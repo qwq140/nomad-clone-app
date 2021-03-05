@@ -1,4 +1,4 @@
-package com.cos.nomadapp;
+package com.cos.nomadapp.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,4 +10,8 @@ import lombok.NoArgsConstructor;
 public class Item {
     private int type;
     private Object object;
+
+    public Item(int type) {
+        this.type=type;
+    }
 }

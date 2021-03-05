@@ -10,10 +10,14 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.ImageView;
 
+import com.cos.nomadapp.model.courses.Course;
+import com.cos.nomadapp.model.CoursesTitle;
+import com.cos.nomadapp.model.Item;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class CoursesActivity extends AppCompatActivity {
 
@@ -51,6 +55,8 @@ public class CoursesActivity extends AppCompatActivity {
 
         CoursesTitle coursesTitle = new CoursesTitle("All Courses","초급부터 고급까지! 니꼬쌤과 함께 풀스택으로 성장하세요!");
         items.add(new Item(0,coursesTitle));
+
+        items.add(new Item(2));
 
         for (int i = 0 ; i<5;i++){
             Course course = new Course("[풀스택] 유튜브 클론코딩","유튜브 백엔드 + 프런트엔드 + 배포",R.drawable.youtube);

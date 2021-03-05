@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.ImageView;
 
+import com.cos.nomadapp.model.courses.Course;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;

@@ -1,7 +1,5 @@
 package com.cos.nomadapp;
 
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +8,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cos.nomadapp.model.courses.Course;
+import com.cos.nomadapp.model.CoursesTitle;
+import com.cos.nomadapp.model.Item;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        //0 : CourseTitle 1 : Course
+        //0 : CourseTitle 1 : Course 2: CoursesFilter
         if(viewType == 0){
             return new TitleViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
@@ -35,10 +36,18 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
                             false
                     )
             );
-        }else{
+        }else if(viewType == 1){
             return new CourseViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
                             R.layout.course_item,
+                            parent,
+                            false
+                    )
+            );
+        }else {
+            return new FilterViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(
+                            R.layout.courses_filter_item,
                             parent,
                             false
                     )
@@ -51,7 +60,7 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
         if(getItemViewType(position)==0){
             CoursesTitle coursesTitle = (CoursesTitle) items.get(position).getObject();
             ((TitleViewHolder) holder).setTitleItem(coursesTitle);
-        }else{
+        }else if(getItemViewType(position)==1){
             Course course = (Course) items.get(position).getObject();
             ((CourseViewHolder) holder).setCourseItem(course);
         }
@@ -99,6 +108,13 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
         void setTitleItem(CoursesTitle coursesTitle){
             tvCoursesTitle.setText(coursesTitle.getTitle());
             tvCoursesSubTitle.setText(coursesTitle.getSubTitle());
+        }
+    }
+
+    public static class FilterViewHolder extends RecyclerView.ViewHolder{
+
+        public FilterViewHolder(@NonNull View itemView) {
+            super(itemView);
         }
     }
 }
