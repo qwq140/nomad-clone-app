@@ -11,7 +11,7 @@ import android.view.Gravity;
 import android.widget.ImageView;
 
 import com.cos.nomadapp.model.courses.Course;
-import com.cos.nomadapp.model.CoursesTitle;
+import com.cos.nomadapp.model.CommonTitle;
 import com.cos.nomadapp.model.Item;
 import com.google.android.material.navigation.NavigationView;
 
@@ -25,8 +25,7 @@ public class CoursesActivity extends AppCompatActivity {
     private ImageView ivMenu;
     private DrawerLayout drawer;
     private NavigationView nv;
-    private RecyclerView rvMainList;
-    private CoursesAdapter coursesAdapter;
+    private RecyclerView rvCoursesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +48,12 @@ public class CoursesActivity extends AppCompatActivity {
 
 
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-        rvMainList = findViewById(R.id.rv_courses_list);
+        rvCoursesList = findViewById(R.id.rv_courses_list);
 
         List<Item> items = new ArrayList<>();
 
-        CoursesTitle coursesTitle = new CoursesTitle("All Courses","초급부터 고급까지! 니꼬쌤과 함께 풀스택으로 성장하세요!");
-        items.add(new Item(0,coursesTitle));
+        CommonTitle commonTitle = new CommonTitle("All Courses","초급부터 고급까지! 니꼬쌤과 함께 풀스택으로 성장하세요!");
+        items.add(new Item(0, commonTitle));
 
         items.add(new Item(2));
 
@@ -63,9 +62,9 @@ public class CoursesActivity extends AppCompatActivity {
             items.add(new Item(1,course));
         }
 
-        rvMainList.setLayoutManager(manager);
+        rvCoursesList.setLayoutManager(manager);
 
-        rvMainList.setAdapter(new CoursesAdapter(items));
+        rvCoursesList.setAdapter(new CoursesAdapter(items));
 
     }
 }

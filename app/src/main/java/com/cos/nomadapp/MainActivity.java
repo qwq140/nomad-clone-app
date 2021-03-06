@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.ImageView;
 
+import com.cos.nomadapp.model.Item;
 import com.cos.nomadapp.model.courses.Course;
+import com.cos.nomadapp.model.main.MainTitle;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -23,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawer;
     private NavigationView nv;
     private RecyclerView rvMainList;
-    private MainAdapter mainAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +44,33 @@ public class MainActivity extends AppCompatActivity {
         nv = findViewById(R.id.nv);
         NavigationViewHelper.enable(MainActivity.this,nv);
 
-        List<Course> courses = new ArrayList<>();
-        for (int i=1; i<7; i++){
-            courses.add(new Course());
-        }
-
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rvMainList = findViewById(R.id.rv_main_list);
+
+        List<Item> items = new ArrayList<>();
+
+        // type 0 : MainTitleItem 1 : CourseItem 2: main_link_item
+        List<MainTitle> mainTitles = new ArrayList<>();
+        mainTitles.add(new MainTitle("Clone Startups.\nLearn to code.","코딩은 진짜를 만들어보는거야!\n실제 구현되어 있는 서비스를 한땀 한땀\n따라 만들면서 코딩을 배우세요."));
+        mainTitles.add(new MainTitle("Challenges","강의만으로는 부족해! 멱살잡고 캐리하는\n챌린지에 무료로 참여하세요!"));
+
+        items.add(new Item(0,mainTitles.get(0)));
+
+        for (int i = 0 ; i<5;i++){
+            Course course = new Course("[풀스택] 유튜브 클론코딩","유튜브 백엔드 + 프런트엔드 + 배포",R.drawable.youtube);
+            items.add(new Item(1,course));
+        }
+
+        items.add(new Item(2,"See all courses →"));
+
+
+        //items.add(new Item(0,mainTitles.get(1)));
+
+
+
         rvMainList.setLayoutManager(manager);
 
-        mainAdapter = new MainAdapter(courses);
-
-        rvMainList.setAdapter(mainAdapter);
+        rvMainList.setAdapter(new MainAdapter(items));
 
     }
 }

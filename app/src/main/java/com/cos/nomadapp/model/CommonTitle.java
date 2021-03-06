@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CoursesTitle {
+public class CommonTitle {
     private String title;
     private String subTitle;
 

@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cos.nomadapp.model.courses.Course;
-import com.cos.nomadapp.model.CoursesTitle;
+import com.cos.nomadapp.model.CommonTitle;
 import com.cos.nomadapp.model.Item;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -31,7 +31,7 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
         if(viewType == 0){
             return new TitleViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
-                            R.layout.course_title,
+                            R.layout.title_item,
                             parent,
                             false
                     )
@@ -58,8 +58,8 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(getItemViewType(position)==0){
-            CoursesTitle coursesTitle = (CoursesTitle) items.get(position).getObject();
-            ((TitleViewHolder) holder).setTitleItem(coursesTitle);
+            CommonTitle commonTitle = (CommonTitle) items.get(position).getObject();
+            ((TitleViewHolder) holder).setTitleItem(commonTitle);
         }else if(getItemViewType(position)==1){
             Course course = (Course) items.get(position).getObject();
             ((CourseViewHolder) holder).setCourseItem(course);
@@ -105,9 +105,9 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
             tvCoursesSubTitle = itemView.findViewById(R.id.tv_courses_subtitle);
         }
 
-        void setTitleItem(CoursesTitle coursesTitle){
-            tvCoursesTitle.setText(coursesTitle.getTitle());
-            tvCoursesSubTitle.setText(coursesTitle.getSubTitle());
+        void setTitleItem(CommonTitle commonTitle){
+            tvCoursesTitle.setText(commonTitle.getTitle());
+            tvCoursesSubTitle.setText(commonTitle.getSubTitle());
         }
     }
 

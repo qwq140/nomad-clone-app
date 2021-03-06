@@ -1,80 +1,132 @@
 package com.cos.nomadapp;
 
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cos.nomadapp.model.CommonTitle;
+import com.cos.nomadapp.model.Item;
 import com.cos.nomadapp.model.courses.Course;
+import com.cos.nomadapp.model.main.MainTitle;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder>{
+public class MainAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private static final String TAG = "UserAdapter";
-    // 4번 컬렉션 생성
-    private final List<Course> courses;
+    private List<Item> items;
 
-    public MainAdapter(List<Course> courses) {
-        this.courses = courses;
+    public MainAdapter(List<Item> items) {
+        this.items = items;
     }
 
-    // 5번 addItem, removeItem
-    public void addItem(Course course){
-        courses.add(course);
-        notifyDataSetChanged();
-    }
-
-    public void removeItem(int position){
-        courses.remove(position);
-        notifyDataSetChanged();
-    }
-
-    // 7번 getView랑 똑같음
-    // 차이점이 있다면 listView는 화면에 3개가 필요하면 최초 로딩시에 3개를 그려야하니까 getView가 3번 호출됨.
-    // 그다음 스크로롤을 해서 2개가 추가되야 될때, 다시 getView를 호출함.
-    // 하지만 recyclerView는 스크롤을 해서 2개가 추가되야 될때 onBindViewHolder를 호출함.
-    // onCreateViewHolder는 해당 Activity 실행시에만 호출 됨.
     @NonNull
     @Override
-    public MainViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        Log.d(TAG, "onCreateViewHolder: ");
-        LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.course_item,parent, false);
-        return new MainViewHolder(view); // view가 리스트뷰에 하나 그려짐
+        // type 0 : MainTitleItem 1 : CourseItem 2: main_link_item
+        if(viewType == 0){
+            return new TitleViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(
+                            R.layout.main_title_item,
+                            parent,
+                            false
+                    )
+            );
+        }else if(viewType == 1){
+            return new CourseViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(
+                            R.layout.course_item,
+                            parent,
+                            false
+                    )
+            );
+        }else{
+            return new LinkViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(
+                            R.layout.main_link_item,
+                            parent,
+                            false
+                    )
+            );
+        }
     }
 
-    // 0, 1, 2, 3
     @Override
-    public void onBindViewHolder(@NonNull MainViewHolder holder, int position) {
-
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if(getItemViewType(position)==0){
+            MainTitle mainTitle = (MainTitle) items.get(position).getObject();
+            ((TitleViewHolder) holder).setMainTitleItem(mainTitle);
+        }else if(getItemViewType(position)==1){
+            Course course = (Course) items.get(position).getObject();
+            ((CourseViewHolder) holder).setCourseItem(course);
+        }else if(getItemViewType(position)==2){
+            String link = (String)items.get(position).getObject();
+            ((LinkViewHolder) holder).setMainLinkItem(link);
+        }
     }
 
-    // 6번 컬렉션 크기 알려주기 (화면에 몇개 그려야될지를 알아야 하기 때문)
     @Override
     public int getItemCount() {
-        return courses.size();
-    }
-
-    // 1번 ViewHolder 만들기
-    // ViewHolder란 하나의 View를 가지고 있다.
-    public static class MainViewHolder extends RecyclerView.ViewHolder {
-
-
-        public MainViewHolder(@NonNull View itemView) {
-            super(itemView);
-        }
-
-
+        return items.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return super.getItemViewType(position);
+        return items.get(position).getType();
     }
+
+    public static class TitleViewHolder extends RecyclerView.ViewHolder{
+
+        private TextView tvTitle, tvSubTitle;
+
+        public TitleViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvTitle = itemView.findViewById(R.id.tv_main_title);
+            tvSubTitle = itemView.findViewById(R.id.tv_main_subtitle);
+        }
+
+        void setMainTitleItem(MainTitle mainTitle){
+            tvTitle.setText(mainTitle.getTitle());
+            tvSubTitle.setText(mainTitle.getSubTitle());
+        }
+    }
+
+    public static class CourseViewHolder extends RecyclerView.ViewHolder{
+
+        private RoundedImageView ivCourse;
+        private TextView tvTitle, tvSubTitle;
+
+        public CourseViewHolder(@NonNull View itemView) {
+            super(itemView);
+            ivCourse = itemView.findViewById(R.id.iv_course);
+            tvTitle = itemView.findViewById(R.id.tv_title);
+            tvSubTitle = itemView.findViewById(R.id.tv_subtitle);
+        }
+
+        void setCourseItem(Course course){
+            ivCourse.setImageResource(course.getCourseImage());
+            tvTitle.setText(course.getTitle());
+            tvSubTitle.setText(course.getSubTitle());
+        }
+    }
+
+    public static class LinkViewHolder extends RecyclerView.ViewHolder{
+
+        private TextView tvLink;
+
+        public LinkViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvLink = itemView.findViewById(R.id.tv_link);
+        }
+
+        void setMainLinkItem(String link){
+            tvLink.setText(link);
+        }
+    }
+
 }
