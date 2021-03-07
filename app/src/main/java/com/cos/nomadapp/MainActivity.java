@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.ImageView;
 
+import com.cos.nomadapp.adapter.MainAdapter;
 import com.cos.nomadapp.model.Item;
 import com.cos.nomadapp.model.courses.Course;
 import com.cos.nomadapp.model.main.MainTitle;
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         // type 0 : MainTitleItem 1 : CourseItem 2: main_link_item
         List<MainTitle> mainTitles = new ArrayList<>();
         mainTitles.add(new MainTitle("Clone Startups.\nLearn to code.","코딩은 진짜를 만들어보는거야!\n실제 구현되어 있는 서비스를 한땀 한땀\n따라 만들면서 코딩을 배우세요."));
-        mainTitles.add(new MainTitle("Challenges","강의만으로는 부족해! 멱살잡고 캐리하는\n챌린지에 무료로 참여하세요!"));
+        //mainTitles.add(new MainTitle("Challenges","강의만으로는 부족해! 멱살잡고 캐리하는\n챌린지에 무료로 참여하세요!"));
 
         items.add(new Item(0,mainTitles.get(0)));
 

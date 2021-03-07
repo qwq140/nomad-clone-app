@@ -6,10 +6,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.ImageView;
 
+import com.cos.nomadapp.adapter.CoursesAdapter;
 import com.cos.nomadapp.model.courses.Course;
 import com.cos.nomadapp.model.CommonTitle;
 import com.cos.nomadapp.model.Item;
@@ -22,7 +24,7 @@ import java.util.List;
 public class CoursesActivity extends AppCompatActivity {
 
     private Toolbar toolbarNomad;
-    private ImageView ivMenu;
+    private ImageView ivMenu, ivLogo;
     private DrawerLayout drawer;
     private NavigationView nv;
     private RecyclerView rvCoursesList;
@@ -37,6 +39,13 @@ public class CoursesActivity extends AppCompatActivity {
 
         ivMenu = findViewById(R.id.iv_menu);
         drawer = findViewById(R.id.drawer);
+
+        ivLogo = findViewById(R.id.iv_logo);
+        ivLogo.setOnClickListener(v -> {
+            Intent intent = new Intent(this,MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            this.startActivity(intent);
+        });
 
         ivMenu.setOnClickListener(v -> {
             drawer.openDrawer(Gravity.LEFT);

@@ -1,5 +1,7 @@
-package com.cos.nomadapp;
+package com.cos.nomadapp.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,18 +10,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cos.nomadapp.model.courses.Course;
+import com.cos.nomadapp.CoursesActivity;
+import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.CommonTitle;
 import com.cos.nomadapp.model.Item;
+import com.cos.nomadapp.model.courses.Course;
+import com.cos.nomadapp.model.main.MainTitle;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
-public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class MainAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private List<Item> items;
 
-    public CoursesAdapter(List<Item> items) {
+    public MainAdapter(List<Item> items) {
         this.items = items;
     }
 
@@ -27,11 +32,11 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        //0 : CourseTitle 1 : Course 2: CoursesFilter
+        // type 0 : MainTitleItem 1 : CourseItem 2: main_link_item
         if(viewType == 0){
             return new TitleViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
-                            R.layout.title_item,
+                            R.layout.main_title_item,
                             parent,
                             false
                     )
@@ -44,10 +49,10 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
                             false
                     )
             );
-        }else {
-            return new FilterViewHolder(
+        }else{
+            return new LinkViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
-                            R.layout.courses_filter_item,
+                            R.layout.main_link_item,
                             parent,
                             false
                     )
@@ -58,11 +63,14 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(getItemViewType(position)==0){
-            CommonTitle commonTitle = (CommonTitle) items.get(position).getObject();
-            ((TitleViewHolder) holder).setTitleItem(commonTitle);
+            MainTitle mainTitle = (MainTitle) items.get(position).getObject();
+            ((TitleViewHolder) holder).setMainTitleItem(mainTitle);
         }else if(getItemViewType(position)==1){
             Course course = (Course) items.get(position).getObject();
             ((CourseViewHolder) holder).setCourseItem(course);
+        }else if(getItemViewType(position)==2){
+            String link = (String)items.get(position).getObject();
+            ((LinkViewHolder) holder).setMainLinkItem(link);
         }
     }
 
@@ -74,6 +82,22 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public int getItemViewType(int position) {
         return items.get(position).getType();
+    }
+
+    public static class TitleViewHolder extends RecyclerView.ViewHolder{
+
+        private TextView tvTitle, tvSubTitle;
+
+        public TitleViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvTitle = itemView.findViewById(R.id.tv_main_title);
+            tvSubTitle = itemView.findViewById(R.id.tv_main_subtitle);
+        }
+
+        void setMainTitleItem(MainTitle mainTitle){
+            tvTitle.setText(mainTitle.getTitle());
+            tvSubTitle.setText(mainTitle.getSubTitle());
+        }
     }
 
     public static class CourseViewHolder extends RecyclerView.ViewHolder{
@@ -95,26 +119,24 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    public static class TitleViewHolder extends RecyclerView.ViewHolder{
+    public static class LinkViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView tvCoursesTitle, tvCoursesSubTitle;
+        private TextView tvLink;
 
-        public TitleViewHolder(@NonNull View itemView) {
+        public LinkViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvCoursesTitle = itemView.findViewById(R.id.tv_courses_title);
-            tvCoursesSubTitle = itemView.findViewById(R.id.tv_courses_subtitle);
+            tvLink = itemView.findViewById(R.id.tv_link);
+
+            tvLink.setOnClickListener(v -> {
+                Intent intent = new Intent(v.getContext(), CoursesActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                v.getContext().startActivity(intent);
+            });
         }
 
-        void setTitleItem(CommonTitle commonTitle){
-            tvCoursesTitle.setText(commonTitle.getTitle());
-            tvCoursesSubTitle.setText(commonTitle.getSubTitle());
+        void setMainLinkItem(String link){
+            tvLink.setText(link);
         }
     }
 
-    public static class FilterViewHolder extends RecyclerView.ViewHolder{
-
-        public FilterViewHolder(@NonNull View itemView) {
-            super(itemView);
-        }
-    }
 }
