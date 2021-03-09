@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.Gravity;
-import android.widget.ExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cos.nomadapp.adapter.FaqAdapter;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -19,11 +19,8 @@ import java.util.List;
 
 public class FaqActivity extends AppCompatActivity {
 
-    private Toolbar toolbarServe;
-    private ImageView ivMenu;
+    private ImageView ivBack;
     private TextView tvToolbarTitle;
-    private DrawerLayout drawer;
-    private NavigationView nv;
     private RecyclerView rvFaqList;
 
     @Override
@@ -31,21 +28,14 @@ public class FaqActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_faq);
 
-        toolbarServe = findViewById(R.id.toolbar_serve);
-        setSupportActionBar(toolbarServe);
-
-        ivMenu = findViewById(R.id.iv_menu);
-        drawer = findViewById(R.id.drawer);
+        ivBack = findViewById(R.id.iv_back);
 
         tvToolbarTitle = findViewById(R.id.tv_toolbar_title);
         tvToolbarTitle.setText("FAQ");
 
-        ivMenu.setOnClickListener(v -> {
-            drawer.openDrawer(Gravity.LEFT);
+        ivBack.setOnClickListener(v -> {
+            finish();
         });
-
-        nv = findViewById(R.id.nv);
-        NavigationViewHelper.enable(FaqActivity.this,nv);
 
         // 리사이클러뷰
         rvFaqList = findViewById(R.id.rv_faq_list);

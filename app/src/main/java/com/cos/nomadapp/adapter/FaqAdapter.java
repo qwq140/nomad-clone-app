@@ -1,15 +1,20 @@
-package com.cos.nomadapp;
+package com.cos.nomadapp.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cos.nomadapp.FaqGubun;
+import com.cos.nomadapp.FaqGubunViewHolder;
+import com.cos.nomadapp.FaqItem;
+import com.cos.nomadapp.FaqItemViewHolder;
+import com.cos.nomadapp.R;
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 
 import java.util.List;
 
-public class FaqAdapter extends ExpandableRecyclerViewAdapter<FaqGubunViewHolder,FaqItemViewHolder> {
+public class FaqAdapter extends ExpandableRecyclerViewAdapter<FaqGubunViewHolder, FaqItemViewHolder> {
     public FaqAdapter(List<? extends ExpandableGroup> groups) {
         super(groups);
     }

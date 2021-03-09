@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         toolbarNomad = findViewById(R.id.toolbar_nomad);
         setSupportActionBar(toolbarNomad);
 
-        ivMenu = findViewById(R.id.iv_menu);
+        ivMenu = findViewById(R.id.iv_back);
         drawer = findViewById(R.id.drawer);
 
         ivMenu.setOnClickListener(v -> {
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         items.add(new Item(0,mainTitles.get(0)));
 
         for (int i = 0 ; i<5;i++){
-            Course course = new Course("[풀스택] 유튜브 클론코딩","유튜브 백엔드 + 프런트엔드 + 배포",R.drawable.youtube);
+            Course course = new Course("[풀스택] 유튜브 클론코딩","유튜브 백엔드 + 프런트엔드 + 배포",R.drawable.course_youtube);
             items.add(new Item(1,course));
         }
 

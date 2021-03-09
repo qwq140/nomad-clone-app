@@ -15,7 +15,7 @@
 
 
         <ImageView
-            android:id="@+id/iv_menu"
+            android:id="@+id/iv_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -33,15 +33,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_logo" />
 
-        <Button
-            android:id="@+id/btn_Join"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Join"
-            android:backgroundTint="#293DE6"
-            android:textAllCaps="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.appcompat.widget.Toolbar>

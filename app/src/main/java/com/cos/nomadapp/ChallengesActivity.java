@@ -10,13 +10,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.cos.nomadapp.adapter.ChallengesAdapter;
-import com.cos.nomadapp.adapter.CoursesAdapter;
 import com.cos.nomadapp.model.CommonTitle;
 import com.cos.nomadapp.model.Item;
 import com.cos.nomadapp.model.challenge.Challenge;
-import com.cos.nomadapp.model.courses.Course;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -24,10 +23,8 @@ import java.util.List;
 
 public class ChallengesActivity extends AppCompatActivity {
 
-    private Toolbar toolbarNomad;
-    private ImageView ivMenu, ivLogo;
-    private DrawerLayout drawer;
-    private NavigationView nv;
+    private ImageView ivBack;
+    private TextView tvToolbarTitle;
     private RecyclerView rvChallengeList;
 
     @Override
@@ -35,25 +32,14 @@ public class ChallengesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_challenges);
 
-        toolbarNomad = findViewById(R.id.toolbar_nomad);
-        setSupportActionBar(toolbarNomad);
+        ivBack = findViewById(R.id.iv_back);
 
-        ivMenu = findViewById(R.id.iv_menu);
-        drawer = findViewById(R.id.drawer);
+        tvToolbarTitle = findViewById(R.id.tv_toolbar_title);
+        tvToolbarTitle.setText("Challenges");
 
-        ivLogo = findViewById(R.id.iv_logo);
-        ivLogo.setOnClickListener(v -> {
-            Intent intent = new Intent(this,MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            this.startActivity(intent);
+        ivBack.setOnClickListener(v -> {
+            finish();
         });
-
-        ivMenu.setOnClickListener(v -> {
-            drawer.openDrawer(Gravity.LEFT);
-        });
-
-        nv = findViewById(R.id.nv);
-        NavigationViewHelper.enable(ChallengesActivity.this,nv);
 
 
 

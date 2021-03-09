@@ -11,7 +11,7 @@
         android:layout_width="350dp"
         android:layout_height="200dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/youtube"
+        android:src="@drawable/course_youtube"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.476"

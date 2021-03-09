@@ -15,11 +15,8 @@ import com.google.android.material.tabs.TabLayout;
 
 public class CommunityActivity extends AppCompatActivity {
 
-    private Toolbar toolbarServe;
-    private ImageView ivMenu;
+    private ImageView ivBack;
     private TextView tvToolbarTitle;
-    private DrawerLayout drawer;
-    private NavigationView nv;
     private ViewPager vpContainer;
     private TabLayout tabs;
     private CommunityPagerAdapter communityPagerAdapter;
@@ -29,21 +26,16 @@ public class CommunityActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community);
 
-        toolbarServe = findViewById(R.id.toolbar_serve);
-        setSupportActionBar(toolbarServe);
 
-        ivMenu = findViewById(R.id.iv_menu);
-        drawer = findViewById(R.id.drawer);
+        ivBack = findViewById(R.id.iv_back);
 
         tvToolbarTitle = findViewById(R.id.tv_toolbar_title);
         tvToolbarTitle.setText("Community");
 
-        ivMenu.setOnClickListener(v -> {
-            drawer.openDrawer(Gravity.LEFT);
+        ivBack.setOnClickListener(v -> {
+            finish();
         });
 
-        nv = findViewById(R.id.nv);
-        NavigationViewHelper.enable(CommunityActivity.this,nv);
 
         //ViewPager
         vpContainer = findViewById(R.id.vp_container);
