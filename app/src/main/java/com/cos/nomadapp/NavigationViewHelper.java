@@ -23,10 +23,19 @@ public class NavigationViewHelper {
                 context.startActivity(intent);
             }else if(id == R.id.item3){
                 Log.d(TAG, "onCreate: 메뉴3 클릭됨");
+                Intent intent = new Intent(context, ChallengesActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                context.startActivity(intent);
             }else if(id == R.id.item4){
                 Log.d(TAG, "onCreate: 메뉴4 클릭됨");
+                Intent intent = new Intent(context, CommunityActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                context.startActivity(intent);
             }else if(id == R.id.item5){
                 Log.d(TAG, "onCreate: 메뉴5 클릭됨");
+                Intent intent = new Intent(context, FaqActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                context.startActivity(intent);
             }else if(id == R.id.item6){
                 Log.d(TAG, "onCreate: 메뉴6 클릭됨");
             }

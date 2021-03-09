@@ -42,4 +42,8 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok:1.18.10'
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
+
+    implementation 'com.github.gmazzo:fontawesome:0.4'
+
+    implementation 'com.thoughtbot:expandablerecyclerview:1.4'
 }

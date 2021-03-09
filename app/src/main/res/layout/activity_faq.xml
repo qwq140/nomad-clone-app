@@ -5,27 +5,25 @@
     android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CommunityActivity">
+    tools:context=".FaqActivity">
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
 
         <include layout="@layout/toolbar_serve" />
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_faq_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tabMode="scrollable"
-            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"/>
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/vp_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent">
+
+
+        </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
 
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bottom_search"
+        android:title="검색하기"
+        android:icon="@drawable/ic_glyph_solid_search"/>
+
+    <item
+        android:id="@+id/bottom_setting"
+        android:title="글쓰기"
+        android:icon="@drawable/ic_glyph_solid_pencil_alt"/>
+
+</menu>

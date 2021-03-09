@@ -9,18 +9,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cos.nomadapp.R;
-import com.cos.nomadapp.model.courses.Course;
 import com.cos.nomadapp.model.CommonTitle;
 import com.cos.nomadapp.model.Item;
+import com.cos.nomadapp.model.challenge.Challenge;
+import com.cos.nomadapp.model.courses.Course;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
-public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class ChallengesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private List<Item> items;
 
-    public CoursesAdapter(List<Item> items) {
+    public ChallengesAdapter(List<Item> items) {
         this.items = items;
     }
 
@@ -28,7 +29,7 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        //0 : CourseTitle 1 : Course 2: CoursesFilter
+        //0 : CourseTitle 1 : Challenge
         if(viewType == 0){
             return new TitleViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
@@ -37,18 +38,10 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
                             false
                     )
             );
-        }else if(viewType == 1){
-            return new CourseViewHolder(
+        }else{
+            return new ChallengeViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
-                            R.layout.course_item,
-                            parent,
-                            false
-                    )
-            );
-        }else {
-            return new FilterViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(
-                            R.layout.courses_filter_item,
+                            R.layout.challenge_item,
                             parent,
                             false
                     )
@@ -62,8 +55,8 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
             CommonTitle commonTitle = (CommonTitle) items.get(position).getObject();
             ((TitleViewHolder) holder).setTitleItem(commonTitle);
         }else if(getItemViewType(position)==1){
-            Course course = (Course) items.get(position).getObject();
-            ((CourseViewHolder) holder).setCourseItem(course);
+            Challenge challenge = (Challenge) items.get(position).getObject();
+            ((ChallengeViewHolder) holder).setChallengeItem(challenge);
         }
     }
 
@@ -77,45 +70,38 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
         return items.get(position).getType();
     }
 
-    public static class CourseViewHolder extends RecyclerView.ViewHolder{
+    public static class ChallengeViewHolder extends RecyclerView.ViewHolder{
 
-        private RoundedImageView ivCourse;
-        private TextView tvTitle, tvSubTitle;
+        private TextView tvChallengeTitle, tvTerm, tvChallengers;
 
-        public CourseViewHolder(@NonNull View itemView) {
+        public ChallengeViewHolder(@NonNull View itemView) {
             super(itemView);
-            ivCourse = itemView.findViewById(R.id.iv_course);
-            tvTitle = itemView.findViewById(R.id.tv_course_title);
-            tvSubTitle = itemView.findViewById(R.id.tv_course_subtitle);
+            tvChallengeTitle = itemView.findViewById(R.id.tv_challenge_title);
+            tvTerm = itemView.findViewById(R.id.tv_term);
+            tvChallengers = itemView.findViewById(R.id.tv_challengers);
         }
 
-        void setCourseItem(Course course){
-            ivCourse.setImageResource(course.getCourseImage());
-            tvTitle.setText(course.getTitle());
-            tvSubTitle.setText(course.getSubTitle());
+        void setChallengeItem(Challenge challenge){
+            tvChallengeTitle.setText(challenge.getTitle());
+            tvChallengers.setText(challenge.getChallengers()+"");
+            tvTerm.setText(challenge.getTerm()+"");
         }
     }
 
     public static class TitleViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView tvCoursesTitle, tvCoursesSubTitle;
+        private TextView tvChallengesTitle, tvChallengesSubTitle;
 
         public TitleViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvCoursesTitle = itemView.findViewById(R.id.tv_title);
-            tvCoursesSubTitle = itemView.findViewById(R.id.tv_subtitle);
+            tvChallengesTitle = itemView.findViewById(R.id.tv_title);
+            tvChallengesSubTitle = itemView.findViewById(R.id.tv_subtitle);
         }
 
         void setTitleItem(CommonTitle commonTitle){
-            tvCoursesTitle.setText(commonTitle.getTitle());
-            tvCoursesSubTitle.setText(commonTitle.getSubTitle());
+            tvChallengesTitle.setText(commonTitle.getTitle());
+            tvChallengesSubTitle.setText(commonTitle.getSubTitle());
         }
     }
 
-    public static class FilterViewHolder extends RecyclerView.ViewHolder{
-
-        public FilterViewHolder(@NonNull View itemView) {
-            super(itemView);
-        }
-    }
 }
