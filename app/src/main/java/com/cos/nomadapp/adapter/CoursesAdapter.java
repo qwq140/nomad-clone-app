@@ -1,5 +1,7 @@
 package com.cos.nomadapp.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cos.nomadapp.CourseDetailActivity;
+import com.cos.nomadapp.FaqActivity;
+import com.cos.nomadapp.JoinActivity;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.courses.Course;
 import com.cos.nomadapp.model.CommonTitle;
@@ -21,6 +26,7 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<Item> items;
 
     public CoursesAdapter(List<Item> items) {
+
         this.items = items;
     }
 
@@ -87,12 +93,21 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
             ivCourse = itemView.findViewById(R.id.iv_course);
             tvTitle = itemView.findViewById(R.id.tv_course_title);
             tvSubTitle = itemView.findViewById(R.id.tv_course_subtitle);
+
+            itemView.setOnClickListener(v -> {
+                Context context = v.getContext();
+                Intent intent = new Intent(context, CourseDetailActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                context.startActivity(intent);
+            });
         }
 
         void setCourseItem(Course course){
             ivCourse.setImageResource(course.getCourseImage());
             tvTitle.setText(course.getTitle());
             tvSubTitle.setText(course.getSubTitle());
+
+
         }
     }
 

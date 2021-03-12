@@ -1,5 +1,6 @@
 package com.cos.nomadapp.adapter;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cos.nomadapp.CourseDetailActivity;
 import com.cos.nomadapp.CoursesActivity;
+import com.cos.nomadapp.FaqActivity;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.Item;
 import com.cos.nomadapp.model.challenge.Challenge;
@@ -120,6 +123,13 @@ public class MainAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
             ivCourse = itemView.findViewById(R.id.iv_course);
             tvTitle = itemView.findViewById(R.id.tv_course_title);
             tvSubTitle = itemView.findViewById(R.id.tv_course_subtitle);
+
+            itemView.setOnClickListener(v -> {
+                Context context = v.getContext();
+                Intent intent = new Intent(context, CourseDetailActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                context.startActivity(intent);
+            });
         }
 
         void setCourseItem(Course course){

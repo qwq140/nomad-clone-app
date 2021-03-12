@@ -17,7 +17,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:src="@drawable/test" />
 
     <TextView
         android:id="@+id/tv_page_title"
@@ -45,7 +45,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_page_title" />
 
     <TextView
-        android:id="@+id/tv_session1_level"
+        android:id="@+id/tv_section1_level"
         android:layout_width="50dp"
         android:layout_height="30dp"
         android:layout_marginTop="15dp"
@@ -59,11 +59,13 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_page_subtitle" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_lang_img"
+        android:id="@+id/rv_lang_logo"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_session1_level" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_section1_level" />
 </androidx.constraintlayout.widget.ConstraintLayout>
