@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 public class Community {
     private Long id;
     private String title;
+    private String username;
     private String content;
+    private Integer like;
     private String category;
+    private String regTime;
 }

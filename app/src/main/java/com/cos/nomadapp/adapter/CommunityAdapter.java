@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.community.Community;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder>{
@@ -38,7 +39,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         return communities.size();
     }
 
-    public static class CommunityViewHolder extends RecyclerView.ViewHolder{
+    public class CommunityViewHolder extends RecyclerView.ViewHolder{
 
         private TextView tvCommunityTitle,tvCommunityCategory;
 
@@ -52,5 +53,11 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             tvCommunityTitle.setText(community.getTitle());
             tvCommunityCategory.setText(community.getCategory());
         }
+    }
+
+    public void filterList(List<Community> filterItems) {
+
+        this.communities = filterItems;
+        notifyDataSetChanged();
     }
 }
