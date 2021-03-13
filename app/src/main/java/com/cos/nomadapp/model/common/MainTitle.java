@@ -1,4 +1,4 @@
-package com.cos.nomadapp.model.main;
+package com.cos.nomadapp.model.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

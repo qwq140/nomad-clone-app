@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.ImageView;
@@ -15,7 +16,7 @@ import com.google.android.material.tabs.TabLayout;
 
 public class CommunityActivity extends AppCompatActivity {
 
-    private ImageView ivBack;
+    private ImageView ivBack, ivWrite, ivSearch;
     private TextView tvToolbarTitle;
     private ViewPager vpContainer;
     private TabLayout tabs;
@@ -36,6 +37,22 @@ public class CommunityActivity extends AppCompatActivity {
             finish();
         });
 
+
+        ivWrite = findViewById(R.id.iv_write);
+
+        ivWrite.setOnClickListener(v -> {
+            Intent intent = new Intent(this, CommunityWriteActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
+
+        ivSearch = findViewById(R.id.iv_search);
+
+        ivSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(this, CommunitySearchActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
 
         //ViewPager
         vpContainer = findViewById(R.id.vp_container);

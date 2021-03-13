@@ -12,12 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cos.nomadapp.CourseDetailActivity;
 import com.cos.nomadapp.CoursesActivity;
-import com.cos.nomadapp.FaqActivity;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.Item;
 import com.cos.nomadapp.model.challenge.Challenge;
 import com.cos.nomadapp.model.courses.Course;
-import com.cos.nomadapp.model.main.MainTitle;
+import com.cos.nomadapp.model.common.MainTitle;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
