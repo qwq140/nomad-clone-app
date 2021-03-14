@@ -8,22 +8,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cos.nomadapp.FooterViewHolder;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.community.Community;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder> {
+public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder>{
 
     private List<Community> communities;
-
 
     public CommunityAdapter(List<Community> communities) {
         this.communities = communities;
     }
-
-
 
     @NonNull
     @Override
@@ -42,9 +39,9 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         return communities.size();
     }
 
-    public static class CommunityViewHolder extends RecyclerView.ViewHolder {
+    public class CommunityViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView tvCommunityTitle, tvCommunityCategory;
+        private TextView tvCommunityTitle,tvCommunityCategory;
 
         public CommunityViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -52,9 +49,15 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             tvCommunityCategory = itemView.findViewById(R.id.tv_community_category);
         }
 
-        public void setCommunityItem(Community community) {
+        public void setCommunityItem(Community community){
             tvCommunityTitle.setText(community.getTitle());
             tvCommunityCategory.setText(community.getCategory());
         }
+    }
+
+    public void filterList(List<Community> filterItems) {
+
+        this.communities = filterItems;
+        notifyDataSetChanged();
     }
 }

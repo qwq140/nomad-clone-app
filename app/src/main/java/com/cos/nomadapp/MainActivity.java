@@ -14,7 +14,7 @@ import com.cos.nomadapp.adapter.MainAdapter;
 import com.cos.nomadapp.model.Item;
 import com.cos.nomadapp.model.challenge.Challenge;
 import com.cos.nomadapp.model.courses.Course;
-import com.cos.nomadapp.model.main.MainTitle;
+import com.cos.nomadapp.model.common.MainTitle;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;

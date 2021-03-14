@@ -34,7 +34,7 @@ public class CommunityFragAll extends Fragment {
         List<Community> communities = new ArrayList<>();
 
         for (Long i = 0L ; i<5L;i++){
-            Community community = new Community(i,"커뮤니티 제목"+i, "내용","bla-bla");
+            Community community = new Community(i,"커뮤니티 제목"+i, "username"+i, "내용",15,"bla-bla","15");
             communities.add(community);
         }
 

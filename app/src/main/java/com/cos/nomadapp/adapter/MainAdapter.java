@@ -2,38 +2,25 @@ package com.cos.nomadapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cos.nomadapp.CancleOrRefundPolicyActivity;
-import com.cos.nomadapp.ChallengesActivity;
-import com.cos.nomadapp.CommunityActivity;
 import com.cos.nomadapp.CourseDetailActivity;
 import com.cos.nomadapp.CoursesActivity;
-import com.cos.nomadapp.FaqActivity;
 import com.cos.nomadapp.FooterViewHolder;
-import com.cos.nomadapp.MainActivity;
-import com.cos.nomadapp.PrivacyPolicyActivity;
 import com.cos.nomadapp.R;
-import com.cos.nomadapp.ServiceTermActivity;
 import com.cos.nomadapp.model.Item;
 import com.cos.nomadapp.model.challenge.Challenge;
 import com.cos.nomadapp.model.courses.Course;
-import com.cos.nomadapp.model.main.MainTitle;
+import com.cos.nomadapp.model.common.MainTitle;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
-
-import info.androidhive.fontawesome.FontTextView;
 
 public class MainAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
