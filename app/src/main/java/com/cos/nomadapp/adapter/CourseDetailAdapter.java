@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cos.nomadapp.FooterViewHolder;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.Item;
 import com.cos.nomadapp.model.courses.Charge;
@@ -113,10 +114,18 @@ public class CourseDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             false
                     )
             );
-        } else {
+        } else if(viewType == 8){
             return new CourseDetailAdapter.CourseSectionNinthViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
                             R.layout.course_detail_section9,
+                            parent,
+                            false
+                    )
+            );
+        } else{
+            return new FooterViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(
+                            R.layout.footer,
                             parent,
                             false
                     )
@@ -177,11 +186,13 @@ public class CourseDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else if (getItemViewType(position) == 7) {
             Charge charge = (Charge) items.get(position).getObject();
             ((CourseSectionEighthViewHolder) holder).setItem(charge);
-        } else {
+        } else if(getItemViewType(position)==8){
             List<CourseFaqTitle> titles = (List<CourseFaqTitle>) items.get(position).getObject();
             LinearLayoutManager manager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
             ((CourseSectionNinthViewHolder) holder).rvCourseFaq.setLayoutManager(manager);
             ((CourseSectionNinthViewHolder) holder).rvCourseFaq.setAdapter(new CourseFaqAdapter(titles));
+        }else{
+            Log.d(TAG, "onBindViewHolder: footer만들어짐");
         }
     }
     @Override

@@ -1,27 +1,38 @@
 package com.cos.nomadapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cos.nomadapp.adapter.FaqAdapter;
+import com.cos.nomadapp.model.Item;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import info.androidhive.fontawesome.FontTextView;
 
 public class FaqActivity extends AppCompatActivity {
 
     private ImageView ivBack;
     private TextView tvToolbarTitle;
     private RecyclerView rvFaqList;
+    //footer
+    private TextView tvRoadMap,tvCourses,tvCommunity,tvFaq,tvChallenges,tvServiceTerm,tvPrivacyPolicy,tvCancleOrRefundPolicy;
+    private FontTextView ftvYoutube, ftvGithub, ftvFacebook, ftvInsta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +43,80 @@ public class FaqActivity extends AppCompatActivity {
 
         tvToolbarTitle = findViewById(R.id.tv_toolbar_title);
         tvToolbarTitle.setText("FAQ");
+
+        tvCourses=findViewById(R.id.tv_courses);
+        tvChallenges=findViewById(R.id.tv_challenges);
+        tvFaq=findViewById(R.id.tv_faq);
+        tvRoadMap=findViewById(R.id.tv_roadmap);
+        tvCommunity=findViewById(R.id.tv_community);
+        tvServiceTerm=findViewById(R.id.tv_service_term);
+        tvPrivacyPolicy=findViewById(R.id.tv_privacy_policy);
+        tvCancleOrRefundPolicy=findViewById(R.id.tv_cancle_or_refund_policy);
+        ftvInsta=findViewById(R.id.ftv_insta);
+        ftvYoutube=findViewById(R.id.ftv_youtube);
+        ftvFacebook=findViewById(R.id.ftv_facebook);
+        ftvGithub=findViewById(R.id.ftv_github);
+
+        tvCommunity.setOnClickListener(v->{
+            Intent intent = new Intent(v.getContext(), CommunityActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        tvCourses.setOnClickListener(v->{
+            Intent intent = new Intent(v.getContext(), CoursesActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        tvChallenges.setOnClickListener(v->{
+            Intent intent = new Intent(v.getContext(), ChallengesActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        tvRoadMap.setOnClickListener(v->{
+            Intent intent = new Intent(v.getContext(), MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        tvFaq.setOnClickListener(v->{
+            Intent intent = new Intent(v.getContext(), FaqActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        tvServiceTerm.setOnClickListener(v->{
+            Intent intent = new Intent(v.getContext(), ServiceTermActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        tvPrivacyPolicy.setOnClickListener(v->{
+            Intent intent = new Intent(v.getContext(), PrivacyPolicyActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        tvCancleOrRefundPolicy.setOnClickListener(v->{
+            Intent intent = new Intent(v.getContext(), CancleOrRefundPolicyActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        ftvInsta.setOnClickListener(v->{
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/nomad_coders/?hl=ko"));
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        ftvYoutube.setOnClickListener(v->{
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/channel/UCUpJs89fSBXNolQGOYKn0YQ"));
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        ftvFacebook.setOnClickListener(v->{
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://ko-kr.facebook.com/nomadcoders/"));
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        ftvGithub.setOnClickListener(v->{
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/nomadcoders"));
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
 
         ivBack.setOnClickListener(v -> {
             finish();
@@ -90,8 +175,12 @@ public class FaqActivity extends AppCompatActivity {
         FaqGubun community = new FaqGubun("노마드 커뮤니티",communityItems);
         faqGubuns.add(community);
 
+
+
+
         rvFaqList.setAdapter(new FaqAdapter(faqGubuns));
 
-
     }
+
+
 }

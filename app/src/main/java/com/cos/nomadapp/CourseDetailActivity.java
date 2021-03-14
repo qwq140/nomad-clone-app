@@ -54,8 +54,6 @@ public class CourseDetailActivity extends AppCompatActivity {
         items.add(new Item(0,courseSection1));
 
 
-
-
         CourseSection2 courseSection2 = new CourseSection2(131,1215,"초급");
         items.add(new Item(1,courseSection2));
 
@@ -154,6 +152,7 @@ public class CourseDetailActivity extends AppCompatActivity {
         titles.add(courseFaqTitle2);
 
         items.add(new Item(8,titles));
+        items.add(new Item(9));
         rvCourseDetail.setAdapter(new CourseDetailAdapter(items,CourseDetailActivity.this));
 
     }

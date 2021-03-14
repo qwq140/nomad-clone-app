@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cos.nomadapp.adapter.CommunityAdapter;
+import com.cos.nomadapp.model.Item;
 import com.cos.nomadapp.model.community.Community;
 
 import java.util.ArrayList;
@@ -38,7 +39,6 @@ public class CommunityFragAll extends Fragment {
         }
 
         rvCommunityNew.setLayoutManager(manager);
-
         rvCommunityNew.setAdapter(new CommunityAdapter(communities));
 
 

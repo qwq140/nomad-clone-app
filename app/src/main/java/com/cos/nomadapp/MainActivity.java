@@ -74,8 +74,8 @@ public class MainActivity extends AppCompatActivity {
 
         items.add(new Item(2,"See all challenges →"));
 
-
-
+        //footer
+        items.add(new Item(4));
         rvMainList.setLayoutManager(manager);
 
         rvMainList.setAdapter(new MainAdapter(items));

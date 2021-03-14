@@ -1,5 +1,6 @@
 package com.cos.nomadapp.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cos.nomadapp.FooterViewHolder;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.CommonTitle;
 import com.cos.nomadapp.model.Item;
@@ -29,7 +31,7 @@ public class ChallengesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        //0 : CourseTitle 1 : Challenge
+        //0 : CourseTitle 1 : Challenge 2: footer
         if(viewType == 0){
             return new TitleViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
@@ -38,10 +40,18 @@ public class ChallengesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHo
                             false
                     )
             );
-        }else{
+        }else if(viewType == 1){
             return new ChallengeViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
                             R.layout.challenge_item,
+                            parent,
+                            false
+                    )
+            );
+        }else{
+            return new FooterViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(
+                            R.layout.footer,
                             parent,
                             false
                     )

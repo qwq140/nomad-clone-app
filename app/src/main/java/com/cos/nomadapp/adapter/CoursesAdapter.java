@@ -2,6 +2,7 @@ package com.cos.nomadapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,16 +11,26 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cos.nomadapp.CancleOrRefundPolicyActivity;
+import com.cos.nomadapp.ChallengesActivity;
+import com.cos.nomadapp.CommunityActivity;
 import com.cos.nomadapp.CourseDetailActivity;
+import com.cos.nomadapp.CoursesActivity;
 import com.cos.nomadapp.FaqActivity;
+import com.cos.nomadapp.FooterViewHolder;
 import com.cos.nomadapp.JoinActivity;
+import com.cos.nomadapp.MainActivity;
+import com.cos.nomadapp.PrivacyPolicyActivity;
 import com.cos.nomadapp.R;
+import com.cos.nomadapp.ServiceTermActivity;
 import com.cos.nomadapp.model.courses.Course;
 import com.cos.nomadapp.model.CommonTitle;
 import com.cos.nomadapp.model.Item;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
+
+import info.androidhive.fontawesome.FontTextView;
 
 public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
@@ -51,10 +62,18 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
                             false
                     )
             );
-        }else {
+        }else if(viewType == 2){
             return new FilterViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
                             R.layout.courses_filter_item,
+                            parent,
+                            false
+                    )
+            );
+        }else{
+            return new FooterViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(
+                            R.layout.footer,
                             parent,
                             false
                     )
@@ -133,4 +152,5 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
             super(itemView);
         }
     }
+
 }

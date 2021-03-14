@@ -51,13 +51,13 @@ public class ChallengesActivity extends AppCompatActivity {
         CommonTitle commonTitle = new CommonTitle("Challenges","강의만으로는 부족해! 멱살잡고 캐리하는 챌린지에 무료로 참여하세요!");
         items.add(new Item(0, commonTitle));
 
-        items.add(new Item(2));
 
         for (Long i = 0L ; i<9L;i++){
             Challenge challenge = new Challenge(i,"바닐라JS 2주 완성반",2,935);
             items.add(new Item(1,challenge));
         }
-
+        //footer
+        items.add(new Item(2));
         rvChallengeList.setLayoutManager(manager);
 
         rvChallengeList.setAdapter(new ChallengesAdapter(items));

@@ -59,6 +59,7 @@ public class CoursesActivity extends AppCompatActivity {
             Course course = new Course("[풀스택] 유튜브 클론코딩","유튜브 백엔드 + 프런트엔드 + 배포",R.drawable.course_youtube);
             items.add(new Item(1,course));
         }
+        items.add(new Item(3));
 
         rvCoursesList.setLayoutManager(manager);
 
