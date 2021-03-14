@@ -1,10 +1,9 @@
-package com.cos.nomadapp.model.community;
+package com.cos.nomadapp.model.reply;
 
-import com.cos.nomadapp.model.reply.Reply;
+
 import com.cos.nomadapp.model.user.User;
 
 import java.io.Serializable;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,13 +12,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Community implements Serializable {
+public class Reply implements Serializable {
     private Long id;
-    private String title;
-    private User user;
-    private List<Reply> reply;
     private String content;
+    private User user;
     private Integer like;
-    private String category;
     private String regTime;
 }

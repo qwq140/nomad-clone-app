@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.cos.nomadapp.adapter.CommunityAdapter;
 import com.cos.nomadapp.model.community.Community;
+import com.cos.nomadapp.model.reply.Reply;
+import com.cos.nomadapp.model.user.User;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
@@ -25,7 +27,6 @@ public class CommunitySearchActivity extends AppCompatActivity {
     private TextView tvToolbarTitle;
     private TextInputEditText etSearch;
     private RecyclerView rvSearchList;
-    private List<Community> communities;
     private CommunityAdapter communityAdapter;
 
     @Override
@@ -46,67 +47,34 @@ public class CommunitySearchActivity extends AppCompatActivity {
 
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
 
-        communities = new ArrayList<>();
+        List<Community> communities = new ArrayList<>();
+
+        User user = new User(0L,"유저1");
+
+        List<Reply> replies = new ArrayList<>();
+        User replyUser = new User(1L,"유저2");
+        Reply reply = new Reply(0L,"댓글내용1",replyUser,1,"1 hours ago");
+        replies.add(reply);
+
+        reply = new Reply(1L,"댓글내용2",replyUser,0,"1 hours ago");
+        replies.add(reply);
+
+        reply = new Reply(2L,"댓글내용3",replyUser,7,"1 hours ago");
+        replies.add(reply);
 
 
-        Community community = new Community(0L,"자바스크립트", "내용","bla-bla");
-        communities.add(community);
-
-        community = new Community(1L,"파이썬", "내용","bla-bla");
-        communities.add(community);
-
-        community = new Community(2L,"리액트", "내용","bla-bla");
-        communities.add(community);
+        for (Long i = 0L ; i<5L;i++){
+            Community community = new Community(i,"커뮤니티 제목"+i, user, replies , "내용",15,"bla-bla","15");
+            communities.add(community);
+        }
 
 
         rvSearchList.setLayoutManager(manager);
 
-        communityAdapter = new CommunityAdapter(communities);
+        communityAdapter = new CommunityAdapter(communities,this);
 
         rvSearchList.setAdapter(communityAdapter);
 
-        etSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                //after the change calling the method and passing the search input
-                filter(editable.toString());
-            }
-        });
     }
 
-    private void filter(String text) {
-        //new array list that will hold the filtered data
-        List<Community> filterItems = new ArrayList<>();
-
-
-        List<String> names = new ArrayList<>();
-        for (int i=0; i<communities.size();i++){
-            names.add(communities.get(i).getTitle());
-        }
-        //looping through existing elements
-        for (String s : names) {
-            //if the existing elements contains the search input
-            if (s.toLowerCase().contains(text.toLowerCase())) {
-                //adding the element to filtered list
-                for (int i=0; i<communities.size();i++){
-                    if (communities.get(i).getTitle().equals(s)){
-                        filterItems.add(communities.get(i));
-                    }
-                }
-            }
-        }
-
-        //calling a method of the adapter class and passing the filtered list
-        communityAdapter.filterList(filterItems);
-    }
 }

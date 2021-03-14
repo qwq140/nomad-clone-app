@@ -41,8 +41,6 @@ public class ChallengesActivity extends AppCompatActivity {
             finish();
         });
 
-
-
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rvChallengeList = findViewById(R.id.rv_challenges_list);
 
