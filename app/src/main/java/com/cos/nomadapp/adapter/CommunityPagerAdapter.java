@@ -1,4 +1,4 @@
-package com.cos.nomadapp;
+package com.cos.nomadapp.adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

@@ -1,6 +1,5 @@
 package com.cos.nomadapp.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cos.nomadapp.ui.community.CommunityDetailActivity;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.Item;
 import com.cos.nomadapp.model.community.Community;
-import com.cos.nomadapp.model.courses.Course;
 import com.cos.nomadapp.model.reply.Reply;
 
 import java.util.List;
@@ -21,12 +20,12 @@ import java.util.List;
 public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private List<Item> items;
-    private Context mContext;
+    private CommunityDetailActivity communityDetailActivity;
 
-    public CommunityDetailAdapter(List<Item> items, Context mContext) {
+    public CommunityDetailAdapter(List<Item> items, CommunityDetailActivity communityDetailActivity) {
 
         this.items = items;
-        this.mContext = mContext;
+        this.communityDetailActivity = communityDetailActivity;
     }
 
     @NonNull
@@ -75,7 +74,7 @@ public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.V
 
     public class DetailContentViewHolder extends RecyclerView.ViewHolder{
 
-        private AppCompatButton btnCommunityLike;
+        private AppCompatButton btnCommunityLike, btnReply;
         private TextView tvDetailTitle, tvDetailContent, tvDetailUsername, tvDetailTime, tvReplyCount, tvDetailCategory;
 
 
@@ -88,6 +87,10 @@ public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.V
             tvDetailTime = itemView.findViewById(R.id.tv_detail_time);
             tvReplyCount = itemView.findViewById(R.id.tv_reply_count);
             btnCommunityLike = itemView.findViewById(R.id.btn_community_like);
+            btnReply = itemView.findViewById(R.id.btn_reply);
+            btnReply.setOnClickListener(v -> {
+                communityDetailActivity.showReplyInput();
+            });
 
 
         }

@@ -1,4 +1,4 @@
-package com.cos.nomadapp;
+package com.cos.nomadapp.model.faq;
 
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 

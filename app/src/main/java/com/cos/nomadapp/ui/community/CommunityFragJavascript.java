@@ -1,4 +1,4 @@
-package com.cos.nomadapp;
+package com.cos.nomadapp.ui.community;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,11 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class CommunityFragTodolist extends Fragment {
+import com.cos.nomadapp.R;
+
+public class CommunityFragJavascript extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.community_frag_todolist,container,false);
+        View view = inflater.inflate(R.layout.community_frag_javascript,container,false);
         return view;
     }
 }

@@ -8,6 +8,10 @@ import android.view.Gravity;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.cos.nomadapp.ui.challenges.ChallengesActivity;
+import com.cos.nomadapp.ui.community.CommunityActivity;
+import com.cos.nomadapp.ui.courses.CoursesActivity;
+import com.cos.nomadapp.ui.faq.FaqActivity;
 import com.google.android.material.navigation.NavigationView;
 
 public class NavigationViewHelper {

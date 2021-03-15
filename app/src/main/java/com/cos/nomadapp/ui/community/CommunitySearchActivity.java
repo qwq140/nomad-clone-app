@@ -1,4 +1,4 @@
-package com.cos.nomadapp;
+package com.cos.nomadapp.ui.community;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,6 +12,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cos.nomadapp.R;
 import com.cos.nomadapp.adapter.CommunityAdapter;
 import com.cos.nomadapp.model.community.Community;
 import com.cos.nomadapp.model.reply.Reply;

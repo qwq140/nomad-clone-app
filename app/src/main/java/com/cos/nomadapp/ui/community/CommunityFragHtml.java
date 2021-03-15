@@ -1,4 +1,4 @@
-package com.cos.nomadapp;
+package com.cos.nomadapp.ui.community;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.cos.nomadapp.R;
 
 public class CommunityFragHtml extends Fragment {
     @Nullable

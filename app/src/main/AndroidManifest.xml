@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cos.nomadapp">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,16 +11,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Nomadapp">
-        <activity android:name=".CommunityDetailActivity"></activity>
-        <activity android:name=".CommunitySearchActivity" />
-        <activity android:name=".CommunityWriteActivity" />
-        <activity android:name=".CourseDetailActivity" />
+        <activity android:name=".ui.community.CommunityDetailActivity" />
+        <activity android:name=".ui.community.CommunitySearchActivity" />
+        <activity android:name=".ui.community.CommunityWriteActivity" />
+        <activity android:name=".ui.courses.CourseDetailActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".JoinActivity" />
-        <activity android:name=".FaqActivity" />
-        <activity android:name=".ChallengesActivity" />
-        <activity android:name=".CommunityActivity" />
-        <activity android:name=".CoursesActivity" />
+        <activity android:name=".ui.faq.FaqActivity" />
+        <activity android:name=".ui.challenges.ChallengesActivity" />
+        <activity android:name=".ui.community.CommunityActivity" />
+        <activity android:name=".ui.courses.CoursesActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

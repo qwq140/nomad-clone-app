@@ -10,9 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cos.nomadapp.CourseDetailActivity;
-import com.cos.nomadapp.FaqActivity;
-import com.cos.nomadapp.JoinActivity;
+import com.cos.nomadapp.ui.courses.CourseDetailActivity;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.courses.Course;
 import com.cos.nomadapp.model.CommonTitle;

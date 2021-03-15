@@ -1,17 +1,15 @@
-package com.cos.nomadapp;
+package com.cos.nomadapp.ui.community;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.material.navigation.NavigationView;
+import com.cos.nomadapp.R;
+import com.cos.nomadapp.adapter.CommunityPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 public class CommunityActivity extends AppCompatActivity {

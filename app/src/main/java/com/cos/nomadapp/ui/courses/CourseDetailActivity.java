@@ -1,4 +1,4 @@
-package com.cos.nomadapp;
+package com.cos.nomadapp.ui.courses;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cos.nomadapp.R;
 import com.cos.nomadapp.adapter.CourseDetailAdapter;
 import com.cos.nomadapp.model.Item;
 import com.cos.nomadapp.model.courses.Charge;

@@ -1,18 +1,17 @@
-package com.cos.nomadapp;
+package com.cos.nomadapp.ui.faq;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cos.nomadapp.R;
 import com.cos.nomadapp.adapter.FaqAdapter;
-import com.google.android.material.navigation.NavigationView;
+import com.cos.nomadapp.model.faq.FaqGubun;
+import com.cos.nomadapp.model.faq.FaqItem;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -10,8 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cos.nomadapp.CourseDetailActivity;
-import com.cos.nomadapp.CoursesActivity;
+import com.cos.nomadapp.ui.courses.CourseDetailActivity;
+import com.cos.nomadapp.ui.courses.CoursesActivity;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.Item;
 import com.cos.nomadapp.model.challenge.Challenge;

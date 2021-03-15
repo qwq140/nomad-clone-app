@@ -1,5 +1,6 @@
-package com.cos.nomadapp;
+package com.cos.nomadapp.ui.community;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -9,9 +10,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.chinalwb.are.AREditor;
+import com.cos.nomadapp.R;
+import com.cos.nomadapp.SpinnerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import in.nashapp.androidsummernote.Summernote;
 
 public class CommunityWriteActivity extends AppCompatActivity {
 
@@ -19,6 +24,7 @@ public class CommunityWriteActivity extends AppCompatActivity {
     private TextView tvToolbarTitle;
     private Spinner spinner;
     private SpinnerAdapter spinnerAdapter;
+    private Summernote summernote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +52,12 @@ public class CommunityWriteActivity extends AppCompatActivity {
         spinnerAdapter = new SpinnerAdapter(this,category);
 
         spinner.setAdapter(spinnerAdapter);
-
-        AREditor arEditor = this.findViewById(R.id.areditor);
-        arEditor.setExpandMode(AREditor.ExpandMode.FULL);
-        arEditor.setHideToolbar(false);
-        arEditor.setToolbarAlignment(AREditor.ToolbarAlignment.BOTTOM);
+        summernote = (Summernote) findViewById(R.id.summernote);
+        summernote.setRequestCodeforFilepicker(5);//Any Number which is not being used by other OnResultActivity
 
 
 
     }
+
+
 }

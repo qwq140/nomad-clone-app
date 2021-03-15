@@ -1,14 +1,21 @@
-package com.cos.nomadapp;
+package com.cos.nomadapp.ui.community;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.cos.nomadapp.R;
 import com.cos.nomadapp.adapter.ChallengesAdapter;
 import com.cos.nomadapp.adapter.CommunityDetailAdapter;
 import com.cos.nomadapp.model.CommonTitle;
@@ -26,6 +33,7 @@ public class CommunityDetailActivity extends AppCompatActivity {
     private ImageView ivBack;
     private TextView tvToolbarTitle;
     private RecyclerView rvCommunityDetail;
+    private EditText etReply;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,5 +67,19 @@ public class CommunityDetailActivity extends AppCompatActivity {
         rvCommunityDetail.setLayoutManager(manager);
 
         rvCommunityDetail.setAdapter(new CommunityDetailAdapter(items,this));
+
     }
+
+    public void showReplyInput(){
+        RelativeLayout replyBar = (RelativeLayout) findViewById(R.id.reply_bar);
+        replyBar.setVisibility(View.VISIBLE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        etReply = (EditText) findViewById(R.id.et_reply);
+        etReply.requestFocus();
+        imm.showSoftInput(etReply, InputMethodManager.SHOW_IMPLICIT);
+
+
+    }
+
+
 }

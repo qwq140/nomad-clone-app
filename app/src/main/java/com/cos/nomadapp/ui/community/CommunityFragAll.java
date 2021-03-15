@@ -1,4 +1,4 @@
-package com.cos.nomadapp;
+package com.cos.nomadapp.ui.community;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cos.nomadapp.R;
 import com.cos.nomadapp.adapter.CommunityAdapter;
 import com.cos.nomadapp.model.community.Community;
 import com.cos.nomadapp.model.reply.Reply;
