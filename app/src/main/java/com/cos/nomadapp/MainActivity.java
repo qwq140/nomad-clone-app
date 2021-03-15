@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
         // type 0 : MainTitleItem 1 : CourseItem 2: main_link_item
         List<MainTitle> mainTitles = new ArrayList<>();
         mainTitles.add(new MainTitle("Clone Startups.\nLearn to code.","코딩은 진짜를 만들어보는거야!\n실제 구현되어 있는 서비스를 한땀 한땀\n따라 만들면서 코딩을 배우세요."));
-        mainTitles.add(new MainTitle("Challenges","강의만으로는 부족해! 멱살잡고 캐리하는\n챌린지에 무료로 참여하세요!"));
 
         items.add(new Item(0,mainTitles.get(0)));
 
@@ -64,15 +63,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         items.add(new Item(2,"See all courses →"));
-
-        items.add(new Item(0,mainTitles.get(1)));
-
-        for(Long i = 0L ; i<3L; i++){
-            Challenge challenge = new Challenge(i,"바닐라JS 2주 완성반",2,935);
-            items.add(new Item(3,challenge));
-        }
-
-        items.add(new Item(2,"See all challenges →"));
 
 
 

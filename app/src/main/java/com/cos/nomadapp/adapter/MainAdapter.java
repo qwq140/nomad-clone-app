@@ -14,7 +14,6 @@ import com.cos.nomadapp.ui.courses.CourseDetailActivity;
 import com.cos.nomadapp.ui.courses.CoursesActivity;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.Item;
-import com.cos.nomadapp.model.challenge.Challenge;
 import com.cos.nomadapp.model.courses.Course;
 import com.cos.nomadapp.model.common.MainTitle;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -50,18 +49,10 @@ public class MainAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
                             false
                     )
             );
-        }else if (viewType == 2){
+        }else{
             return new LinkViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
                             R.layout.main_link_item,
-                            parent,
-                            false
-                    )
-            );
-        }else {
-            return new ChallengeViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(
-                            R.layout.challenge_item,
                             parent,
                             false
                     )
@@ -80,9 +71,6 @@ public class MainAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }else if(getItemViewType(position)==2){
             String link = (String)items.get(position).getObject();
             ((LinkViewHolder) holder).setMainLinkItem(link);
-        }else{
-            Challenge challenge = (Challenge) items.get(position).getObject();
-            ((ChallengeViewHolder) holder).setChallengeItem(challenge);
         }
     }
 
@@ -158,22 +146,6 @@ public class MainAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
     }
 
-    public static class ChallengeViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView tvChallengeTitle, tvTerm, tvChallengers;
-
-        public ChallengeViewHolder(@NonNull View itemView) {
-            super(itemView);
-            tvChallengeTitle = itemView.findViewById(R.id.tv_challenge_title);
-            tvTerm = itemView.findViewById(R.id.tv_term);
-            tvChallengers = itemView.findViewById(R.id.tv_challengers);
-        }
-
-        void setChallengeItem(Challenge challenge){
-            tvChallengeTitle.setText(challenge.getTitle());
-            tvChallengers.setText(challenge.getChallengers()+"");
-            tvTerm.setText(challenge.getTerm()+"");
-        }
-    }
 
 }
