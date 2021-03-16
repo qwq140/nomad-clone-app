@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.chinalwb.are.AREditor;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.SpinnerAdapter;
 

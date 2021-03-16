@@ -3,15 +3,22 @@ package com.cos.nomadapp.model.faq;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
+
 import lombok.Data;
 
 @Data
 public class FaqItem implements Parcelable{
 
+    private Long id;
     private final String name;
 
     public FaqItem(String name) {
         this.name = name;
+    }
+    public FaqItem(Long id, String name){
+        this.id=id;
+        this.name=name;
     }
 
     protected FaqItem(Parcel in) {

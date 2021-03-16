@@ -1,5 +1,7 @@
 package com.cos.nomadapp.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,9 +9,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
+import com.cos.nomadapp.FaqDetailActivity;
 import com.cos.nomadapp.model.faq.FaqGubun;
 import com.cos.nomadapp.model.faq.FaqItem;
 import com.cos.nomadapp.R;
+import com.cos.nomadapp.ui.community.CommunityDetailActivity;
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
@@ -18,8 +22,12 @@ import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 import java.util.List;
 
 public class FaqAdapter extends ExpandableRecyclerViewAdapter<FaqAdapter.FaqGubunViewHolder, FaqAdapter.FaqItemViewHolder> {
-    public FaqAdapter(List<? extends ExpandableGroup> groups) {
+
+    private Context mContext;
+
+    public FaqAdapter(List<? extends ExpandableGroup> groups, Context mContext) {
         super(groups);
+        this.mContext=mContext;
     }
 
     @Override
@@ -38,6 +46,13 @@ public class FaqAdapter extends ExpandableRecyclerViewAdapter<FaqAdapter.FaqGubu
     public void onBindChildViewHolder(FaqItemViewHolder holder, int flatPosition, ExpandableGroup group, int childIndex) {
         final FaqItem faqItem = (FaqItem) group.getItems().get(childIndex);
         holder.bind(faqItem);
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, FaqDetailActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.putExtra("faqItem",faqItem);
+            mContext.startActivity(intent);
+        });
+
     }
 
     @Override
@@ -72,6 +87,7 @@ public class FaqAdapter extends ExpandableRecyclerViewAdapter<FaqAdapter.FaqGubu
         public FaqItemViewHolder(View itemView) {
             super(itemView);
             tvFaqItem = itemView.findViewById(R.id.tv_faq_expand_item);
+
         }
 
         public void bind(FaqItem faqItem){

@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Nomadapp">
+        <activity android:name=".FaqDetailActivity"></activity>
         <activity android:name=".ui.community.CommunityDetailActivity" />
         <activity android:name=".ui.community.CommunitySearchActivity" />
         <activity android:name=".ui.community.CommunityWriteActivity" />
