@@ -19,16 +19,12 @@ import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.Item;
 import com.cos.nomadapp.model.courses.Charge;
 import com.cos.nomadapp.model.courses.Concept;
-import com.cos.nomadapp.model.courses.Course;
-import com.cos.nomadapp.model.courses.CourseFaqContent;
 import com.cos.nomadapp.model.courses.CourseFaqTitle;
 import com.cos.nomadapp.model.courses.CourseSection1;
 import com.cos.nomadapp.model.courses.CourseSection2;
 import com.cos.nomadapp.model.courses.CourseSection3;
 import com.cos.nomadapp.model.courses.Curriculum;
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
-import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +80,7 @@ public class CourseDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else if(viewType == 4){
             return new CourseDetailAdapter.CourseSectionFifthViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
-                            R.layout.coures_detail_section5,
+                            R.layout.course_detail_section5,
                             parent,
                             false
                     )
@@ -92,7 +88,7 @@ public class CourseDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else if(viewType == 5){
             return new CourseDetailAdapter.CourseSectionSixthViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
-                            R.layout.coures_detail_section6,
+                            R.layout.course_detail_section6,
                             parent,
                             false
                     )
@@ -100,7 +96,7 @@ public class CourseDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else if(viewType == 6){
             return new CourseDetailAdapter.CourseSectionSeventhViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
-                            R.layout.coures_detail_section7,
+                            R.layout.course_detail_section7,
                             parent,
                             false
                     )
