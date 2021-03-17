@@ -9,11 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cos.nomadapp.R;
-import com.cos.nomadapp.model.CommonTitle;
-import com.cos.nomadapp.model.Item;
+import com.cos.nomadapp.model.common.CommonTitle;
+import com.cos.nomadapp.model.common.Item;
 import com.cos.nomadapp.model.challenge.Challenge;
-import com.cos.nomadapp.model.courses.Course;
-import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
 

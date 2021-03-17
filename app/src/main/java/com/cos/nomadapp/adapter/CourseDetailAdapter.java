@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cos.nomadapp.R;
-import com.cos.nomadapp.model.Item;
+import com.cos.nomadapp.model.common.Item;
 import com.cos.nomadapp.model.courses.Charge;
 import com.cos.nomadapp.model.courses.Concept;
 import com.cos.nomadapp.model.courses.CourseFaqTitle;

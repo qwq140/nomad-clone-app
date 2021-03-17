@@ -4,16 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cos.nomadapp.R;
-import com.cos.nomadapp.model.Item;
-import com.cos.nomadapp.model.courses.Concept;
+import com.cos.nomadapp.model.common.Item;
 import com.cos.nomadapp.model.courses.Curriculum;
 
 import java.util.ArrayList;

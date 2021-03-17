@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.adapter.CourseDetailAdapter;
-import com.cos.nomadapp.model.Item;
+import com.cos.nomadapp.model.common.Item;
 import com.cos.nomadapp.model.courses.Charge;
 import com.cos.nomadapp.model.courses.Concept;
 import com.cos.nomadapp.model.courses.CourseFaqContent;

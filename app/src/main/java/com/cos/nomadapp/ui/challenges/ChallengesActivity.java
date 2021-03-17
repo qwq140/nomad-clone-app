@@ -1,23 +1,18 @@
 package com.cos.nomadapp.ui.challenges;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.adapter.ChallengesAdapter;
-import com.cos.nomadapp.model.CommonTitle;
-import com.cos.nomadapp.model.Item;
+import com.cos.nomadapp.model.common.CommonTitle;
+import com.cos.nomadapp.model.common.Item;
 import com.cos.nomadapp.model.challenge.Challenge;
-import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;

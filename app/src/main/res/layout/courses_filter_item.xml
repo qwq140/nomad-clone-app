@@ -107,7 +107,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView4">
 
         <ImageButton
-            android:id="@+id/imageButton2"
+            android:id="@+id/ib_tech1"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="16dp"
@@ -115,13 +115,13 @@
             android:elevation="10dp"
             android:src="@drawable/ic_js"
             android:scaleType="fitCenter"
-            app:layout_constraintEnd_toStartOf="@+id/imageButton6"
+            app:layout_constraintEnd_toStartOf="@+id/ib_tech2"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:id="@+id/imageButton3"
+            android:id="@+id/ib_tech6"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="16dp"
@@ -129,13 +129,13 @@
             android:elevation="10dp"
             android:src="@drawable/ic_js"
             android:scaleType="fitCenter"
-            app:layout_constraintEnd_toStartOf="@+id/imageButton8"
+            app:layout_constraintEnd_toStartOf="@+id/ib_tech7"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/imageButton4"
-            app:layout_constraintTop_toBottomOf="@+id/imageButton6" />
+            app:layout_constraintStart_toEndOf="@+id/ib_tech5"
+            app:layout_constraintTop_toBottomOf="@+id/ib_tech2" />
 
         <ImageButton
-            android:id="@+id/imageButton8"
+            android:id="@+id/ib_tech7"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="16dp"
@@ -143,13 +143,13 @@
             android:elevation="10dp"
             android:src="@drawable/ic_js"
             android:scaleType="fitCenter"
-            app:layout_constraintEnd_toStartOf="@+id/imageButton9"
+            app:layout_constraintEnd_toStartOf="@+id/ib_tech8"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/imageButton3"
-            app:layout_constraintTop_toBottomOf="@+id/imageButton7" />
+            app:layout_constraintStart_toEndOf="@+id/ib_tech6"
+            app:layout_constraintTop_toBottomOf="@+id/ib_tech3" />
 
         <ImageButton
-            android:id="@+id/imageButton9"
+            android:id="@+id/ib_tech8"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="16dp"
@@ -159,11 +159,11 @@
             android:scaleType="fitCenter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/imageButton8"
-            app:layout_constraintTop_toBottomOf="@+id/imageButton5" />
+            app:layout_constraintStart_toEndOf="@+id/ib_tech7"
+            app:layout_constraintTop_toBottomOf="@+id/ib_tech4" />
 
         <ImageButton
-            android:id="@+id/imageButton10"
+            android:id="@+id/ib_tech9"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="16dp"
@@ -171,13 +171,13 @@
             android:elevation="10dp"
             android:src="@drawable/ic_js"
             android:scaleType="fitCenter"
-            app:layout_constraintEnd_toStartOf="@+id/imageButton13"
+            app:layout_constraintEnd_toStartOf="@+id/ib_tech10"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageButton4" />
+            app:layout_constraintTop_toBottomOf="@+id/ib_tech5" />
 
         <ImageButton
-            android:id="@+id/imageButton13"
+            android:id="@+id/ib_tech10"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="16dp"
@@ -185,13 +185,13 @@
             android:elevation="10dp"
             android:src="@drawable/ic_js"
             android:scaleType="fitCenter"
-            app:layout_constraintEnd_toStartOf="@+id/imageButton12"
+            app:layout_constraintEnd_toStartOf="@+id/ib_tech11"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/imageButton10"
-            app:layout_constraintTop_toBottomOf="@+id/imageButton3" />
+            app:layout_constraintStart_toEndOf="@+id/ib_tech9"
+            app:layout_constraintTop_toBottomOf="@+id/ib_tech6" />
 
         <ImageButton
-            android:id="@+id/imageButton11"
+            android:id="@+id/ib_tech12"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="16dp"
@@ -201,11 +201,11 @@
             android:scaleType="fitCenter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/imageButton12"
-            app:layout_constraintTop_toBottomOf="@+id/imageButton9" />
+            app:layout_constraintStart_toEndOf="@+id/ib_tech11"
+            app:layout_constraintTop_toBottomOf="@+id/ib_tech8" />
 
         <ImageButton
-            android:id="@+id/imageButton12"
+            android:id="@+id/ib_tech11"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="16dp"
@@ -213,13 +213,13 @@
             android:elevation="10dp"
             android:src="@drawable/ic_js"
             android:scaleType="fitCenter"
-            app:layout_constraintEnd_toStartOf="@+id/imageButton11"
+            app:layout_constraintEnd_toStartOf="@+id/ib_tech12"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/imageButton13"
-            app:layout_constraintTop_toBottomOf="@+id/imageButton8" />
+            app:layout_constraintStart_toEndOf="@+id/ib_tech10"
+            app:layout_constraintTop_toBottomOf="@+id/ib_tech7" />
 
         <ImageButton
-            android:id="@+id/imageButton4"
+            android:id="@+id/ib_tech5"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="16dp"
@@ -227,13 +227,13 @@
             android:elevation="10dp"
             android:src="@drawable/ic_js"
             android:scaleType="fitCenter"
-            app:layout_constraintEnd_toStartOf="@+id/imageButton3"
+            app:layout_constraintEnd_toStartOf="@+id/ib_tech6"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageButton2" />
+            app:layout_constraintTop_toBottomOf="@+id/ib_tech1" />
 
         <ImageButton
-            android:id="@+id/imageButton5"
+            android:id="@+id/ib_tech4"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="16dp"
@@ -243,11 +243,11 @@
             android:scaleType="fitCenter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/imageButton7"
+            app:layout_constraintStart_toEndOf="@+id/ib_tech3"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:id="@+id/imageButton6"
+            android:id="@+id/ib_tech2"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="16dp"
@@ -255,13 +255,13 @@
             android:elevation="10dp"
             android:src="@drawable/ic_js"
             android:scaleType="fitCenter"
-            app:layout_constraintEnd_toStartOf="@+id/imageButton7"
+            app:layout_constraintEnd_toStartOf="@+id/ib_tech3"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/imageButton2"
+            app:layout_constraintStart_toEndOf="@+id/ib_tech1"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:id="@+id/imageButton7"
+            android:id="@+id/ib_tech3"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="16dp"
@@ -269,9 +269,9 @@
             android:elevation="10dp"
             android:src="@drawable/ic_js"
             android:scaleType="fitCenter"
-            app:layout_constraintEnd_toStartOf="@+id/imageButton5"
+            app:layout_constraintEnd_toStartOf="@+id/ib_tech4"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/imageButton6"
+            app:layout_constraintStart_toEndOf="@+id/ib_tech2"
             app:layout_constraintTop_toTopOf="parent" />
 
 

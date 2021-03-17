@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cos.nomadapp.ui.courses.CourseDetailActivity;
 import com.cos.nomadapp.ui.courses.CoursesActivity;
 import com.cos.nomadapp.R;
-import com.cos.nomadapp.model.Item;
+import com.cos.nomadapp.model.common.Item;
 import com.cos.nomadapp.model.courses.Course;
-import com.cos.nomadapp.model.common.MainTitle;
+import com.cos.nomadapp.model.main.MainTitle;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;

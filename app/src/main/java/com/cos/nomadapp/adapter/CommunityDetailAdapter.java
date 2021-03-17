@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cos.nomadapp.ui.community.CommunityDetailActivity;
 import com.cos.nomadapp.R;
-import com.cos.nomadapp.model.Item;
+import com.cos.nomadapp.model.common.Item;
 import com.cos.nomadapp.model.community.Community;
 import com.cos.nomadapp.model.reply.Reply;
 
