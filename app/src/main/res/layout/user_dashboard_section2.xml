@@ -13,6 +13,7 @@
     android:background="@drawable/corner_round">
 
     <TextView
+        android:id="@+id/tv_dash_plain"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"

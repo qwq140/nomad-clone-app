@@ -125,8 +125,6 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
             ivCourse.setImageResource(course.getCourseImage());
             tvTitle.setText(course.getTitle());
             tvSubTitle.setText(course.getSubTitle());
-
-
         }
     }
 

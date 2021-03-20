@@ -8,27 +8,29 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 public class CommunityActivity extends AppCompatActivity {
 
-    private ImageView ivBack,ivWrite,ivSearch;
+    private ImageView ivBack, ivWrite, ivSearch;
     private TextView tvToolbarTitle;
     private ViewPager vpContainer;
     private TabLayout tabs;
     private CommunityPagerAdapter communityPagerAdapter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community);
-
-
         ivBack = findViewById(R.id.iv_back);
 
         tvToolbarTitle = findViewById(R.id.tv_toolbar_title);
@@ -58,7 +60,7 @@ public class CommunityActivity extends AppCompatActivity {
         vpContainer = findViewById(R.id.vp_container);
         tabs = findViewById(R.id.tabs);
 
-        communityPagerAdapter = new CommunityPagerAdapter(getSupportFragmentManager(),1);
+        communityPagerAdapter = new CommunityPagerAdapter(getSupportFragmentManager(), 1);
 
         communityPagerAdapter.addFragment(new CommunityFragAll());
         communityPagerAdapter.addFragment(new CommunityFragTodolist());
@@ -77,8 +79,5 @@ public class CommunityActivity extends AppCompatActivity {
         tabs.getTabAt(3).setText("bla-bla");
         tabs.getTabAt(4).setText("html_css");
         tabs.getTabAt(5).setText("python");
-
-
-
     }
 }
