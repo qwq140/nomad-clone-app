@@ -1,8 +1,10 @@
 package com.cos.nomadapp.adapter;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 import com.cos.nomadapp.FaqDetailActivity;
 import com.cos.nomadapp.model.faq.FaqGubun;
 import com.cos.nomadapp.model.faq.FaqItem;
+
 import com.cos.nomadapp.R;
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
@@ -19,6 +22,7 @@ import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 
 import java.util.List;
+
 
 public class FaqAdapter extends ExpandableRecyclerViewAdapter<FaqAdapter.FaqGubunViewHolder, FaqAdapter.FaqItemViewHolder> {
 
@@ -29,6 +33,7 @@ public class FaqAdapter extends ExpandableRecyclerViewAdapter<FaqAdapter.FaqGubu
         super(groups);
         this.mContext=mContext;
     }
+
 
     @Override
     public FaqGubunViewHolder onCreateGroupViewHolder(ViewGroup parent, int viewType) {

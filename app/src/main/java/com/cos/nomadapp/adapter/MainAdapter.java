@@ -12,10 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cos.nomadapp.ui.courses.CourseDetailActivity;
 import com.cos.nomadapp.ui.courses.CoursesActivity;
+import com.cos.nomadapp.FooterViewHolder;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.common.Item;
 import com.cos.nomadapp.model.courses.Course;
-import com.cos.nomadapp.model.main.MainTitle;
+import com.cos.nomadapp.model.common.MainTitle;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
@@ -49,10 +50,18 @@ public class MainAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
                             false
                     )
             );
-        }else{
+        }else if (viewType == 2){
             return new LinkViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
                             R.layout.main_link_item,
+                            parent,
+                            false
+                    )
+            );
+        }else{
+            return new FooterViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(
+                            R.layout.footer,
                             parent,
                             false
                     )
@@ -71,6 +80,8 @@ public class MainAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }else if(getItemViewType(position)==2){
             String link = (String)items.get(position).getObject();
             ((LinkViewHolder) holder).setMainLinkItem(link);
+        }else{
+            System.out.println("푸터는 데이터변경없음");
         }
     }
 

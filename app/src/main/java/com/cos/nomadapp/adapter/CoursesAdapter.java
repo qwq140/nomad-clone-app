@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cos.nomadapp.ui.courses.CourseDetailActivity;
+import com.cos.nomadapp.FooterViewHolder;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.courses.Course;
 import com.cos.nomadapp.model.common.CommonTitle;
@@ -48,10 +49,19 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
                             false
                     )
             );
-        }else {
+
+        }else if(viewType == 2){
             return new CourseViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
                             R.layout.course_item,
+                            parent,
+                            false
+                    )
+            );
+        }else{
+            return new FooterViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(
+                            R.layout.footer,
                             parent,
                             false
                     )
@@ -103,8 +113,6 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
             ivCourse.setImageResource(course.getCourseImage());
             tvTitle.setText(course.getTitle());
             tvSubTitle.setText(course.getSubTitle());
-
-
         }
     }
 
@@ -130,4 +138,5 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
             super(itemView);
         }
     }
+
 }

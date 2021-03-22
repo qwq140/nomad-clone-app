@@ -1,7 +1,5 @@
 package com.cos.nomadapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -11,22 +9,26 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.makeramen.roundedimageview.RoundedImageView;
 
-public class JoinActivity extends AppCompatActivity {
+public class PrivacyPolicyActivity extends AppCompatActivity {
 
     private ImageView ivBack;
     private TextView tvToolbarTitle;
     private RoundedImageView rivUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_join);
+        setContentView(R.layout.activity_privacy_policy);
 
         ivBack = findViewById(R.id.iv_back);
 
         tvToolbarTitle = findViewById(R.id.tv_toolbar_title);
-        tvToolbarTitle.setText("Join");
+        tvToolbarTitle.setText("개인정보취급방침");
 
         ivBack.setOnClickListener(v -> {
             finish();

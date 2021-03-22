@@ -1,9 +1,12 @@
 package com.cos.nomadapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,22 +14,30 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cos.nomadapp.adapter.DashboardAdapter;
+import com.cos.nomadapp.model.common.Item;
+import com.cos.nomadapp.model.user.UserDashboardSecondSection;
 import com.makeramen.roundedimageview.RoundedImageView;
 
-public class JoinActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
 
+public class UserDashboardActivity extends AppCompatActivity {
+    private static final String TAG = "UserDashboardActivity";
     private ImageView ivBack;
     private TextView tvToolbarTitle;
     private RoundedImageView rivUser;
+    private RecyclerView rvDashboard;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_join);
+        setContentView(R.layout.activity_user_dashboard);
 
         ivBack = findViewById(R.id.iv_back);
 
         tvToolbarTitle = findViewById(R.id.tv_toolbar_title);
-        tvToolbarTitle.setText("Join");
+        tvToolbarTitle.setText("DashBoard");
 
         ivBack.setOnClickListener(v -> {
             finish();
@@ -60,5 +71,18 @@ public class JoinActivity extends AppCompatActivity {
             }
         });
         //roundedImageView End
+
+        LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        rvDashboard = findViewById(R.id.rv_dashboard);
+        rvDashboard.setLayoutManager(manager);
+
+        List<Item> items = new ArrayList<>();
+
+        UserDashboardSecondSection userDashboardSecondSection = new UserDashboardSecondSection("Join more courses and complete challenges to unlock the next level!");
+        items.add(new Item(1, userDashboardSecondSection));
+        Log.d(TAG, "onCreate: "+ userDashboardSecondSection);
+
+        rvDashboard.setAdapter(new DashboardAdapter(items,UserDashboardActivity.this));
+
     }
 }

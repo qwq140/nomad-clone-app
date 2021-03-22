@@ -8,29 +8,50 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chinalwb.are.AREditor;
 import com.makeramen.roundedimageview.RoundedImageView;
 
-public class JoinActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class CommunityWriteActivity extends AppCompatActivity {
 
     private ImageView ivBack;
     private TextView tvToolbarTitle;
+    private Spinner spinner;
+    private SpinnerAdapter spinnerAdapter;
     private RoundedImageView rivUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_join);
+        setContentView(R.layout.activity_community_write);
 
         ivBack = findViewById(R.id.iv_back);
 
         tvToolbarTitle = findViewById(R.id.tv_toolbar_title);
-        tvToolbarTitle.setText("Join");
+        tvToolbarTitle.setText("글쓰기");
 
         ivBack.setOnClickListener(v -> {
             finish();
         });
+
+        // 카테고리 목록
+        List<String> category = new ArrayList<>();
+        category.add("#카테고리1");
+        category.add("#카테고리2");
+        category.add("#카테고리3");
+        category.add("#카테고리4");
+
+        spinner = findViewById(R.id.spinner);
+
+        spinnerAdapter = new SpinnerAdapter(this,category);
+
+        spinner.setAdapter(spinnerAdapter);
+
 
         //roundedImageView 이벤트
         rivUser = (RoundedImageView) findViewById(R.id.riv_user);

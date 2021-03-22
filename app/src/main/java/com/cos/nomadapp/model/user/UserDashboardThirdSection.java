@@ -1,4 +1,4 @@
-package com.cos.nomadapp.model.main;
+package com.cos.nomadapp.model.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MainTitle {
-    private String title;
-    private String subTitle;
-
+public class UserDashboardThirdSection {
+    private int image;
 }

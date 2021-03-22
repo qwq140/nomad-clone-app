@@ -1,7 +1,5 @@
 package com.cos.nomadapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -11,9 +9,12 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.makeramen.roundedimageview.RoundedImageView;
 
-public class JoinActivity extends AppCompatActivity {
+public class CancleOrRefundPolicyActivity extends AppCompatActivity {
 
     private ImageView ivBack;
     private TextView tvToolbarTitle;
@@ -21,17 +22,16 @@ public class JoinActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_join);
+        setContentView(R.layout.activity_cancle_or_refund_policy);
 
         ivBack = findViewById(R.id.iv_back);
 
         tvToolbarTitle = findViewById(R.id.tv_toolbar_title);
-        tvToolbarTitle.setText("Join");
+        tvToolbarTitle.setText("취소 및 환불 정책");
 
         ivBack.setOnClickListener(v -> {
             finish();
         });
-
         //roundedImageView 이벤트
         rivUser = (RoundedImageView) findViewById(R.id.riv_user);
         rivUser.setOnClickListener(new View.OnClickListener() {

@@ -5,12 +5,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.cos.nomadapp.CancleOrRefundPolicyActivity;
+import com.cos.nomadapp.MainActivity;
+import com.cos.nomadapp.PrivacyPolicyActivity;
 import com.cos.nomadapp.R;
+import com.cos.nomadapp.ServiceTermActivity;
+import com.cos.nomadapp.UserDashboardActivity;
 import com.cos.nomadapp.adapter.FaqAdapter;
 import com.cos.nomadapp.model.CMRespDto;
 import com.cos.nomadapp.model.faq.Faq;
@@ -18,10 +29,15 @@ import com.cos.nomadapp.model.faq.FaqCategory;
 import com.cos.nomadapp.model.faq.FaqGubun;
 import com.cos.nomadapp.model.faq.FaqItem;
 import com.cos.nomadapp.service.NomadApi;
+import com.cos.nomadapp.ui.challenges.ChallengesActivity;
+import com.cos.nomadapp.ui.community.CommunityActivity;
+import com.cos.nomadapp.ui.courses.CoursesActivity;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import info.androidhive.fontawesome.FontTextView;
 import lombok.SneakyThrows;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,6 +55,12 @@ public class FaqActivity extends AppCompatActivity {
     private List<Faq> faqList = new ArrayList<>();
     private Context mContext = this;
 
+    private RoundedImageView rivUser;
+
+    //footer
+    private TextView tvRoadMap,tvCourses,tvCommunity,tvFaq,tvChallenges,tvServiceTerm,tvPrivacyPolicy,tvCancleOrRefundPolicy;
+    private FontTextView ftvYoutube, ftvGithub, ftvFacebook, ftvInsta;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,9 +71,85 @@ public class FaqActivity extends AppCompatActivity {
         tvToolbarTitle = findViewById(R.id.tv_toolbar_title);
         tvToolbarTitle.setText("FAQ");
 
+        tvCourses=findViewById(R.id.tv_courses);
+        tvChallenges=findViewById(R.id.tv_challenges);
+        tvFaq=findViewById(R.id.tv_faq);
+        tvRoadMap=findViewById(R.id.tv_roadmap);
+        tvCommunity=findViewById(R.id.tv_community);
+        tvServiceTerm=findViewById(R.id.tv_service_term);
+        tvPrivacyPolicy=findViewById(R.id.tv_privacy_policy);
+        tvCancleOrRefundPolicy=findViewById(R.id.tv_cancle_or_refund_policy);
+        ftvInsta=findViewById(R.id.ftv_insta);
+        ftvYoutube=findViewById(R.id.ftv_youtube);
+        ftvFacebook=findViewById(R.id.ftv_facebook);
+        ftvGithub=findViewById(R.id.ftv_github);
+
+        tvCommunity.setOnClickListener(v->{
+            Intent intent = new Intent(v.getContext(), CommunityActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        tvCourses.setOnClickListener(v->{
+            Intent intent = new Intent(v.getContext(), CoursesActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        tvChallenges.setOnClickListener(v->{
+            Intent intent = new Intent(v.getContext(), ChallengesActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        tvRoadMap.setOnClickListener(v->{
+            Intent intent = new Intent(v.getContext(), MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        tvFaq.setOnClickListener(v->{
+            Intent intent = new Intent(v.getContext(), FaqActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        tvServiceTerm.setOnClickListener(v->{
+            Intent intent = new Intent(v.getContext(), ServiceTermActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        tvPrivacyPolicy.setOnClickListener(v->{
+            Intent intent = new Intent(v.getContext(), PrivacyPolicyActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        tvCancleOrRefundPolicy.setOnClickListener(v->{
+            Intent intent = new Intent(v.getContext(), CancleOrRefundPolicyActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        ftvInsta.setOnClickListener(v->{
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/nomad_coders/?hl=ko"));
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        ftvYoutube.setOnClickListener(v->{
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/channel/UCUpJs89fSBXNolQGOYKn0YQ"));
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        ftvFacebook.setOnClickListener(v->{
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://ko-kr.facebook.com/nomadcoders/"));
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+        ftvGithub.setOnClickListener(v->{
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/nomadcoders"));
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+
         ivBack.setOnClickListener(v -> {
             finish();
         });
+
+
 
         // 리사이클러뷰
         rvFaqList = findViewById(R.id.rv_faq_list);
@@ -86,6 +184,35 @@ public class FaqActivity extends AppCompatActivity {
                 Log.d(TAG, "onFailure: ");
             }
         });
+
+        //roundedImageView 이벤트
+        rivUser = (RoundedImageView) findViewById(R.id.riv_user);
+        rivUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu p = new PopupMenu(
+                        getApplicationContext(),//화면제어권자
+                        v);             //팝업을 띄울 기준이될 위젯
+                getMenuInflater().inflate(R.menu.user_menu, p.getMenu());
+                //이벤트 처리
+                p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getTitle().equals("Dashboard")) {
+                            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(v.getContext(), UserDashboardActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            v.getContext().startActivity(intent);
+                        } else {
+                            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+                        }
+                        return false;
+                    }
+                });
+                p.show();
+            }
+        });
+        //roundedImageView End
 
 
 

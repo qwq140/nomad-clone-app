@@ -64,13 +64,16 @@ public class CommunityFragAll extends Fragment {
 
 
         for (Long i = 0L ; i<5L;i++){
+
             Community community = new Community(i,"커뮤니티 제목"+i, user, replies , "내용",15,"#bla-bla","6 days ago");
+
             communities.add(community);
         }
 
         rvCommunityNew.setLayoutManager(manager);
 
         rvCommunityNew.setAdapter(new CommunityAdapter(communities,mContext));
+
 
 
         return view;

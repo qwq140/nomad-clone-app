@@ -18,8 +18,17 @@ public class Community implements Serializable {
     private String title;
     private User user;
     private List<Reply> reply;
+
     private String content;
     private Integer like;
     private String category;
     private String regTime;
+
+
+    public Community(Long id, String title, String content, String category) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.category = category;
+    }
 }

@@ -15,6 +15,7 @@ import com.cos.nomadapp.ui.community.CommunityDetailActivity;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.community.Community;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder>{
@@ -78,4 +79,10 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         }
     }
 
+    public void filterList(List<Community> filterItems) {
+
+        this.communities = filterItems;
+        notifyDataSetChanged();
+    }
 }
+
