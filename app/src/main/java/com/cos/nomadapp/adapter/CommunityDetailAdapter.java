@@ -98,7 +98,7 @@ public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.V
         void setItem(Community community){
             tvDetailTitle.setText(community.getTitle());
             tvDetailContent.setText(community.getContent());
-            tvDetailUsername.setText(community.getUser().getUsername());
+            tvDetailUsername.setText(community.getUser().getName());
             tvDetailCategory.setText(community.getCategory());
             tvDetailTime.setText(community.getRegTime());
             tvReplyCount.setText(community.getReply().size()+"");
@@ -124,7 +124,7 @@ public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.V
 
         void setItem(Reply reply){
             btnReplyLike.setText(reply.getLike()+"");
-            tvReplyUsername.setText(reply.getUser().getUsername());
+            tvReplyUsername.setText(reply.getUser().getName());
             tvReplyContent.setText(reply.getContent());
             tvReplyTime.setText(reply.getRegTime());
 

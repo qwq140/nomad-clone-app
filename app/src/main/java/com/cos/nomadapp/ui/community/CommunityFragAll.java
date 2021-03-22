@@ -39,10 +39,14 @@ public class CommunityFragAll extends Fragment {
 
         List<Community> communities = new ArrayList<>();
 
-        User user = new User(0L,"유저1");
+        User user = User.builder()
+                .name("유저1")
+                .build();
 
         List<Reply> replies = new ArrayList<>();
-        User replyUser = new User(1L,"유저2");
+        User replyUser = User.builder()
+                .name("유저2")
+                .build();
         Reply reply = new Reply(0L,"댓글내용1",replyUser,1,"1 hours ago");
         replies.add(reply);
 

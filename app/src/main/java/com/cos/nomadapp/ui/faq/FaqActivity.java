@@ -10,11 +10,15 @@ import android.widget.TextView;
 
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.adapter.FaqAdapter;
+import com.cos.nomadapp.model.CMRespDto;
 import com.cos.nomadapp.model.faq.FaqGubun;
 import com.cos.nomadapp.model.faq.FaqItem;
+import com.cos.nomadapp.service.NomadApi;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
 
 public class FaqActivity extends AppCompatActivity {
 
@@ -39,6 +43,11 @@ public class FaqActivity extends AppCompatActivity {
         // 리사이클러뷰
         rvFaqList = findViewById(R.id.rv_faq_list);
         rvFaqList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+
+        // faq findAll get요청
+        NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
+        Call<CMRespDto> call = nomadApi.faqFindAll();
+
 
         List<FaqGubun> faqGubuns = new ArrayList<>();
 
