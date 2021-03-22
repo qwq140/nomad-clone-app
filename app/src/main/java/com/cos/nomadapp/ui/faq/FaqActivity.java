@@ -4,13 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.adapter.FaqAdapter;
 import com.cos.nomadapp.model.CMRespDto;
+import com.cos.nomadapp.model.faq.Faq;
+import com.cos.nomadapp.model.faq.FaqCategory;
 import com.cos.nomadapp.model.faq.FaqGubun;
 import com.cos.nomadapp.model.faq.FaqItem;
 import com.cos.nomadapp.service.NomadApi;
@@ -18,13 +22,22 @@ import com.cos.nomadapp.service.NomadApi;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.SneakyThrows;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FaqActivity extends AppCompatActivity {
+
+    private static final String TAG = "FaqActivity";
 
     private ImageView ivBack;
     private TextView tvToolbarTitle;
     private RecyclerView rvFaqList;
+    private List<FaqGubun> faqGubunList;
+    private List<FaqCategory> faqCategoryList = new ArrayList<>();
+    private List<Faq> faqList = new ArrayList<>();
+    private Context mContext = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,62 +57,38 @@ public class FaqActivity extends AppCompatActivity {
         rvFaqList = findViewById(R.id.rv_faq_list);
         rvFaqList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-        // faq findAll get요청
+        faqGubunList = new ArrayList<>();
+
+        //전체 카테고리 불러오기
         NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
-        Call<CMRespDto> call = nomadApi.faqFindAll();
+        Call<CMRespDto<List<FaqCategory>>> call = nomadApi.faqCategoryFindAll();
+        call.enqueue(new Callback<CMRespDto<List<FaqCategory>>>() {
+            @Override
+            public void onResponse(Call<CMRespDto<List<FaqCategory>>> call, Response<CMRespDto<List<FaqCategory>>> response) {
+                Log.d(TAG, "onResponse: "+response.body());
+                faqCategoryList = (List<FaqCategory>) response.body().getData();
+                Log.d(TAG, "onResponse: "+faqCategoryList);
+                for (int i=0; i<faqCategoryList.size();i++){
+                    List<FaqItem> faqItems = new ArrayList<>();
+                    for (int j = 0; j < faqCategoryList.get(i).getFaq().size(); j++){
+                        faqItems.add(new FaqItem(faqCategoryList.get(i).getFaq().get(j).getId(),faqCategoryList.get(i).getFaq().get(j).getTitle()));
+                    }
+                    faqGubunList.add(new FaqGubun(faqCategoryList.get(i).getTitle(),faqItems));
+                }
+                Log.d(TAG, "onResponse: faqGubunList : "+faqGubunList );
+                rvFaqList.setAdapter(new FaqAdapter(faqGubunList,FaqActivity.this));
 
 
-        List<FaqGubun> faqGubuns = new ArrayList<>();
+            }
 
-        List<FaqItem> academyItems = new ArrayList<>();
-        academyItems.add(new FaqItem(0L,"로그인"));
-        academyItems.add(new FaqItem(1L,"결제"));
-        academyItems.add(new FaqItem(2L,"취소 및 환불정책"));
-        academyItems.add(new FaqItem(3L,"수업 관련 문의"));
-        academyItems.add(new FaqItem(4L,"증빙서류 발급"));
-        academyItems.add(new FaqItem(5L,"슬랙 이용방법"));
-        academyItems.add(new FaqItem(6L,"문의하기"));
+            @Override
+            public void onFailure(Call<CMRespDto<List<FaqCategory>>> call, Throwable t) {
+                Log.d(TAG, "onFailure: ");
+            }
+        });
 
-        FaqGubun academy = new FaqGubun("노마드 아카데미",academyItems);
-        faqGubuns.add(academy);
-
-        List<FaqItem> challengeItems = new ArrayList<>();
-        challengeItems.add(new FaqItem(7L,"로그인"));
-        challengeItems.add(new FaqItem(8L,"결제"));
-        challengeItems.add(new FaqItem(9L,"취소 및 환불정책"));
-        challengeItems.add(new FaqItem(10L,"수업 관련 문의"));
-        challengeItems.add(new FaqItem(11L,"증빙서류 발급"));
-
-        FaqGubun challenge = new FaqGubun("노마드 챌린지",challengeItems);
-        faqGubuns.add(challenge);
-
-        List<FaqItem> reviewItems = new ArrayList<>();
-        reviewItems.add(new FaqItem(12L,"코코아 클론 2주 완성반"));
-        reviewItems.add(new FaqItem(13L,"바닐라JS 2주 완성반"));
-        reviewItems.add(new FaqItem(14L,"파이썬 2주 완성반"));
-        reviewItems.add(new FaqItem(15L,"에어비앤비 4주 완성반"));
-        reviewItems.add(new FaqItem(16L,"유튜브 클론 6주 완성반"));
-        reviewItems.add(new FaqItem(17L,"CSS Layout 2주 완성반"));
-        reviewItems.add(new FaqItem(18L,"리액트JS 2주 완성반"));
-        reviewItems.add(new FaqItem(19L,"우버이츠 클론 6주 완성반"));
-
-        FaqGubun review = new FaqGubun("졸업작품 및 후기",reviewItems);
-        faqGubuns.add(review);
-
-        List<FaqItem> communityItems = new ArrayList<>();
-        communityItems.add(new FaqItem(20L,"로그인"));
-        communityItems.add(new FaqItem(21L,"결제"));
-        communityItems.add(new FaqItem(22L,"취소 및 환불정책"));
-        communityItems.add(new FaqItem(23L,"수업 관련 문의"));
-        communityItems.add(new FaqItem(24L,"증빙서류 발급"));
-        communityItems.add(new FaqItem(25L,"슬랙 이용방법"));
-        communityItems.add(new FaqItem(26L,"문의하기"));
-
-        FaqGubun community = new FaqGubun("노마드 커뮤니티",communityItems);
-        faqGubuns.add(community);
-
-        rvFaqList.setAdapter(new FaqAdapter(faqGubuns,this));
 
 
     }
+
 }

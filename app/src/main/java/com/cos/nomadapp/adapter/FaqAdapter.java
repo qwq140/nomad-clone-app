@@ -13,7 +13,6 @@ import com.cos.nomadapp.FaqDetailActivity;
 import com.cos.nomadapp.model.faq.FaqGubun;
 import com.cos.nomadapp.model.faq.FaqItem;
 import com.cos.nomadapp.R;
-import com.cos.nomadapp.ui.community.CommunityDetailActivity;
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
@@ -23,6 +22,7 @@ import java.util.List;
 
 public class FaqAdapter extends ExpandableRecyclerViewAdapter<FaqAdapter.FaqGubunViewHolder, FaqAdapter.FaqItemViewHolder> {
 
+    private static final String TAG = "FaqAdapter";
     private Context mContext;
 
     public FaqAdapter(List<? extends ExpandableGroup> groups, Context mContext) {
@@ -49,7 +49,8 @@ public class FaqAdapter extends ExpandableRecyclerViewAdapter<FaqAdapter.FaqGubu
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, FaqDetailActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            intent.putExtra("faqItem",faqItem);
+            Log.d(TAG, "onBindChildViewHolder: "+faqItem);
+            intent.putExtra("faqItem",faqItem.getId());
             mContext.startActivity(intent);
         });
 
@@ -75,7 +76,7 @@ public class FaqAdapter extends ExpandableRecyclerViewAdapter<FaqAdapter.FaqGubu
         public void bind(FaqGubun faqGubun){
 
             tvFaqTitle.setText(faqGubun.getTitle());
-            Log.d(TAG, "bind: "+faqGubun.getTitle());
+            Log.d(TAG, "bind: "+ faqGubun.getTitle());
 
         }
     }
@@ -92,6 +93,7 @@ public class FaqAdapter extends ExpandableRecyclerViewAdapter<FaqAdapter.FaqGubu
 
         public void bind(FaqItem faqItem){
             tvFaqItem.setText(faqItem.getName());
+            Log.d(TAG, "bind: "+faqItem);
         }
     }
 }
