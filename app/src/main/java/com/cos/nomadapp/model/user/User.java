@@ -12,9 +12,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class User implements Serializable {
+    private Long id;
+    private String username;
     private String name;
     private String email;
     private String roles;
     private String provider;
-
+    private String imageUrl;
 }

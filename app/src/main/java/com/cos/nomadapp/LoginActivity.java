@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 
-import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,6 +17,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import com.cos.nomadapp.model.CMRespDto;
@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        mAuth = FirebaseAuth.getInstance();
+        //mAuth = FirebaseAuth.getInstance();
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -104,7 +104,8 @@ public class LoginActivity extends AppCompatActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            Log.d(TAG, "handleSignInResult: "+account);
+
+
             OAuthApi oauthApi = OAuthApi.retrofit.create(OAuthApi.class);
             Call<CMRespDto> call = oauthApi.postOauth(account.getIdToken());
             call.enqueue(new Callback<CMRespDto>() {
@@ -115,17 +116,20 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d(TAG, "onResponse: 200 성공");
                         Map<String, Object> data = (Map<String, Object>) response.body().getData();
                         Log.d(TAG, "onResponse: data : " + data);
-                        // 서버로 부터 받은 token payload에 userid 들어가있음, 요청을 할 때 jwt토큰도 함께 보내기?
+
                         User user = User.builder()
                                 .email(data.get("email").toString())
                                 .name(data.get("name").toString())
                                 .provider(data.get("provider").toString())
                                 .roles(data.get("roles").toString())
                                 .build();
+                        Gson gson = new Gson();
+                        String principal = gson.toJson(user);
 
                         pref = getSharedPreferences("pref", MODE_PRIVATE);
                         editor = pref.edit();
                         editor.putString("token",data.get("token").toString());
+                        editor.putString("principal",principal);
                         editor.commit();
 
                         Log.d(TAG, "onResponse: User (구글로그인) : "+user);

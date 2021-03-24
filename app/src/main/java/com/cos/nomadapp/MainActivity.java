@@ -79,6 +79,10 @@ public class MainActivity extends AppCompatActivity {
             drawer.openDrawer(Gravity.LEFT);
         });
 
+        Intent intent = getIntent();
+        User principal = (User)intent.getSerializableExtra("principal");
+        Log.d(TAG, "onCreate: principal" + principal);
+
         //roundedImageView 이벤트
         rivUser = (RoundedImageView)findViewById(R.id.riv_user);
         rivUser.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), item.getTitle(),Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(v.getContext(), UserDashboardActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            intent.putExtra("principal",principal);
                             v.getContext().startActivity(intent);
                         }else{
                             Toast.makeText(getApplicationContext(), item.getTitle(),Toast.LENGTH_SHORT).show();
@@ -110,9 +115,6 @@ public class MainActivity extends AppCompatActivity {
 
         //navigationView
         nv = findViewById(R.id.nv);
-
-        Intent intent = getIntent();
-        User principal = (User)intent.getSerializableExtra("principal");
 
         pref = getSharedPreferences("pref", MODE_PRIVATE);
         String token = pref.getString("token","");

@@ -3,22 +3,25 @@
     package="com.cos.nomadapp">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Nomadapp">
-        <activity android:name=".FaqDetailActivity"></activity>
+        android:theme="@style/Theme.Nomadapp"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".EditProfileActivity"></activity>
+        <activity android:name=".FaqDetailActivity" />
         <activity android:name=".ui.community.CommunityDetailActivity" />
         <activity android:name=".ui.community.CommunitySearchActivity" />
         <activity android:name=".ui.community.CommunityWriteActivity" />
         <activity android:name=".ui.courses.CourseDetailActivity" />
-        <activity android:name=".UserDashboardActivity"></activity>
+        <activity android:name=".UserDashboardActivity" />
         <activity android:name=".CommunityDetailActivity" />
         <activity android:name=".CommunitySearchActivity" />
         <activity android:name=".CommunityWriteActivity" />

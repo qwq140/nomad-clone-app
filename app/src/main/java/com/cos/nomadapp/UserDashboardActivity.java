@@ -5,30 +5,57 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.cos.nomadapp.adapter.DashboardAdapter;
+import com.cos.nomadapp.model.CMRespDto;
 import com.cos.nomadapp.model.common.Item;
+import com.cos.nomadapp.model.user.User;
 import com.cos.nomadapp.model.user.UserDashboardSecondSection;
+import com.cos.nomadapp.service.NomadApi;
+import com.cos.nomadapp.utils.JwtUtils;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.makeramen.roundedimageview.RoundedImageView;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import lombok.SneakyThrows;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class UserDashboardActivity extends AppCompatActivity {
     private static final String TAG = "UserDashboardActivity";
     private ImageView ivBack;
-    private TextView tvToolbarTitle;
-    private RoundedImageView rivUser;
+    private TextView tvToolbarTitle, tvDashName, tvDashUsername;
+    private RoundedImageView rivUser, rivDashboardUser;
     private RecyclerView rvDashboard;
+    private SharedPreferences pref;
+    private Button btnEditProfile, btnSeeProfile;
+    private NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
+    private User user;
 
+    private long id;
+    private String token;
+
+    @SneakyThrows
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +69,23 @@ public class UserDashboardActivity extends AppCompatActivity {
         ivBack.setOnClickListener(v -> {
             finish();
         });
+
+        rivDashboardUser = findViewById(R.id.riv_dashboard_user);
+        tvDashName = findViewById(R.id.tv_dash_name);
+        tvDashUsername = findViewById(R.id.tv_dash_username);
+
+        // 토큰 불러오기, principal 불러오기ㅣ
+        pref = getSharedPreferences("pref", MODE_PRIVATE);
+        token = pref.getString("token", "");
+        Log.d(TAG, "onCreate: token : " + token);
+
+        // 토큰 디코딩
+        String payload = JwtUtils.payloadDecoded(token);
+        JSONObject payloadObj = new JSONObject(payload);
+        Log.d(TAG, "onCreate: Payload : " + payloadObj);
+
+        id = payloadObj.getLong("id");
+
 
         //roundedImageView 이벤트
         rivUser = (RoundedImageView) findViewById(R.id.riv_user);
@@ -80,9 +124,65 @@ public class UserDashboardActivity extends AppCompatActivity {
 
         UserDashboardSecondSection userDashboardSecondSection = new UserDashboardSecondSection("Join more courses and complete challenges to unlock the next level!");
         items.add(new Item(1, userDashboardSecondSection));
-        Log.d(TAG, "onCreate: "+ userDashboardSecondSection);
+        Log.d(TAG, "onCreate: " + userDashboardSecondSection);
 
-        rvDashboard.setAdapter(new DashboardAdapter(items,UserDashboardActivity.this));
+        rvDashboard.setAdapter(new DashboardAdapter(items, UserDashboardActivity.this));
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 개인 정보 얻기
+        Call<CMRespDto> call = nomadApi.getProfile("Bearer " + token, id);
+        call.enqueue(new Callback<CMRespDto>() {
+            @Override
+            public void onResponse(Call<CMRespDto> call, Response<CMRespDto> response) {
+                Log.d(TAG, "onResponse: " + response.body());
+                Log.d(TAG, "onResponse: " + response.body().getData());
+                Map<String, Object> data = (Map<String, Object>) response.body().getData();
+                Log.d(TAG, "onResponse: data : " + data);
+
+                user = User.builder()
+                        .username(data.get("username").toString())
+                        .email(data.get("email").toString())
+                        .name(data.get("name").toString())
+                        .provider(data.get("provider").toString())
+                        .roles(data.get("roles").toString())
+                        .imageUrl(data.get("imageUrl").toString())
+                        .build();
+
+                tvDashName.setText(user.getName());
+                tvDashUsername.setText(user.getUsername());
+
+                Glide
+                        .with(UserDashboardActivity.this)
+                        .load(user.getImageUrl())
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_user)
+                        .into(rivDashboardUser);
+            }
+
+            @Override
+            public void onFailure(Call<CMRespDto> call, Throwable t) {
+                Log.d(TAG, "onFailure: ");
+            }
+        });
+
+
+        btnEditProfile = findViewById(R.id.btn_edit_profile);
+        btnSeeProfile = findViewById(R.id.btn_see_profile);
+
+        btnEditProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), EditProfileActivity.class);
+            intent.putExtra("principal",user);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
+        });
+
+        btnSeeProfile.setOnClickListener(v -> {
+
+        });
 
     }
 }

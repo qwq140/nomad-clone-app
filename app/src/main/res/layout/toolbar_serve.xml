@@ -5,7 +5,8 @@
     android:id="@+id/toolbar_serve"
     android:layout_width="match_parent"
     android:layout_height="65dp"
-    app:contentInsetStart="0dp">
+    app:contentInsetStart="0dp"
+    android:background="#FFFFFF">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
