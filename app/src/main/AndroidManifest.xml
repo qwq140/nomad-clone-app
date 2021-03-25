@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Nomadapp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".EditProfileActivity"></activity>
+        <activity android:name=".SeeProfileActivity"></activity>
+        <activity android:name=".EditProfileActivity" />
         <activity android:name=".FaqDetailActivity" />
         <activity android:name=".ui.community.CommunityDetailActivity" />
         <activity android:name=".ui.community.CommunitySearchActivity" />
@@ -41,6 +42,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

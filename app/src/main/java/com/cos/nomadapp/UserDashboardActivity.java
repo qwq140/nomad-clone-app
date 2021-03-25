@@ -55,7 +55,6 @@ public class UserDashboardActivity extends AppCompatActivity {
     private long id;
     private String token;
 
-    @SneakyThrows
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,17 +73,6 @@ public class UserDashboardActivity extends AppCompatActivity {
         tvDashName = findViewById(R.id.tv_dash_name);
         tvDashUsername = findViewById(R.id.tv_dash_username);
 
-        // 토큰 불러오기, principal 불러오기ㅣ
-        pref = getSharedPreferences("pref", MODE_PRIVATE);
-        token = pref.getString("token", "");
-        Log.d(TAG, "onCreate: token : " + token);
-
-        // 토큰 디코딩
-        String payload = JwtUtils.payloadDecoded(token);
-        JSONObject payloadObj = new JSONObject(payload);
-        Log.d(TAG, "onCreate: Payload : " + payloadObj);
-
-        id = payloadObj.getLong("id");
 
 
         //roundedImageView 이벤트
@@ -130,44 +118,70 @@ public class UserDashboardActivity extends AppCompatActivity {
 
     }
 
+    @SneakyThrows
     @Override
     protected void onResume() {
         super.onResume();
-        // 개인 정보 얻기
-        Call<CMRespDto> call = nomadApi.getProfile("Bearer " + token, id);
-        call.enqueue(new Callback<CMRespDto>() {
-            @Override
-            public void onResponse(Call<CMRespDto> call, Response<CMRespDto> response) {
-                Log.d(TAG, "onResponse: " + response.body());
-                Log.d(TAG, "onResponse: " + response.body().getData());
-                Map<String, Object> data = (Map<String, Object>) response.body().getData();
-                Log.d(TAG, "onResponse: data : " + data);
+        // 토큰 불러오기, principal 불러오기
+        pref = getSharedPreferences("pref", MODE_PRIVATE);
+        token = pref.getString("token", "");
+        Log.d(TAG, "onCreate: token : " + token);
 
-                user = User.builder()
-                        .username(data.get("username").toString())
-                        .email(data.get("email").toString())
-                        .name(data.get("name").toString())
-                        .provider(data.get("provider").toString())
-                        .roles(data.get("roles").toString())
-                        .imageUrl(data.get("imageUrl").toString())
-                        .build();
+        if (token!=""){
+            // 토큰 디코딩
+            String payload = JwtUtils.payloadDecoded(token);
+            JSONObject payloadObj = new JSONObject(payload);
+            Log.d(TAG, "onCreate: Payload : " + payloadObj);
 
-                tvDashName.setText(user.getName());
-                tvDashUsername.setText(user.getUsername());
+            id = payloadObj.getLong("id");
 
-                Glide
-                        .with(UserDashboardActivity.this)
-                        .load(user.getImageUrl())
-                        .centerCrop()
-                        .placeholder(R.drawable.ic_user)
-                        .into(rivDashboardUser);
-            }
+            // 개인 정보 얻기
+            Call<CMRespDto> call = nomadApi.getProfile("Bearer " + token, id);
+            call.enqueue(new Callback<CMRespDto>() {
+                @Override
+                public void onResponse(Call<CMRespDto> call, Response<CMRespDto> response) {
+                    Log.d(TAG, "onResponse: " + response.body());
+                    if (response.body()!=null){
+                        Log.d(TAG, "onResponse: " + response.body().getData());
+                        Map<String, Object> data = (Map<String, Object>) response.body().getData();
+                        Log.d(TAG, "onResponse: data : " + data);
 
-            @Override
-            public void onFailure(Call<CMRespDto> call, Throwable t) {
-                Log.d(TAG, "onFailure: ");
-            }
-        });
+                        user = User.builder()
+                                .username(data.get("username").toString())
+                                .email(data.get("email").toString())
+                                .name(data.get("name").toString())
+                                .provider(data.get("provider").toString())
+                                .roles(data.get("roles").toString())
+                                .imageUrl(data.get("imageUrl").toString())
+                                .build();
+
+                        tvDashName.setText(user.getName());
+                        tvDashUsername.setText(user.getUsername());
+
+                        Glide
+                                .with(UserDashboardActivity.this)
+                                .load(user.getImageUrl())
+                                .centerCrop()
+                                .placeholder(R.drawable.ic_user)
+                                .into(rivDashboardUser);
+                    } else {
+                        Intent intent = new Intent(UserDashboardActivity.this, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        UserDashboardActivity.this.startActivity(intent);
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<CMRespDto> call, Throwable t) {
+                    Log.d(TAG, "onFailure: ");
+                }
+            });
+        } else {
+            Intent intent = new Intent(UserDashboardActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            UserDashboardActivity.this.startActivity(intent);
+        }
 
 
         btnEditProfile = findViewById(R.id.btn_edit_profile);
@@ -181,7 +195,10 @@ public class UserDashboardActivity extends AppCompatActivity {
         });
 
         btnSeeProfile.setOnClickListener(v -> {
-
+            Intent intent = new Intent(v.getContext(), SeeProfileActivity.class);
+            intent.putExtra("principal",user);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            v.getContext().startActivity(intent);
         });
 
     }

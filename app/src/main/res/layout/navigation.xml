@@ -6,9 +6,13 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nv"
+        app:headerLayout="@layout/nav_header"
         app:menu="@menu/menu"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
         android:background="@android:color/white"
-        android:layout_gravity="start"/>
+        android:layout_gravity="start">
+
+
+    </com.google.android.material.navigation.NavigationView>
 </merge>

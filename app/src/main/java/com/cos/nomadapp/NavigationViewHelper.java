@@ -24,38 +24,37 @@ public class NavigationViewHelper {
 
             DrawerLayout drawer = (DrawerLayout)((Activity) context).findViewById(R.id.drawer);
 
-            if (id == R.id.item1) {
-                Log.d(TAG, "enable: Join 클릭");
-                Intent intent = new Intent(context, JoinActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                context.startActivity(intent);
-            } else if (id == R.id.item2) {
+
+            if (id == R.id.login) {
                 Log.d(TAG, "enable: Login 클릭");
                 Intent intent = new Intent(context, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 context.startActivity(intent);
-            } else if (id == R.id.item3) {
+            } else if(id == R.id.dashboard){
+                Log.d(TAG, "enable: dashboard 클릭");
+                Intent intent = new Intent(context, UserDashboardActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                context.startActivity(intent);
+            }else if (id == R.id.courses) {
                 Log.d(TAG, "enable: Courses 클릭");
                 Intent intent = new Intent(context, CoursesActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 context.startActivity(intent);
-            } else if (id == R.id.item4) {
+            } else if (id == R.id.challenges) {
                 Log.d(TAG, "enable: Challenges 클릭");
                 Intent intent = new Intent(context, ChallengesActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 context.startActivity(intent);
-            } else if (id == R.id.item5) {
+            } else if (id == R.id.community) {
                 Log.d(TAG, "enable: Community 클릭");
                 Intent intent = new Intent(context, CommunityActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 context.startActivity(intent);
-            } else if (id == R.id.item6) {
+            } else if (id == R.id.faq) {
                 Log.d(TAG, "enable: FAQ 클릭");
                 Intent intent = new Intent(context, FaqActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 context.startActivity(intent);
-            } else if (id == R.id.item7) {
-                Log.d(TAG, "onCreate: Road Map 클릭");
             }
             drawer.closeDrawer(Gravity.LEFT);
             return false;

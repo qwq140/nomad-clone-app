@@ -8,32 +8,39 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cos.nomadapp.ui.courses.CourseDetailActivity;
 import com.cos.nomadapp.FooterViewHolder;
 import com.cos.nomadapp.R;
-import com.cos.nomadapp.model.courses.Course;
-import com.cos.nomadapp.model.common.CommonTitle;
-import com.cos.nomadapp.model.common.Item;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
+import java.util.Map;
 
 public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private List<Item> items;
 
-    public CoursesAdapter(List<Item> items) {
+    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_FILTER = 1;
+    private static final int TYPE_ITEM = 2;
+    private static final int TYPE_FOOTER = 3;
 
-        this.items = items;
+    private List<Map<String,Object>> coursesPreviews;
+    private Context context;
+
+    public CoursesAdapter(Context context, List<Map<String,Object>> coursesPreviews) {
+        this.context = context;
+        this.coursesPreviews = coursesPreviews;
     }
+
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        if(viewType == 0){
+        if(viewType == TYPE_HEADER){
             return new TitleViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
                             R.layout.title_item,
@@ -41,7 +48,7 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
                             false
                     )
             );
-        }else if(viewType == 1){
+        }else if(viewType == TYPE_FILTER){
             return new FilterViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
                             R.layout.courses_filter_item,
@@ -50,7 +57,7 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
                     )
             );
 
-        }else if(viewType == 2){
+        }else if(viewType == TYPE_ITEM){
             return new CourseViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
                             R.layout.course_item,
@@ -58,7 +65,7 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
                             false
                     )
             );
-        }else{
+        }else if (viewType == TYPE_FOOTER){
             return new FooterViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
                             R.layout.footer,
@@ -67,39 +74,53 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
                     )
             );
         }
+        return null;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if(getItemViewType(position)==0){
-            CommonTitle commonTitle = (CommonTitle) items.get(position).getObject();
-            ((TitleViewHolder) holder).setTitleItem(commonTitle);
-        }else if(getItemViewType(position)==2){
-            Course course = (Course) items.get(position).getObject();
-            ((CourseViewHolder) holder).setCourseItem(course);
+        if (holder instanceof TitleViewHolder){
+            TitleViewHolder titleViewHolder = (TitleViewHolder) holder;
+            titleViewHolder.setTitleItem();
+        } else if (holder instanceof FilterViewHolder){
+            FilterViewHolder filterViewHolder = (FilterViewHolder) holder;
+        } else if (holder instanceof  FooterViewHolder){
+            FooterViewHolder footerViewHolder = (FooterViewHolder) holder;
+        } else {
+            CourseViewHolder courseViewHolder = (CourseViewHolder) holder;
+            courseViewHolder.setCourseItem(coursesPreviews.get(position-2));
         }
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return coursesPreviews.size()+3;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return items.get(position).getType();
+        if (position == 0){
+            return TYPE_HEADER;
+        } else if (position == 1){
+            return TYPE_FILTER;
+        }else if (position == coursesPreviews.size()+2){
+            return TYPE_FOOTER;
+        } else {
+            return TYPE_ITEM;
+        }
     }
 
-    public static class CourseViewHolder extends RecyclerView.ViewHolder{
+    public class CourseViewHolder extends RecyclerView.ViewHolder{
 
         private RoundedImageView ivCourse;
-        private TextView tvTitle, tvSubTitle;
+        private TextView tvTitle, tvSubTitle, tvLevel;
 
         public CourseViewHolder(@NonNull View itemView) {
             super(itemView);
             ivCourse = itemView.findViewById(R.id.iv_course);
             tvTitle = itemView.findViewById(R.id.tv_course_title);
             tvSubTitle = itemView.findViewById(R.id.tv_course_subtitle);
+            tvLevel = itemView.findViewById(R.id.tv_courses_level);
 
             itemView.setOnClickListener(v -> {
                 Context context = v.getContext();
@@ -109,14 +130,15 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
             });
         }
 
-        void setCourseItem(Course course){
-            ivCourse.setImageResource(course.getCourseImage());
-            tvTitle.setText(course.getTitle());
-            tvSubTitle.setText(course.getSubTitle());
+        void setCourseItem(Map<String,Object> coursesPreview){
+            //ivCourse.setImageResource(coursesPreview.get());
+            tvLevel.setText(coursesPreview.get("level").toString());
+            tvTitle.setText(coursesPreview.get("title").toString());
+            tvSubTitle.setText(coursesPreview.get("subTitle").toString());
         }
     }
 
-    public static class TitleViewHolder extends RecyclerView.ViewHolder{
+    public class TitleViewHolder extends RecyclerView.ViewHolder{
 
         private TextView tvCoursesTitle, tvCoursesSubTitle;
 
@@ -126,13 +148,13 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
             tvCoursesSubTitle = itemView.findViewById(R.id.tv_subtitle);
         }
 
-        void setTitleItem(CommonTitle commonTitle){
-            tvCoursesTitle.setText(commonTitle.getTitle());
-            tvCoursesSubTitle.setText(commonTitle.getSubTitle());
+        void setTitleItem(){
+            tvCoursesTitle.setText("All Courses");
+            tvCoursesSubTitle.setText("초급부터 고급까지! 니꼬쌤과 함께 풀스택으로 성장하세요!");
         }
     }
 
-    public static class FilterViewHolder extends RecyclerView.ViewHolder{
+    public class FilterViewHolder extends RecyclerView.ViewHolder{
 
         public FilterViewHolder(@NonNull View itemView) {
             super(itemView);

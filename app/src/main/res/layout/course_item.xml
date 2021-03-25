@@ -6,6 +6,8 @@
     android:layout_height="270dp">
 
 
+
+
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/iv_course"
         android:layout_width="350dp"
@@ -18,9 +20,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:riv_corner_radius="20dip"
+        app:riv_corner_radius="10dip"
         app:riv_mutate_background="true"
         android:elevation="10dp"/>
+
+    <TextView
+        android:id="@+id/tv_courses_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/level_round"
+        android:paddingLeft="15dp"
+        android:paddingTop="5dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="5dp"
+        android:elevation="10dp"
+        android:text="초보"
+        android:textColor="#689F83"
+        app:layout_constraintStart_toStartOf="@+id/iv_course"
+        app:layout_constraintTop_toTopOf="@+id/iv_course" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"

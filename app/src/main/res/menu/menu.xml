@@ -3,27 +3,25 @@
     <group
         android:id="@+id/group1"
         android:checkableBehavior="single">
+
         <item
-            android:id="@+id/item1"
-            android:title="Join"/>
-        <item
-            android:id="@+id/item2"
+            android:id="@+id/login"
             android:title="Login"/>
         <item
-            android:id="@+id/item3"
+            android:id="@+id/dashboard"
+            android:title="DashBoard"/>
+        <item
+            android:id="@+id/courses"
             android:title="Courses" />
         <item
-            android:id="@+id/item4"
+            android:id="@+id/challenges"
             android:title="Challenges"/>
         <item
-            android:id="@+id/item5"
+            android:id="@+id/community"
             android:title="Community"/>
         <item
-            android:id="@+id/item6"
+            android:id="@+id/faq"
             android:title="FAQ" />
-        <item
-            android:id="@+id/item7"
-            android:title="Roadmap" />
     </group>
 
 </menu>

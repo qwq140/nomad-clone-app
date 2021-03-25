@@ -123,20 +123,14 @@ public class LoginActivity extends AppCompatActivity {
                                 .provider(data.get("provider").toString())
                                 .roles(data.get("roles").toString())
                                 .build();
-                        Gson gson = new Gson();
-                        String principal = gson.toJson(user);
 
                         pref = getSharedPreferences("pref", MODE_PRIVATE);
                         editor = pref.edit();
                         editor.putString("token",data.get("token").toString());
-                        editor.putString("principal",principal);
                         editor.commit();
 
                         Log.d(TAG, "onResponse: User (구글로그인) : "+user);
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.putExtra("principal",user);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
+                        finish();
 
                     } else {
                         Log.d(TAG, "onResponse: 로그인 실패");

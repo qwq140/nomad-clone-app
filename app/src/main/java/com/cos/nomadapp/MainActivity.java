@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.widget.Button;
 
 import android.os.Bundle;
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private SharedPreferences pref;
+    private String token;
 
     private RoundedImageView rivUser;
     private static final String TAG = "MainActivity";
@@ -79,9 +81,7 @@ public class MainActivity extends AppCompatActivity {
             drawer.openDrawer(Gravity.LEFT);
         });
 
-        Intent intent = getIntent();
-        User principal = (User)intent.getSerializableExtra("principal");
-        Log.d(TAG, "onCreate: principal" + principal);
+
 
         //roundedImageView 이벤트
         rivUser = (RoundedImageView)findViewById(R.id.riv_user);
@@ -97,13 +97,20 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         if(item.getTitle().equals("Dashboard")){
-                            Toast.makeText(getApplicationContext(), item.getTitle(),Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(v.getContext(), UserDashboardActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            intent.putExtra("principal",principal);
-                            v.getContext().startActivity(intent);
+                                Toast.makeText(getApplicationContext(), item.getTitle(),Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(v.getContext(), UserDashboardActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                v.getContext().startActivity(intent);
+
                         }else{
                             Toast.makeText(getApplicationContext(), item.getTitle(),Toast.LENGTH_SHORT).show();
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putString("token","");
+                            editor.commit();
+                            Intent intent = new Intent(v.getContext(), MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            v.getContext().startActivity(intent);
+
                         }
                         return false;
                     }
@@ -114,11 +121,15 @@ public class MainActivity extends AppCompatActivity {
         //roundedImageView End
 
         //navigationView
+
+        LayoutInflater mInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        mInflater.inflate(R.layout.navigation,drawer,true);
         nv = findViewById(R.id.nv);
 
-        pref = getSharedPreferences("pref", MODE_PRIVATE);
-        String token = pref.getString("token","");
-        Log.d(TAG, "onCreate: token : "+token);
+
+
+
+
 
         NavigationViewHelper.enable(MainActivity.this,nv);
 
@@ -149,6 +160,21 @@ public class MainActivity extends AppCompatActivity {
         rvMainList.setLayoutManager(manager);
 
         rvMainList.setAdapter(new MainAdapter(items));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        pref = getSharedPreferences("pref", MODE_PRIVATE);
+        token = pref.getString("token","");
+        Log.d(TAG, "onResume: "+token);
+        if (token.equals("")){
+            nv.getMenu().findItem(R.id.login).setVisible(true);
+            nv.getMenu().findItem(R.id.dashboard).setVisible(false);
+        } else {
+            nv.getMenu().findItem(R.id.login).setVisible(false);
+            nv.getMenu().findItem(R.id.dashboard).setVisible(true);
+        }
     }
 
     @Override

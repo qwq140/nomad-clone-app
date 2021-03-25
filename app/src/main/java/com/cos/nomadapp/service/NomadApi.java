@@ -3,7 +3,6 @@ package com.cos.nomadapp.service;
 import com.cos.nomadapp.model.CMRespDto;
 import com.cos.nomadapp.model.faq.Faq;
 import com.cos.nomadapp.model.faq.FaqCategory;
-import com.cos.nomadapp.model.user.User;
 import com.cos.nomadapp.model.user.UserUpdateReqDto;
 
 import java.util.List;
@@ -16,7 +15,6 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.PUT;
-import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public interface NomadApi {
@@ -36,6 +34,9 @@ public interface NomadApi {
 
     @DELETE("user/{id}")
     Call<CMRespDto> userDelete(@Header("Authorization") String token, @Path("id") long id);
+
+    @GET("/courses")
+    Call<CMRespDto> getAllCourses();
 
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://172.30.1.50:8080/")

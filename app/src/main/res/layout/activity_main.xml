@@ -27,6 +27,4 @@
     </LinearLayout>
 
 
-    <include layout="@layout/navigation" />
-
 </androidx.drawerlayout.widget.DrawerLayout>
