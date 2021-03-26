@@ -1,7 +1,6 @@
 package com.cos.nomadapp.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,19 +10,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cos.nomadapp.R;
-import com.cos.nomadapp.model.courses.Course;
 
 import java.util.List;
 
-public class CourseLectureAfterAdapter extends RecyclerView.Adapter<CourseLectureAfterAdapter.MyViewHolder>{
+public class CourseSkillAdapter extends RecyclerView.Adapter<CourseSkillAdapter.MyViewHolder>{
 
-    private final List<String> lectureAfter;
-    private Course course;
+    private final List<String> contents;
+    private Context mContext;
 
-    public CourseLectureAfterAdapter(List<String> lectureAfter, Course course) {
+    public CourseSkillAdapter(List<String> contents, Context mContext) {
 
-        this.lectureAfter = lectureAfter;
-        this.course = course;
+        this.contents = contents;
+        this.mContext = mContext;
     }
 
 
@@ -32,35 +30,34 @@ public class CourseLectureAfterAdapter extends RecyclerView.Adapter<CourseLectur
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.detail_lecture_after,parent, false);
+        View view = inflater.inflate(R.layout.course_skill_packges,parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.setItem(lectureAfter.get(position));
+        holder.setItem(contents.get(position));
 
     }
 
 
     @Override
     public int getItemCount() {
-        return lectureAfter.size();
+        return contents.size();
     }
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvLectureAfter;
+        private TextView tvPackage;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvLectureAfter = itemView.findViewById(R.id.tv_lecture_after);
+            tvPackage = itemView.findViewById(R.id.tv_packages_content);
         }
 
-        public void setItem(String lectureAfter){
-            tvLectureAfter.setText(lectureAfter);
-            tvLectureAfter.setTextColor(Color.parseColor(course.getTextColor()));
+        public void setItem(String content){
+            tvPackage.setText(content);
 
         }
     }

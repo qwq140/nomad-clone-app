@@ -2,14 +2,16 @@ package com.cos.nomadapp.model.courses;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class CourseSection1 {
-    private int image;
+    private String mainImage;
     private String title;
     private String subTitle;
     private String level;

@@ -1,6 +1,8 @@
 package com.cos.nomadapp.service;
 
 import com.cos.nomadapp.model.CMRespDto;
+import com.cos.nomadapp.model.courses.Course;
+import com.cos.nomadapp.model.courses.CoursesPreview;
 import com.cos.nomadapp.model.faq.Faq;
 import com.cos.nomadapp.model.faq.FaqCategory;
 import com.cos.nomadapp.model.user.UserUpdateReqDto;
@@ -36,10 +38,13 @@ public interface NomadApi {
     Call<CMRespDto> userDelete(@Header("Authorization") String token, @Path("id") long id);
 
     @GET("/courses")
-    Call<CMRespDto> getAllCourses();
+    Call<CMRespDto<List<CoursesPreview>>> getAllCourses();
+
+    @GET("/courses/{id}")
+    Call<CMRespDto<Course>> getDetailCourses(@Path("id") long id);
 
     public static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://172.30.1.50:8080/")
+            .baseUrl("http://172.30.1.29:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 

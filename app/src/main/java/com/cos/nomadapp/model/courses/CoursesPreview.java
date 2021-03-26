@@ -9,8 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CourseSection3 {
-    private String simpleImage;
+public class CoursesPreview {
+    private long id;
     private String title;
-    private String content;
+    private String subTitle;
+    private String level;
+
+    private PreviewImage previewImage;
 }

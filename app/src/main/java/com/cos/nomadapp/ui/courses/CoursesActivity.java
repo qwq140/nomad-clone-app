@@ -21,6 +21,7 @@ import com.cos.nomadapp.UserDashboardActivity;
 import com.cos.nomadapp.adapter.CoursesAdapter;
 import com.cos.nomadapp.model.CMRespDto;
 
+import com.cos.nomadapp.model.courses.CoursesPreview;
 import com.cos.nomadapp.service.NomadApi;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -82,19 +83,18 @@ public class CoursesActivity extends AppCompatActivity {
 
 
 
-        Call<CMRespDto> call = nomadApi.getAllCourses();
-        call.enqueue(new Callback<CMRespDto>() {
+        Call<CMRespDto<List<CoursesPreview>>> call = nomadApi.getAllCourses();
+        call.enqueue(new Callback<CMRespDto<List<CoursesPreview>>>() {
             @Override
-            public void onResponse(Call<CMRespDto> call, Response<CMRespDto> response) {
+            public void onResponse(Call<CMRespDto<List<CoursesPreview>>> call, Response<CMRespDto<List<CoursesPreview>>> response) {
                 Log.d(TAG, "onResponse: "+response.body());
-                List<Map<String,Object>> coursesPreviews =(List<Map<String,Object>>) response.body().getData();
-                Log.d(TAG, "onResponse: "+coursesPreviews);
-                Log.d(TAG, "onResponse: "+coursesPreviews.get(0).get("id"));
+                List<CoursesPreview> coursesPreviews = response.body().getData();
+                Log.d(TAG, "onResponse: "+coursesPreviews.get(0).getId());
                 rvCoursesList.setAdapter(new CoursesAdapter(getApplicationContext(),coursesPreviews));
             }
 
             @Override
-            public void onFailure(Call<CMRespDto> call, Throwable t) {
+            public void onFailure(Call<CMRespDto<List<CoursesPreview>>> call, Throwable t) {
                 Log.d(TAG, "onFailure: ");
             }
         });

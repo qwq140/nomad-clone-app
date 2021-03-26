@@ -2,6 +2,7 @@ package com.cos.nomadapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.cos.nomadapp.model.courses.CoursesPreview;
+import com.cos.nomadapp.model.courses.PreviewImage;
 import com.cos.nomadapp.ui.courses.CourseDetailActivity;
 import com.cos.nomadapp.ui.courses.CoursesActivity;
 import com.cos.nomadapp.FooterViewHolder;
@@ -23,42 +27,52 @@ import java.util.List;
 
 public class MainAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private List<Item> items;
+    private static final String TAG = "CoursesAdapter";
 
-    public MainAdapter(List<Item> items) {
-        this.items = items;
+    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_ITEM = 1;
+    private static final int TYPE_LINK = 2;
+    private static final int TYPE_FOOTER = 3;
+
+    private List<CoursesPreview> coursesPreviews;
+    private Context context;
+
+    public MainAdapter(Context context, List<CoursesPreview> coursesPreviews) {
+        this.context = context;
+        this.coursesPreviews = coursesPreviews;
     }
+
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        // type 0 : MainTitleItem 1 : CourseItem 2: main_link_item
-        if(viewType == 0){
-            return new TitleViewHolder(
+        if(viewType == TYPE_HEADER){
+            return new MainAdapter.TitleViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
                             R.layout.main_title_item,
                             parent,
                             false
                     )
             );
-        }else if(viewType == 1){
-            return new CourseViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(
-                            R.layout.course_item,
-                            parent,
-                            false
-                    )
-            );
-        }else if (viewType == 2){
-            return new LinkViewHolder(
+        }else if(viewType == TYPE_LINK){
+            return new MainAdapter.LinkViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
                             R.layout.main_link_item,
                             parent,
                             false
                     )
             );
-        }else{
+
+        }else if(viewType == TYPE_ITEM){
+            return new MainAdapter.CourseViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(
+                            R.layout.course_item,
+                            parent,
+                            false
+                    )
+            );
+        }else if (viewType == TYPE_FOOTER){
             return new FooterViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
                             R.layout.footer,
@@ -67,35 +81,85 @@ public class MainAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
                     )
             );
         }
+        return null;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if(getItemViewType(position)==0){
-            MainTitle mainTitle = (MainTitle) items.get(position).getObject();
-            ((TitleViewHolder) holder).setMainTitleItem(mainTitle);
-        }else if(getItemViewType(position)==1){
-            Course course = (Course) items.get(position).getObject();
-            ((CourseViewHolder) holder).setCourseItem(course);
-        }else if(getItemViewType(position)==2){
-            String link = (String)items.get(position).getObject();
-            ((LinkViewHolder) holder).setMainLinkItem(link);
-        }else{
-            System.out.println("푸터는 데이터변경없음");
+        if (holder instanceof TitleViewHolder){
+            TitleViewHolder titleViewHolder = (TitleViewHolder) holder;
+            titleViewHolder.setTitleItem();
+        } else if (holder instanceof LinkViewHolder){
+            LinkViewHolder linkViewHolder = (LinkViewHolder) holder;
+        } else if (holder instanceof  FooterViewHolder){
+            FooterViewHolder footerViewHolder = (FooterViewHolder) holder;
+        } else {
+            CourseViewHolder courseViewHolder = (CourseViewHolder) holder;
+            courseViewHolder.setCourseItem(coursesPreviews.get(position-1));
         }
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return coursesPreviews.size()+3;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return items.get(position).getType();
+        if (position == 0){
+            return TYPE_HEADER;
+        } else if (position == coursesPreviews.size()+1){
+            return TYPE_LINK;
+        }else if (position == coursesPreviews.size()+2){
+            return TYPE_FOOTER;
+        } else {
+            return TYPE_ITEM;
+        }
     }
 
-    public static class TitleViewHolder extends RecyclerView.ViewHolder{
+    public class CourseViewHolder extends RecyclerView.ViewHolder{
+
+        private RoundedImageView ivCourse;
+        private TextView tvTitle, tvSubTitle, tvLevel;
+
+        public CourseViewHolder(@NonNull View itemView) {
+            super(itemView);
+            ivCourse = itemView.findViewById(R.id.iv_course);
+            tvTitle = itemView.findViewById(R.id.tv_course_title);
+            tvSubTitle = itemView.findViewById(R.id.tv_course_subtitle);
+            tvLevel = itemView.findViewById(R.id.tv_courses_level);
+        }
+
+        void setCourseItem(CoursesPreview coursesPreview){
+            //ivCourse.setImageResource(coursesPreview.get());
+            tvLevel.setText(coursesPreview.getLevel());
+            tvTitle.setText(coursesPreview.getTitle());
+            tvSubTitle.setText(coursesPreview.getSubTitle());
+
+            PreviewImage previewImage =  coursesPreview.getPreviewImage();
+            Log.d(TAG, "setCourseItem: "+previewImage.getUrl());
+            // localhost로 들어오는건 안됨 ..... 나중에 배포할때는 가능할듯
+            Glide
+                    .with(context)
+                    .load(previewImage.getUrl())
+                    .centerCrop()
+                    .placeholder(R.drawable.course_youtube)
+                    .into(ivCourse);
+
+            long id = coursesPreview.getId();
+
+            Log.d(TAG, "setCourseItem: id : " +id);
+            itemView.setOnClickListener(v -> {
+                Context context = v.getContext();
+                Intent intent = new Intent(context, CourseDetailActivity.class);
+                intent.putExtra("id", id);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                context.startActivity(intent);
+            });
+        }
+    }
+
+    public class TitleViewHolder extends RecyclerView.ViewHolder{
 
         private TextView tvTitle, tvSubTitle;
 
@@ -105,39 +169,13 @@ public class MainAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
             tvSubTitle = itemView.findViewById(R.id.tv_main_subtitle);
         }
 
-        void setMainTitleItem(MainTitle mainTitle){
-            tvTitle.setText(mainTitle.getTitle());
-            tvSubTitle.setText(mainTitle.getSubTitle());
+        void setTitleItem(){
+            tvTitle.setText("Clone Startups.\nLearn to code.");
+            tvSubTitle.setText("코딩은 진짜를 만들어보는거야!\n실제 구현되어 있는 서비스를 한땀 한땀\n따라 만들면서 코딩을 배우세요.");
         }
     }
 
-    public static class CourseViewHolder extends RecyclerView.ViewHolder{
-
-        private RoundedImageView ivCourse;
-        private TextView tvTitle, tvSubTitle;
-
-        public CourseViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ivCourse = itemView.findViewById(R.id.iv_course);
-            tvTitle = itemView.findViewById(R.id.tv_course_title);
-            tvSubTitle = itemView.findViewById(R.id.tv_course_subtitle);
-
-            itemView.setOnClickListener(v -> {
-                Context context = v.getContext();
-                Intent intent = new Intent(context, CourseDetailActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                context.startActivity(intent);
-            });
-        }
-
-        void setCourseItem(Course course){
-            ivCourse.setImageResource(course.getCourseImage());
-            tvTitle.setText(course.getTitle());
-            tvSubTitle.setText(course.getSubTitle());
-        }
-    }
-
-    public static class LinkViewHolder extends RecyclerView.ViewHolder{
+    public class LinkViewHolder extends RecyclerView.ViewHolder{
 
         private TextView tvLink;
 
@@ -156,7 +194,5 @@ public class MainAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
             tvLink.setText(link);
         }
     }
-
-
 
 }

@@ -10,18 +10,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.user.User;
+import com.cos.nomadapp.ui.courses.CourseDetailActivity;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
 public class CourseLogoAdapter extends RecyclerView.Adapter<CourseLogoAdapter.MyViewHolder>{
 
-    private final List<Integer> logos;
+    private List<String> logos;
+    private Context mContext;
 
-    public CourseLogoAdapter(List<Integer> logos) {
+    public CourseLogoAdapter(List<String> logos, Context mContext) {
         this.logos = logos;
+        this.mContext = mContext;
     }
 
 
@@ -45,7 +49,7 @@ public class CourseLogoAdapter extends RecyclerView.Adapter<CourseLogoAdapter.My
     }
 
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private RoundedImageView ivLogo;
 
@@ -54,8 +58,13 @@ public class CourseLogoAdapter extends RecyclerView.Adapter<CourseLogoAdapter.My
             ivLogo = itemView.findViewById(R.id.iv_session1_logo);
         }
 
-        public void setItem(Integer logo){
-            ivLogo.setImageResource(logo);
+        public void setItem(String logo){
+            Glide
+                    .with(mContext)
+                    .load(logo) // 임시 테스트로 넘어오는 이미지는 localhost라서 적용이 안됨
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_js)
+                    .into(ivLogo);
         }
     }
 }

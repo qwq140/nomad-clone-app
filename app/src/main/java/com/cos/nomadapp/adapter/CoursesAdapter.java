@@ -2,6 +2,7 @@ package com.cos.nomadapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +12,15 @@ import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.cos.nomadapp.SeeProfileActivity;
+import com.cos.nomadapp.model.courses.CoursesPreview;
+import com.cos.nomadapp.model.courses.PreviewImage;
 import com.cos.nomadapp.ui.courses.CourseDetailActivity;
 import com.cos.nomadapp.FooterViewHolder;
 import com.cos.nomadapp.R;
+import com.cos.nomadapp.ui.courses.CoursesActivity;
+import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
@@ -21,16 +28,17 @@ import java.util.Map;
 
 public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
+    private static final String TAG = "CoursesAdapter";
 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_FILTER = 1;
     private static final int TYPE_ITEM = 2;
     private static final int TYPE_FOOTER = 3;
 
-    private List<Map<String,Object>> coursesPreviews;
+    private List<CoursesPreview> coursesPreviews;
     private Context context;
 
-    public CoursesAdapter(Context context, List<Map<String,Object>> coursesPreviews) {
+    public CoursesAdapter(Context context, List<CoursesPreview> coursesPreviews) {
         this.context = context;
         this.coursesPreviews = coursesPreviews;
     }
@@ -121,20 +129,34 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
             tvTitle = itemView.findViewById(R.id.tv_course_title);
             tvSubTitle = itemView.findViewById(R.id.tv_course_subtitle);
             tvLevel = itemView.findViewById(R.id.tv_courses_level);
+        }
 
+        void setCourseItem(CoursesPreview coursesPreview){
+            //ivCourse.setImageResource(coursesPreview.get());
+            tvLevel.setText(coursesPreview.getLevel());
+            tvTitle.setText(coursesPreview.getTitle());
+            tvSubTitle.setText(coursesPreview.getSubTitle());
+
+            PreviewImage previewImage =  coursesPreview.getPreviewImage();
+            Log.d(TAG, "setCourseItem: "+previewImage.getUrl());
+            // localhost로 들어오는건 안됨 ..... 나중에 배포할때는 가능할듯
+            Glide
+                    .with(context)
+                    .load(previewImage.getUrl())
+                    .centerCrop()
+                    .placeholder(R.drawable.course_youtube)
+                    .into(ivCourse);
+
+            long id = coursesPreview.getId();
+
+            Log.d(TAG, "setCourseItem: id : " +id);
             itemView.setOnClickListener(v -> {
                 Context context = v.getContext();
                 Intent intent = new Intent(context, CourseDetailActivity.class);
+                intent.putExtra("id", id);
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 context.startActivity(intent);
             });
-        }
-
-        void setCourseItem(Map<String,Object> coursesPreview){
-            //ivCourse.setImageResource(coursesPreview.get());
-            tvLevel.setText(coursesPreview.get("level").toString());
-            tvTitle.setText(coursesPreview.get("title").toString());
-            tvSubTitle.setText(coursesPreview.get("subTitle").toString());
         }
     }
 

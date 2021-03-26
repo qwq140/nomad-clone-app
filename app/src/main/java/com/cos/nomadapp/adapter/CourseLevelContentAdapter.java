@@ -17,7 +17,7 @@ public class CourseLevelContentAdapter extends RecyclerView.Adapter<CourseLevelC
 
     private final List<String> levelContent;
 
-    public CourseLevelContentAdapter(List<String> levelContent) {
+    public CourseLevelContentAdapter(List<String> levelContent ) {
 
         this.levelContent = levelContent;
     }
@@ -45,7 +45,7 @@ public class CourseLevelContentAdapter extends RecyclerView.Adapter<CourseLevelC
     }
 
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvLevelContent;
 
