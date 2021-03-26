@@ -1,6 +1,7 @@
 package com.cos.nomadapp.model.reply;
 
 
+import com.cos.nomadapp.model.community.Community;
 import com.cos.nomadapp.model.user.User;
 
 import java.io.Serializable;
@@ -17,5 +18,7 @@ public class Reply implements Serializable {
     private String content;
     private User user;
     private Integer like;
+
+    private Community community;
     private String regTime;
 }

@@ -6,27 +6,34 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Intent;
 import android.os.Bundle;
 
-import android.view.Gravity;
-import android.view.MenuItem;
-import android.view.View;
+import android.util.Log;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.adapter.CommunityPagerAdapter;
+import com.cos.nomadapp.model.CMRespDto;
+import com.cos.nomadapp.model.community.Category;
+import com.cos.nomadapp.service.NomadApi;
 import com.google.android.material.tabs.TabLayout;
-import com.makeramen.roundedimageview.RoundedImageView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CommunityActivity extends AppCompatActivity {
+
+    private static final String TAG = "CommunityActivity";
 
     private ImageView ivBack, ivWrite, ivSearch;
     private TextView tvToolbarTitle;
     private ViewPager vpContainer;
     private TabLayout tabs;
     private CommunityPagerAdapter communityPagerAdapter;
-
+    private List<Category> comCategoryList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,28 +79,44 @@ public class CommunityActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+
+
+        //전체 카테고리 불러오기
         //ViewPager
         vpContainer = findViewById(R.id.vp_container);
         tabs = findViewById(R.id.tabs);
-
         communityPagerAdapter = new CommunityPagerAdapter(getSupportFragmentManager(), 1);
 
-        communityPagerAdapter.addFragment(new CommunityFragAll());
-        communityPagerAdapter.addFragment(new CommunityFragTodolist());
-        communityPagerAdapter.addFragment(new CommunityFragJavascript());
-        communityPagerAdapter.addFragment(new CommunityFragBla());
-        communityPagerAdapter.addFragment(new CommunityFragHtml());
-        communityPagerAdapter.addFragment(new CommunityFragPython());
+        comCategoryList = new ArrayList<>();
 
-        vpContainer.setAdapter(communityPagerAdapter);
+        NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
+        Call<CMRespDto<List<Category>>> call = nomadApi.comCategoryFindAll();
+        call.enqueue(new Callback<CMRespDto<List<Category>>>() {
+            @Override
+            public void onResponse(Call<CMRespDto<List<Category>>> call, Response<CMRespDto<List<Category>>> response) {
+                Log.d(TAG, "onResponse: "+response.body());
+                comCategoryList = (List<Category>) response.body().getData();
 
-        tabs.setupWithViewPager(vpContainer);
+                for(int i=0;i<comCategoryList.size();i++){
+                    Log.d(TAG, "onResponse: "+ response.body().getData());
+                    if(i==0){
+                        communityPagerAdapter.addFragment(new CommunityFragAll());
+                    }else{
+                        communityPagerAdapter.addFragment(new CommunityFragSub(comCategoryList.get(i).getId()));    //카테고리의 id
+                    }
 
-        tabs.getTabAt(0).setText("all");
-        tabs.getTabAt(1).setText("to-do-list");
-        tabs.getTabAt(2).setText("javascript");
-        tabs.getTabAt(3).setText("bla-bla");
-        tabs.getTabAt(4).setText("html_css");
-        tabs.getTabAt(5).setText("python");
+                }
+                vpContainer.setAdapter(communityPagerAdapter);
+                tabs.setupWithViewPager(vpContainer);
+                for(int i=0;i<comCategoryList.size();i++){
+                    tabs.getTabAt(i).setText(comCategoryList.get(i).getTitle());
+                }
+            }
+            @Override
+            public void onFailure(Call<CMRespDto<List<Category>>> call, Throwable t) {
+                Log.d(TAG, "onFailure: "+t.getMessage());
+            }
+        });
+
     }
 }

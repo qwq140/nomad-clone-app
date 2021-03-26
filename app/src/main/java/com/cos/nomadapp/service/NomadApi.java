@@ -1,6 +1,9 @@
 package com.cos.nomadapp.service;
 
 import com.cos.nomadapp.model.CMRespDto;
+import com.cos.nomadapp.model.community.CReply;
+import com.cos.nomadapp.model.community.Category;
+import com.cos.nomadapp.model.community.Community;
 import com.cos.nomadapp.model.faq.Faq;
 import com.cos.nomadapp.model.faq.FaqCategory;
 
@@ -23,8 +26,26 @@ public interface NomadApi {
     @GET("faq/{id}")
     Call<CMRespDto<Faq>> faqFindById(@Path("id") long id);
 
+    //--- community Start ---
+
+    @GET("category")
+    Call<CMRespDto<List<Category>>> comCategoryFindAll();
+
+    // 카테고리
+    @GET("community")
+    Call<CMRespDto<List<Community>>> comFindAll();
+
+    // 카테고리 한개에 community List
+    @GET("community/{id}")
+    Call<CMRespDto<Community>> comFindById(@Path("id") long id);
+
+    @GET("cReply")
+    Call<CMRespDto<List<CReply>>> cReplyFindAll();
+
+    //--- community End ---
+
     public static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://172.30.1.50:8080/")
+            .baseUrl("http://192.168.0.5:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 

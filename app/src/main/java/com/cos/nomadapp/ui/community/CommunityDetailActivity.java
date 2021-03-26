@@ -38,7 +38,6 @@ public class CommunityDetailActivity extends AppCompatActivity {
         Community community = (Community) intent.getSerializableExtra("community");
 
         ivBack = findViewById(R.id.iv_back);
-
         tvToolbarTitle = findViewById(R.id.tv_toolbar_title);
         tvToolbarTitle.setText("");
 
@@ -48,31 +47,18 @@ public class CommunityDetailActivity extends AppCompatActivity {
 
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rvCommunityDetail = findViewById(R.id.rv_community_detail);
-
         List<Item> items = new ArrayList<>();
-
         items.add(new Item(0,community));
-
-        for (int i = 0; i<community.getReply().size();i++){
-            items.add(new Item(1,community.getReply().get(i)));
-        }
-
         rvCommunityDetail.setLayoutManager(manager);
-
         rvCommunityDetail.setAdapter(new CommunityDetailAdapter(items,this));
-
     }
 
-    public void showReplyInput(){
+    public void showReplyInput(){           //댓글 쓰기
         RelativeLayout replyBar = (RelativeLayout) findViewById(R.id.reply_bar);
         replyBar.setVisibility(View.VISIBLE);
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         etReply = (EditText) findViewById(R.id.et_reply);
         etReply.requestFocus();
         imm.showSoftInput(etReply, InputMethodManager.SHOW_IMPLICIT);
-
-
     }
-
-
 }

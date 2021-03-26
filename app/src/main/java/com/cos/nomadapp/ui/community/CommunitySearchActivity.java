@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.adapter.CommunityAdapter;
+import com.cos.nomadapp.model.community.CReply;
 import com.cos.nomadapp.model.community.Community;
 import com.cos.nomadapp.model.reply.Reply;
 import com.cos.nomadapp.model.user.User;
@@ -50,28 +51,8 @@ public class CommunitySearchActivity extends AppCompatActivity {
 
         List<Community> communities = new ArrayList<>();
 
-        User user = User.builder()
-                .name("유저1")
-                .build();
-
-        List<Reply> replies = new ArrayList<>();
-        User replyUser = User.builder()
-                .name("유저2")
-                .build();
-        Reply reply = new Reply(0L,"댓글내용1",replyUser,1,"1 hours ago");
-        replies.add(reply);
-
-        reply = new Reply(1L,"댓글내용2",replyUser,0,"1 hours ago");
-        replies.add(reply);
-
-        reply = new Reply(2L,"댓글내용3",replyUser,7,"1 hours ago");
-        replies.add(reply);
 
 
-        for (Long i = 0L ; i<5L;i++){
-            Community community = new Community(i,"커뮤니티 제목"+i, user, replies , "내용",15,"bla-bla","15");
-            communities.add(community);
-        }
 
 
         rvSearchList.setLayoutManager(manager);
