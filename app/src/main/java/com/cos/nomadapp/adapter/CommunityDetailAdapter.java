@@ -14,7 +14,6 @@ import com.cos.nomadapp.ui.community.CommunityDetailActivity;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.common.Item;
 import com.cos.nomadapp.model.community.Community;
-import com.cos.nomadapp.model.reply.Reply;
 
 import java.util.List;
 
@@ -107,7 +106,7 @@ public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.V
     public class ReplyViewHolder extends RecyclerView.ViewHolder{
 
         private AppCompatButton btnReplyLike;
-        private TextView tvReplyContent, tvReplyUsername, tvReplyTime;
+        private TextView tvReplyContent, tvReplyUsername, tvReplyTime,tvReplyCount;
 
         public ReplyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -115,6 +114,7 @@ public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.V
             tvReplyUsername = itemView.findViewById(R.id.tv_reply_username);
             tvReplyContent = itemView.findViewById(R.id.tv_reply_content);
             tvReplyTime = itemView.findViewById(R.id.tv_reply_time);
+            tvReplyCount = itemView.findViewById(R.id.tv_reply_count);
         }
 
         void setItem(CReply cReply){
@@ -122,6 +122,7 @@ public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.V
             tvReplyUsername.setText(cReply.getUser().getName());
             tvReplyContent.setText(cReply.getContent());
             tvReplyTime.setText(cReply.getCreateDate().toString());
+
         }
     }
 

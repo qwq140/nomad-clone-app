@@ -15,12 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.adapter.CommunityAdapter;
-import com.cos.nomadapp.adapter.CommunityPagerAdapter;
 import com.cos.nomadapp.model.CMRespDto;
-import com.cos.nomadapp.model.community.Category;
 import com.cos.nomadapp.model.community.Community;
-import com.cos.nomadapp.model.reply.Reply;
-import com.cos.nomadapp.model.user.User;
 import com.cos.nomadapp.service.NomadApi;
 
 import java.util.ArrayList;

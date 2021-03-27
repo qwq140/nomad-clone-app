@@ -14,6 +14,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 
@@ -39,13 +40,18 @@ public interface NomadApi {
     @GET("community/{id}")
     Call<CMRespDto<Community>> comFindById(@Path("id") long id);
 
+    // 댓글 찾기
     @GET("cReply")
     Call<CMRespDto<List<CReply>>> cReplyFindAll();
+
+    // 커뮤니티 저장
+    @POST("community")
+    Call<CMRespDto<Community>> comSave();
 
     //--- community End ---
 
     public static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://192.168.0.5:8080/")
+            .baseUrl("http://192.168.0.9:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 

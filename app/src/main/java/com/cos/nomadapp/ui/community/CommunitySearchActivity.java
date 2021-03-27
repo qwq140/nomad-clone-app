@@ -5,19 +5,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.adapter.CommunityAdapter;
-import com.cos.nomadapp.model.community.CReply;
 import com.cos.nomadapp.model.community.Community;
-import com.cos.nomadapp.model.reply.Reply;
-import com.cos.nomadapp.model.user.User;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
