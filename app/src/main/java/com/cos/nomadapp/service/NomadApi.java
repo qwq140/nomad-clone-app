@@ -2,6 +2,7 @@ package com.cos.nomadapp.service;
 
 import com.cos.nomadapp.model.CMRespDto;
 import com.cos.nomadapp.model.community.CReply;
+import com.cos.nomadapp.model.community.CReplySaveReqDto;
 import com.cos.nomadapp.model.community.Category;
 import com.cos.nomadapp.model.community.Community;
 import com.cos.nomadapp.model.faq.Faq;
@@ -14,6 +15,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
@@ -28,11 +30,11 @@ public interface NomadApi {
     Call<CMRespDto<Faq>> faqFindById(@Path("id") long id);
 
     //--- community Start ---
-
+    // 카테고리
     @GET("category")
     Call<CMRespDto<List<Category>>> comCategoryFindAll();
 
-    // 카테고리
+    // 커뮤니티 게시글
     @GET("community")
     Call<CMRespDto<List<Community>>> comFindAll();
 
@@ -40,13 +42,18 @@ public interface NomadApi {
     @GET("community/{id}")
     Call<CMRespDto<Community>> comFindById(@Path("id") long id);
 
-    // 댓글 찾기
+    // 모든 댓글 찾기
     @GET("cReply")
     Call<CMRespDto<List<CReply>>> cReplyFindAll();
 
-    // 커뮤니티 저장
+    // 댓글 저장
+    @POST("cReply")
+    Call<CMRespDto<CReply>> cReplySave(@Header("Authorization") String token, @Body CReplySaveReqDto cReplySaveReqDto);
+
+    // 게시글 저장
     @POST("community")
-    Call<CMRespDto<Community>> comSave();
+    Call<CMRespDto<Community>> comSave(@Header("Authorization") String token);
+
 
     //--- community End ---
 

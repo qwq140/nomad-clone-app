@@ -74,7 +74,7 @@ public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.V
 
     public class DetailContentViewHolder extends RecyclerView.ViewHolder{
 
-        private AppCompatButton btnCommunityLike, btnReply;
+        private AppCompatButton btnCommunityLike, btnReply,btnsendReply;
         private TextView tvDetailTitle, tvDetailContent, tvDetailUsername, tvDetailTime, tvReplyCount, tvDetailCategory;
 
 
@@ -91,6 +91,8 @@ public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.V
             btnReply.setOnClickListener(v -> {
                 communityDetailActivity.showReplyInput();
             });
+            btnsendReply=itemView.findViewById(R.id.iv_reply_send);
+
         }
 
         void setItem(Community community){
@@ -100,6 +102,7 @@ public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.V
             tvDetailCategory.setText(community.getCategory().getTitle());
             tvDetailTime.setText(community.getCreateDate().toString());
             btnCommunityLike.setText(community.getCount().toString());
+            tvReplyCount.setText(community.getReplys().size()+"");
         }
     }
 
@@ -122,7 +125,6 @@ public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.V
             tvReplyUsername.setText(cReply.getUser().getName());
             tvReplyContent.setText(cReply.getContent());
             tvReplyTime.setText(cReply.getCreateDate().toString());
-
         }
     }
 

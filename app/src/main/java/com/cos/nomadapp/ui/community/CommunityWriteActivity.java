@@ -3,31 +3,22 @@ package com.cos.nomadapp.ui.community;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 
 import com.cos.nomadapp.R;
-import com.cos.nomadapp.model.CMRespDto;
-import com.cos.nomadapp.model.community.Category;
-import com.cos.nomadapp.service.NomadApi;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import in.nashapp.androidsummernote.Summernote;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class CommunityWriteActivity extends AppCompatActivity {
 
     private ImageView ivBack;
     private AutoCompleteTextView autoCompleteTextView;
     private Summernote summernote;
-    private static final String TAG = "CommunityWriteActivity";
-    private List<Category> comCategoryList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +34,18 @@ public class CommunityWriteActivity extends AppCompatActivity {
         autoCompleteTextView = findViewById(R.id.autoCompleteText);
 
         List<String> category = new ArrayList<>();
-        NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
-        Call<CMRespDto<List<Category>>> call = nomadApi.comCategoryFindAll();
-        call.enqueue(new Callback<CMRespDto<List<Category>>>() {
-            @Override
-            public void onResponse(Call<CMRespDto<List<Category>>> call, Response<CMRespDto<List<Category>>> response) {
-
-            }
-            @Override
-            public void onFailure(Call<CMRespDto<List<Category>>> call, Throwable t) {
-                Log.d(TAG, "onFailure: "+t.getMessage());
-            }
-        });
+        category.add("#to-do-list");
+        category.add("#html_css");
+        category.add("#javascript");
+        category.add("#bla-bla");
+        category.add("#python");
+        category.add("#dev_resources");
+        category.add("#jobs");
+        category.add("#side_projects");
+        category.add("#react");
+        category.add("#uber_eats");
+        category.add("#hello");
+        category.add("#instaclone");
 
         ArrayAdapter arrayAdapter = new ArrayAdapter(this,R.layout.community_category_item,category);
 

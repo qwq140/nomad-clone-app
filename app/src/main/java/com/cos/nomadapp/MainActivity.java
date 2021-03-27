@@ -32,6 +32,7 @@ import com.cos.nomadapp.model.common.Item;
 import com.cos.nomadapp.model.courses.Course;
 
 import com.cos.nomadapp.model.user.User;
+import com.cos.nomadapp.model.user.UserLoginRespDto;
 import com.cos.nomadapp.service.NomadApi;
 import com.cos.nomadapp.service.OAuthApi;
 import com.google.android.material.navigation.NavigationView;
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         nv = findViewById(R.id.nv);
 
         Intent intent = getIntent();
-        User principal = (User)intent.getSerializableExtra("principal");
+        UserLoginRespDto principal = (UserLoginRespDto)intent.getSerializableExtra("principal");
 
         pref = getSharedPreferences("pref", MODE_PRIVATE);
         String token = pref.getString("token","");

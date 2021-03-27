@@ -18,6 +18,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cos.nomadapp.model.user.UserLoginRespDto;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import com.cos.nomadapp.model.CMRespDto;
@@ -106,26 +107,31 @@ public class LoginActivity extends AppCompatActivity {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             Log.d(TAG, "handleSignInResult: "+account);
             OAuthApi oauthApi = OAuthApi.retrofit.create(OAuthApi.class);
-            Call<CMRespDto> call = oauthApi.postOauth(account.getIdToken());
-            call.enqueue(new Callback<CMRespDto>() {
+            Call<CMRespDto<UserLoginRespDto>> call = oauthApi.postOauth(account.getIdToken());
+            call.enqueue(new Callback<CMRespDto<UserLoginRespDto>>() {
                 @Override
-                public void onResponse(Call<CMRespDto> call, Response<CMRespDto> response) {
+                public void onResponse(Call<CMRespDto<UserLoginRespDto>> call, Response<CMRespDto<UserLoginRespDto>> response) {
                     Log.d(TAG, "onResponse: 응답 : "+response.body());
                     if (response.body().getStatusCode()==200){
                         Log.d(TAG, "onResponse: 200 성공");
-                        Map<String, Object> data = (Map<String, Object>) response.body().getData();
-                        Log.d(TAG, "onResponse: data : " + data);
-                        // 서버로 부터 받은 token payload에 userid 들어가있음, 요청을 할 때 jwt토큰도 함께 보내기?
-                        User user = User.builder()
-                                .email(data.get("email").toString())
-                                .name(data.get("name").toString())
-                                .provider(data.get("provider").toString())
-                                .roles(data.get("roles").toString())
-                                .build();
+                        UserLoginRespDto user = response.body().getData();
+//                        Map<String, Object> data = (Map<String, Object>) response.body().getData();
+//                        Log.d(TAG, "onResponse: data : " + data);
+//                        // 서버로 부터 받은 token payload에 userid 들어가있음, 요청을 할 때 jwt토큰도 함께 보내기?
+//                        User user = User.builder()
+//                                .id(Long.valueOf(String.valueOf(data.get("id"))))
+//                                .email(data.get("email").toString())
+//                                .name(data.get("name").toString())
+//                                .provider(data.get("provider").toString())
+//                                .roles(data.get("roles").toString())
+//                                .build();
+
+
 
                         pref = getSharedPreferences("pref", MODE_PRIVATE);
                         editor = pref.edit();
-                        editor.putString("token",data.get("token").toString());
+                        editor.putString("token",user.getToken());
+                        //editor.putLong("principalId",user.getId());
                         editor.commit();
 
                         Log.d(TAG, "onResponse: User (구글로그인) : "+user);
@@ -141,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<CMRespDto> call, Throwable t) {
+                public void onFailure(Call<CMRespDto<UserLoginRespDto>> call, Throwable t) {
                     Log.d(TAG, "onFailure: onFailure");
                 }
             });
