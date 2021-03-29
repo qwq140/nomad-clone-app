@@ -1,5 +1,6 @@
 package com.cos.nomadapp.adapter;
 
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,7 +98,7 @@ public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.V
 
         void setItem(Community community){
             tvDetailTitle.setText(community.getTitle());
-            tvDetailContent.setText(community.getContent());
+            tvDetailContent.setText(Html.fromHtml(community.getContent()));
             tvDetailUsername.setText(community.getUser().getName());
             tvDetailCategory.setText(community.getCategory().getTitle());
             tvDetailTime.setText(community.getCreateDate().toString());

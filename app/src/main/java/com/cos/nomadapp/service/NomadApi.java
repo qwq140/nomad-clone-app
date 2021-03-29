@@ -5,6 +5,7 @@ import com.cos.nomadapp.model.community.CReply;
 import com.cos.nomadapp.model.community.CReplySaveReqDto;
 import com.cos.nomadapp.model.community.Category;
 import com.cos.nomadapp.model.community.Community;
+import com.cos.nomadapp.model.community.CommunitySaveReqDto;
 import com.cos.nomadapp.model.faq.Faq;
 import com.cos.nomadapp.model.faq.FaqCategory;
 
@@ -52,13 +53,13 @@ public interface NomadApi {
 
     // 게시글 저장
     @POST("community")
-    Call<CMRespDto<Community>> comSave(@Header("Authorization") String token);
+    Call<CMRespDto<Community>> comSave(@Header("Authorization") String token, @Body CommunitySaveReqDto communitySaveReqDto);
 
 
     //--- community End ---
 
     public static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://192.168.0.9:8080/")
+            .baseUrl("http://172.17.100.102:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 

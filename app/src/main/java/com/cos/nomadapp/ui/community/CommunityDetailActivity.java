@@ -46,7 +46,6 @@ public class CommunityDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community_detail);
-
         Intent intent = getIntent();
 
         Community community = (Community) intent.getSerializableExtra("community");
@@ -73,16 +72,15 @@ public class CommunityDetailActivity extends AppCompatActivity {
         //게시글마다 댓글 불러오기
         replies = new ArrayList<>();
 
-
         NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
         Call<CMRespDto<Community>> call = nomadApi.comFindById(community.getId());
         call.enqueue(new Callback<CMRespDto<Community>>() {
             @Override
             public void onResponse(Call<CMRespDto<Community>> call, Response<CMRespDto<Community>> response) {
-               replies = response.body().getData().getReplys();
-               for(int i=0;i<replies.size();i++){
-                   items.add(new Item(1,replies.get(i)));
-               }
+                replies = response.body().getData().getReplys();
+                for(int i=0;i<replies.size();i++){
+                    items.add(new Item(1,replies.get(i)));
+                }
             }
 
             @Override
@@ -120,7 +118,9 @@ public class CommunityDetailActivity extends AppCompatActivity {
                     Log.d(TAG, "onFailure: ");
                 }
             });
+            shutdownReplyInput();
         });
+
 
 
     }
@@ -128,6 +128,7 @@ public class CommunityDetailActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
     }
 
     public void showReplyInput(){           //댓글 쓰기
@@ -144,7 +145,15 @@ public class CommunityDetailActivity extends AppCompatActivity {
         etReply = (EditText) findViewById(R.id.et_reply);
         etReply.requestFocus();
         imm.showSoftInput(etReply, InputMethodManager.SHOW_IMPLICIT);
+    }
+    public void shutdownReplyInput(){           //댓글 닫기
+        RelativeLayout replyBar = (RelativeLayout) findViewById(R.id.reply_bar);
+        replyBar.setVisibility(View.INVISIBLE);
 
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        etReply = (EditText) findViewById(R.id.et_reply);
+        etReply.requestFocus();
+        imm.showSoftInput(etReply, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
 

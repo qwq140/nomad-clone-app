@@ -36,6 +36,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_save_community"
             android:layout_width="60dp"
             android:layout_height="35dp"
             android:text="등록"
