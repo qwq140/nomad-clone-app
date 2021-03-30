@@ -89,7 +89,6 @@ public class CoursesActivity extends AppCompatActivity {
             public void onResponse(Call<CMRespDto<List<CoursesPreview>>> call, Response<CMRespDto<List<CoursesPreview>>> response) {
                 Log.d(TAG, "onResponse: "+response.body());
                 List<CoursesPreview> coursesPreviews = response.body().getData();
-                Log.d(TAG, "onResponse: "+coursesPreviews.get(0).getId());
                 rvCoursesList.setAdapter(new CoursesAdapter(getApplicationContext(),coursesPreviews));
             }
 

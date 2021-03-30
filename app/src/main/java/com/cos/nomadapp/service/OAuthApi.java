@@ -14,7 +14,7 @@ public interface OAuthApi {
     Call<CMRespDto> postOauth(@Body String idToken);
 
     public static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://172.17.0.239:8080/")
+            .baseUrl("http://172.17.21.146:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 

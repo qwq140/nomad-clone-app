@@ -1,6 +1,7 @@
 package com.cos.nomadapp.model.user;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,4 +20,5 @@ public class User implements Serializable {
     private String roles;
     private String provider;
     private String imageUrl;
+    private Timestamp createDate;
 }

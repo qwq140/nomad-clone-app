@@ -25,9 +25,6 @@
         <activity android:name=".ui.community.CommunityWriteActivity" />
         <activity android:name=".ui.courses.CourseDetailActivity" />
         <activity android:name=".UserDashboardActivity" />
-        <activity android:name=".CommunityDetailActivity" />
-        <activity android:name=".CommunitySearchActivity" />
-        <activity android:name=".CommunityWriteActivity" />
         <activity android:name=".CancleOrRefundPolicyActivity" />
         <activity android:name=".PrivacyPolicyActivity" />
         <activity android:name=".ServiceTermActivity" />

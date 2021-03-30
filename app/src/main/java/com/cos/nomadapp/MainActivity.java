@@ -101,10 +101,10 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         if(item.getTitle().equals("Dashboard")){
-                                Toast.makeText(getApplicationContext(), item.getTitle(),Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(v.getContext(), UserDashboardActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                v.getContext().startActivity(intent);
+                            Toast.makeText(getApplicationContext(), item.getTitle(),Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(v.getContext(), UserDashboardActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            v.getContext().startActivity(intent);
 
                         }else{
                             Toast.makeText(getApplicationContext(), item.getTitle(),Toast.LENGTH_SHORT).show();

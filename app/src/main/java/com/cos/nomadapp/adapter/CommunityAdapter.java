@@ -2,6 +2,7 @@ package com.cos.nomadapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +16,13 @@ import com.cos.nomadapp.ui.community.CommunityDetailActivity;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.community.Community;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder>{
 
     private List<Community> communities;
     private Context mContext;
-
+    private static final String TAG = "CommunityAdapter";
     public CommunityAdapter(List<Community> communities, Context mContext) {
         this.communities = communities;
         this.mContext = mContext;
@@ -60,9 +60,11 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             tvReplyCount = itemView.findViewById(R.id.tv_reply_count);
             btnLike = itemView.findViewById(R.id.btn_like);
 
-            itemView.setOnClickListener(v -> {
+            itemView.setOnClickListener(v->{
                 int pos = getAdapterPosition();
+
                 Intent intent = new Intent(mContext, CommunityDetailActivity.class);
+
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra("community",communities.get(pos));
                 mContext.startActivity(intent);
@@ -71,18 +73,15 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
 
         public void setCommunityItem(Community community){
             tvCommunityTitle.setText(community.getTitle());
-            tvCommunityCategory.setText(community.getCategory());
-            tvRegTime.setText(community.getRegTime());
+            tvCommunityCategory.setText(community.getCategory().getTitle());
+            tvRegTime.setText(community.getCreateDate().toString());
             tvUsername.setText(community.getUser().getName());
-            tvReplyCount.setText(community.getReply().size()+"");
-            btnLike.setText(community.getLike()+"");
+            tvReplyCount.setText(community.getReplys().size()+"");
         }
     }
 
     public void filterList(List<Community> filterItems) {
-
         this.communities = filterItems;
         notifyDataSetChanged();
     }
 }
-
