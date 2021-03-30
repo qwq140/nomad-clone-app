@@ -19,7 +19,7 @@ public class Video {
     private String name;
     private String vimeoFolderId;
 
-    private List<String> contents = new ArrayList<>();
-    private List<List<Map<String, Object>>> contentList = new ArrayList<>();
+    private List<Map<String,Object>> contents = new ArrayList<>();
+    //private List<List<Map<String, Object>>> contentList = new ArrayList<>();
     private Timestamp createDate;
 }

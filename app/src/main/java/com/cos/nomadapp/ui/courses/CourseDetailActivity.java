@@ -222,7 +222,7 @@ public class CourseDetailActivity extends AppCompatActivity {
         section5();
         section6();
         section7();
-        //section8();
+        section8();
         section9();
         section10();
 
@@ -376,14 +376,18 @@ public class CourseDetailActivity extends AppCompatActivity {
 
         for(int i = 0 ; i < video.getContents().size() ; i++){
             Curriculum curriculum = new Curriculum();
-            curriculum.setChapter(video.getContents().get(i));
+            curriculum.setChapter(video.getContents().get(i).get("title").toString());
             List<VideoContent> curriculumContent = new ArrayList<>();
-            List<Map<String, Object>> contentList = video.getContentList().get(i);
-            for (Map<String,Object> content : contentList) {
+            Log.d(TAG, "section8: chapter : "+curriculum.getChapter());
+            Log.d(TAG, "section8: "+video.getContents().get(i).get("list"));
+            List<Map<String, Object>> content = (List<Map<String, Object>>)video.getContents().get(i).get("list");
+            Log.d(TAG, "section8: "+content);
+            for (int j=0; j<content.size();j++){
+                Log.d(TAG, "section8: curriculumContent"+content.get(j));
                 VideoContent videoContent = VideoContent.builder()
-                        .title(content.get("title").toString())
-                        .isFree(Boolean.valueOf(content.get("isFree").toString()))
-                        .vimeoId(content.get("vimeoId").toString())
+                        .title(content.get(j).get("title").toString())
+                        .isFree(Boolean.parseBoolean(content.get(j).get("isFree").toString()))
+                        .vimeoId(content.get(j).get("vimeoId").toString())
                         .build();
                 curriculumContent.add(videoContent);
             }
