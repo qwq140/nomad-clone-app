@@ -15,7 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Nomadapp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".SeeProfileActivity"></activity>
+        <activity android:name=".PaymentActivity"></activity>
+        <activity android:name=".VideoActivity" />
+        <activity android:name=".SeeProfileActivity" />
         <activity android:name=".EditProfileActivity" />
         <activity android:name=".FaqDetailActivity" />
         <activity android:name=".ui.community.CommunityDetailActivity" />

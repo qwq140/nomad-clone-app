@@ -14,14 +14,14 @@ import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.courses.Concept;
 
 import java.util.List;
+import java.util.Map;
 
 public class CourseConceptAdapter extends RecyclerView.Adapter<CourseConceptAdapter.MyViewHolder>{
 
-    private final List<Concept> concepts;
+    private final List<Map<String,Object>> concepts;
     private final Context context;
-    private LinearLayout container;
 
-    public CourseConceptAdapter(List<Concept> concepts, Context context) {
+    public CourseConceptAdapter(List<Map<String,Object>> concepts, Context context) {
 
         this.concepts = concepts;
         this.context = context;
@@ -52,15 +52,15 @@ public class CourseConceptAdapter extends RecyclerView.Adapter<CourseConceptAdap
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvConceptTitle;
+        private TextView tvConceptContent;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvConceptTitle = itemView.findViewById(R.id.tv_concept_title);
+            tvConceptContent = itemView.findViewById(R.id.tv_concept_content);
         }
 
-        public void setItem(Concept concept){
-            tvConceptTitle.setText(concept.getTitle());
+        public void setItem(Map<String, Object> concept){
+            tvConceptContent.setText(concept.get("content").toString());
 
         }
     }

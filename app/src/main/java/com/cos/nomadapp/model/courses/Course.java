@@ -1,5 +1,8 @@
 package com.cos.nomadapp.model.courses;
 
+import com.cos.nomadapp.model.video.Video;
+
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Course {
+public class Course implements Serializable {
     private long id;
     private String title;
     private String subTitle;
@@ -31,7 +34,7 @@ public class Course {
     private Map<String, Object> skill = new HashMap<>();
     private List<Map<String, Object>> lectureAfter = new ArrayList<>();
 
-    private long videoId;
+    private Video video;
     private String price;
     private Timestamp createDate;
 }

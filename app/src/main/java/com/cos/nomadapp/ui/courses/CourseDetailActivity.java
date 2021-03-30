@@ -7,11 +7,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -19,6 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.cos.nomadapp.LoginActivity;
+import com.cos.nomadapp.PaymentActivity;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.UserDashboardActivity;
 import com.cos.nomadapp.adapter.CourseConceptAdapter;
@@ -36,6 +40,8 @@ import com.cos.nomadapp.model.courses.CourseFaqContent;
 import com.cos.nomadapp.model.courses.CourseFaqTitle;
 import com.cos.nomadapp.model.courses.CourseSimple;
 import com.cos.nomadapp.model.courses.Curriculum;
+import com.cos.nomadapp.model.video.Video;
+import com.cos.nomadapp.model.video.VideoContent;
 import com.cos.nomadapp.service.NomadApi;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -71,11 +77,18 @@ public class CourseDetailActivity extends AppCompatActivity {
     private TextView tvConceptTitle;
     private LinearLayout layoutSection4;
 
+    private Button btnPayment;
+
     private RecyclerView rvSkillPackages, rvLevelContent, rvLectureAfter, rvCourseCurriculum, rvCourseFaq;
     private TextView tvSkillName, tvSkillSection, tvLectureAfterTitle, tvPayTitle, tvPrice;
     private LinearLayout layoutSection5, layoutSection7, layoutTopSection9;
 
     private long id;
+
+    private NomadApi nomadApi;
+    // 토큰
+    private SharedPreferences pref;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +97,7 @@ public class CourseDetailActivity extends AppCompatActivity {
 
         init();
 
-
-        NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
+        nomadApi= NomadApi.retrofit.create(NomadApi.class);
         Call<CMRespDto<Course>> call = nomadApi.getDetailCourses(id);
         call.enqueue(new Callback<CMRespDto<Course>>() {
             @Override
@@ -140,6 +152,10 @@ public class CourseDetailActivity extends AppCompatActivity {
         id = intent.getLongExtra("id",0);
         Log.d(TAG, "onCreate: id"+id);
 
+        // 토큰 가져오기
+        pref=getSharedPreferences("pref", MODE_PRIVATE);
+        token = pref.getString("token","");
+
         // 뒤로가기 버튼
         ivBack = findViewById(R.id.iv_back);
         ivBack.setOnClickListener(v -> {
@@ -192,6 +208,7 @@ public class CourseDetailActivity extends AppCompatActivity {
         layoutTopSection9 = findViewById(R.id.layout_top_section9);
         tvPayTitle = findViewById(R.id.tv_section9_title);
         tvPrice = findViewById(R.id.tv_price);
+        btnPayment = findViewById(R.id.btn_payment);
 
         // section10
         rvCourseFaq = findViewById(R.id.rv_course_faq);
@@ -205,15 +222,19 @@ public class CourseDetailActivity extends AppCompatActivity {
         section5();
         section6();
         section7();
-        section8();
+        //section8();
         section9();
         section10();
 
     }
     private void section1(){
+
+        Map<String, Object> map = course.getMainImage();
+        String mainUrl = map.get("url").toString();
+
         Glide
                 .with(CourseDetailActivity.this)
-                .load("https://picsum.photos/200/300") // 임시 테스트로 넘어오는 이미지는 localhost라서 적용이 안됨
+                .load(mainUrl) // 임시 테스트로 넘어오는 이미지는 localhost라서 적용이 안됨
                 .centerCrop()
                 .placeholder(R.drawable.test)
                 .into(mainImage);
@@ -251,9 +272,11 @@ public class CourseDetailActivity extends AppCompatActivity {
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rvCourseSimpleInfo.setLayoutManager(manager);
         List<Map<String,Object>> simpleInfo = course.getSimpleInfo();
+        Log.d(TAG, "section3: 심플 인포"+simpleInfo);
         List<CourseSimple> simples = new ArrayList<>();
         for (Map<String,Object> i:simpleInfo) {
             Map<String,Object> image =(Map<String,Object>)i.get("image");
+            Log.d(TAG, "section3: 심플인포 이미지"+image);
             CourseSimple courseSimple = CourseSimple.builder()
                     .simpleImage(image.get("url").toString())
                     .title(i.get("title").toString())
@@ -270,27 +293,31 @@ public class CourseDetailActivity extends AppCompatActivity {
         layoutSection4.setBackgroundColor(Color.parseColor(course.getBackgroundColor()));
         tvConceptTitle.setTextColor(Color.parseColor(course.getTextColor()));
 
-        // concept, 잠시 임시데이터로 (디자인 고민)
-        List<Concept> concepts = new ArrayList<>();
-        // First concept
-        Concept concept1 = new Concept();
-        concept1.setTitle("Users");
-        List<String> contents1 = new ArrayList<>();
-        for (int i = 0 ; i<5 ; i++){
-            contents1.add("content"+i);
-        }
-        concept1.setContents(contents1);
-        concepts.add(concept1);
+        List<Map<String,Object>> concepts = course.getConcept();
 
-        Concept concept2 = new Concept();
-        concept2.setTitle("Videos");
-        List<String> contents2 = new ArrayList<>();
-        for (int i = 0 ; i<5 ; i++){
-            contents2.add("content"+i);
-        }
-        concept2.setContents(contents2);
-        concepts.add(concept2);
-        GridLayoutManager manager = new GridLayoutManager(this, 2);
+
+
+//        // concept, 잠시 임시데이터로 (디자인 고민)
+//        List<Concept> concepts = new ArrayList<>();
+//        // First concept
+//        Concept concept1 = new Concept();
+//        concept1.setTitle("Users");
+//        List<String> contents1 = new ArrayList<>();
+//        for (int i = 0 ; i<5 ; i++){
+//            contents1.add("content"+i);
+//        }
+//        concept1.setContents(contents1);
+//        concepts.add(concept1);
+//
+//        Concept concept2 = new Concept();
+//        concept2.setTitle("Videos");
+//        List<String> contents2 = new ArrayList<>();
+//        for (int i = 0 ; i<5 ; i++){
+//            contents2.add("content"+i);
+//        }
+        //concept2.setContents(contents2);
+        //concepts.add(concept2);
+        LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rvConcept.setLayoutManager(manager);
         rvConcept.setAdapter(new CourseConceptAdapter(concepts,this));
 
@@ -340,26 +367,29 @@ public class CourseDetailActivity extends AppCompatActivity {
     }
 
     private void section8(){
+        Log.d(TAG, "section8: video "+course.getVideo());
 
+        Video video = (Video) course.getVideo();
+        Log.d(TAG, "section8: "+video);
         // 임시 데이터
         List<Curriculum> curriculumList = new ArrayList<>();
 
-        Curriculum curriculum = new Curriculum();
-        List<String> curriculumContent = new ArrayList<>();
-        // 첫번째
-        curriculum.setChapter("#0 INTRODUCTION");
-        curriculumContent.add("#0.0 Read this First");
-        curriculumContent.add("#0.1 What Are We Building");
-        curriculumContent.add("#0.2 The State of Fullstack");
-        curriculum.setContents(curriculumContent);
-        curriculumList.add(curriculum);
-        // 두번째
-        curriculum.setChapter("#1 NODEJS THEORY");
-        curriculumContent.add("#1.0 What is NodeJS");
-        curriculumContent.add("#1.1 Use Cases for NodeJS");
-        curriculumContent.add("#1.2 Who Uses NodeJS");
-        curriculum.setContents(curriculumContent);
-        curriculumList.add(curriculum);
+        for(int i = 0 ; i < video.getContents().size() ; i++){
+            Curriculum curriculum = new Curriculum();
+            curriculum.setChapter(video.getContents().get(i));
+            List<VideoContent> curriculumContent = new ArrayList<>();
+            List<Map<String, Object>> contentList = video.getContentList().get(i);
+            for (Map<String,Object> content : contentList) {
+                VideoContent videoContent = VideoContent.builder()
+                        .title(content.get("title").toString())
+                        .isFree(Boolean.valueOf(content.get("isFree").toString()))
+                        .vimeoId(content.get("vimeoId").toString())
+                        .build();
+                curriculumContent.add(videoContent);
+            }
+            curriculum.setContents(curriculumContent);
+            curriculumList.add(curriculum);
+        }
 
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rvCourseCurriculum.setLayoutManager(manager);
@@ -371,6 +401,12 @@ public class CourseDetailActivity extends AppCompatActivity {
         layoutTopSection9.setBackgroundColor(Color.parseColor(course.getBackgroundColor()));
         tvPayTitle.setTextColor(Color.parseColor(course.getTextColor()));
         tvPrice.setText("월 "+course.getPrice());
+        btnPayment.setOnClickListener(v -> {
+            Intent intent = new Intent(this, PaymentActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.putExtra("course",course);
+            startActivity(intent);
+        });
     }
 
     private void section10(){

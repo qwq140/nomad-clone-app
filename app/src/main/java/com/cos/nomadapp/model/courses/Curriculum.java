@@ -1,5 +1,7 @@
 package com.cos.nomadapp.model.courses;
 
+import com.cos.nomadapp.model.video.VideoContent;
+
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -11,5 +13,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Curriculum {
     private String chapter;
-    private List<String> contents;
+    private List<VideoContent> contents;
 }

@@ -140,13 +140,13 @@ public class MainActivity extends AppCompatActivity {
         rvMainList = findViewById(R.id.rv_main_list);
         rvMainList.setLayoutManager(manager);
 
-        Call<CMRespDto<List<CoursesPreview>>> call = nomadApi.getAllCourses();
+        Call<CMRespDto<List<CoursesPreview>>> call = nomadApi.getHomeCourses();
         call.enqueue(new Callback<CMRespDto<List<CoursesPreview>>>() {
             @Override
             public void onResponse(Call<CMRespDto<List<CoursesPreview>>> call, Response<CMRespDto<List<CoursesPreview>>> response) {
                 Log.d(TAG, "onResponse: "+response.body());
                 List<CoursesPreview> coursesPreviews = response.body().getData();
-                Log.d(TAG, "onResponse: "+coursesPreviews.get(0).getId());
+                //Log.d(TAG, "onResponse: "+coursesPreviews.get(0).getId());
                 rvMainList.setAdapter(new MainAdapter(getApplicationContext(),coursesPreviews));
             }
 

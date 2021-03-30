@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.common.Item;
 import com.cos.nomadapp.model.courses.Curriculum;
+import com.cos.nomadapp.model.video.VideoContent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +43,8 @@ public class CourseCurriculumAdapter extends RecyclerView.Adapter<CourseCurricul
         List<Item> items = new ArrayList<>();
         items.add(new Item(0,curriculumList.get(position).getChapter()));
         for (int i=0; i<curriculumList.get(position).getContents().size() ; i++){
-            String content = curriculumList.get(position).getContents().get(i);
-            items.add(new Item(1,content));
+            VideoContent videoContent = curriculumList.get(position).getContents().get(i);
+            items.add(new Item(1,videoContent));
         }
 
         LinearLayoutManager manager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);

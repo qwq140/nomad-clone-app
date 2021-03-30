@@ -1,5 +1,7 @@
 package com.cos.nomadapp.adapter;
 
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.common.Item;
+import com.cos.nomadapp.model.video.VideoContent;
 
 import java.util.List;
 
 public class CurriculumSpaceAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
+    private static final String TAG = "CurriculumSpaceAdapter";
     private List<Item> items;
 
     public CurriculumSpaceAdapter(List<Item> items) {
@@ -25,7 +29,6 @@ public class CurriculumSpaceAdapter extends  RecyclerView.Adapter<RecyclerView.V
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        //0 : CourseTitle 1 : Challenge
         if(viewType == 0){
             return new ChapterViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
@@ -51,8 +54,8 @@ public class CurriculumSpaceAdapter extends  RecyclerView.Adapter<RecyclerView.V
             String chapter = (String) items.get(position).getObject();
             ((ChapterViewHolder) holder).setItem(chapter);
         }else if(getItemViewType(position)==1){
-            String content = (String) items.get(position).getObject();
-            ((ContentViewHolder) holder).setItem(content);
+            VideoContent videoContent = (VideoContent) items.get(position).getObject();
+            ((ContentViewHolder) holder).setItem(videoContent);
         }
     }
 
@@ -89,8 +92,20 @@ public class CurriculumSpaceAdapter extends  RecyclerView.Adapter<RecyclerView.V
             tvCurriculumContent = itemView.findViewById(R.id.tv_curriculum_content);
         }
 
-        void setItem(String content){
-           tvCurriculumContent.setText(content);
+        void setItem(VideoContent videoContent){
+           tvCurriculumContent.setText(videoContent.getTitle());
+            Log.d(TAG, "setItem: "+videoContent.isFree());
+            if (videoContent.isFree()==false){
+                tvCurriculumContent.setTextColor(Color.parseColor("#cdd1d7"));
+                tvCurriculumContent.setClickable(false);
+                tvCurriculumContent.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_lock,0);
+            } else {
+                tvCurriculumContent.setOnClickListener(v -> {
+                    Log.d(TAG, "setItem: 커리큘럼 클릭");
+                    Log.d(TAG, "setItem: "+videoContent.isFree());
+                });
+            }
+
         }
     }
 

@@ -43,8 +43,14 @@ public interface NomadApi {
     @GET("/courses/{id}")
     Call<CMRespDto<Course>> getDetailCourses(@Path("id") long id);
 
+    @GET("/homeCourses")
+    Call<CMRespDto<List<CoursesPreview>>> getHomeCourses();
+
+    @GET("/admin/video/{id}")
+    Call<CMRespDto> getVideoList(@Header("Authorization") String token ,@Path("id") long id);
+
     public static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://172.30.1.29:8080/")
+            .baseUrl("http://172.17.0.239:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
