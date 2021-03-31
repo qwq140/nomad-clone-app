@@ -1,5 +1,6 @@
 package com.cos.nomadapp.model.video;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Video {
+public class Video implements Serializable {
     private Long id;
     private String name;
     private String vimeoFolderId;

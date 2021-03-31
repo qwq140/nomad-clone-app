@@ -1,5 +1,7 @@
 package com.cos.nomadapp.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,9 +12,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cos.nomadapp.PaymentActivity;
 import com.cos.nomadapp.R;
+import com.cos.nomadapp.VideoActivity;
 import com.cos.nomadapp.model.common.Item;
 import com.cos.nomadapp.model.video.VideoContent;
+import com.cos.nomadapp.ui.courses.CourseDetailActivity;
 
 import java.util.List;
 
@@ -20,9 +25,13 @@ public class CurriculumSpaceAdapter extends  RecyclerView.Adapter<RecyclerView.V
 
     private static final String TAG = "CurriculumSpaceAdapter";
     private List<Item> items;
+    private Context context;
+    private long videoId;
 
-    public CurriculumSpaceAdapter(List<Item> items) {
+    public CurriculumSpaceAdapter(List<Item> items, Context context, long videoId) {
         this.items = items;
+        this.context = context;
+        this.videoId = videoId;
     }
 
     @NonNull
@@ -69,7 +78,7 @@ public class CurriculumSpaceAdapter extends  RecyclerView.Adapter<RecyclerView.V
         return items.get(position).getType();
     }
 
-    public static class ChapterViewHolder extends RecyclerView.ViewHolder{
+    public class ChapterViewHolder extends RecyclerView.ViewHolder{
 
         private TextView tvChapter;
 
@@ -83,7 +92,7 @@ public class CurriculumSpaceAdapter extends  RecyclerView.Adapter<RecyclerView.V
         }
     }
 
-    public static class ContentViewHolder extends RecyclerView.ViewHolder{
+    public class ContentViewHolder extends RecyclerView.ViewHolder{
 
         private TextView tvCurriculumContent;
 
@@ -103,6 +112,11 @@ public class CurriculumSpaceAdapter extends  RecyclerView.Adapter<RecyclerView.V
                 tvCurriculumContent.setOnClickListener(v -> {
                     Log.d(TAG, "setItem: 커리큘럼 클릭");
                     Log.d(TAG, "setItem: "+videoContent.isFree());
+                    Intent intent = new Intent(context, VideoActivity.class);
+                    intent.putExtra("videoContent",videoContent);
+                    intent.putExtra("videoId", videoId);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    context.startActivity(intent);
                 });
             }
 

@@ -9,17 +9,28 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.cos.nomadapp.model.courses.Course;
 import com.cos.nomadapp.ui.courses.CourseDetailActivity;
+import com.iamport.sdk.data.sdk.IamPortRequest;
+import com.iamport.sdk.data.sdk.PG;
+import com.iamport.sdk.data.sdk.PayMethod;
+import com.iamport.sdk.domain.core.Iamport;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.util.Date;
 import java.util.Map;
+
+import kotlin.Unit;
 
 public class PaymentActivity extends AppCompatActivity {
 
+    private static final String TAG = "PaymentActivity";
+    
     private Course course;
     private SharedPreferences pref;
     private String token;
@@ -28,6 +39,9 @@ public class PaymentActivity extends AppCompatActivity {
     private TextView tvToolbarTitle, tvCourseTitle, tvCourseSubTitle, tvCourseLevel, tvAmountPayment;
     private ImageView ivBack;
     private RoundedImageView ivCourse;
+
+    private Button btnPayNow;
+    private RadioGroup rgPaymentMethod;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +76,9 @@ public class PaymentActivity extends AppCompatActivity {
         tvCourseSubTitle = findViewById(R.id.tv_course_subtitle);
         tvCourseLevel = findViewById(R.id.tv_courses_level);
         tvAmountPayment = findViewById(R.id.tv_amount_payment);
+        
+        rgPaymentMethod = findViewById(R.id.rg_payment_method);
+        btnPayNow = findViewById(R.id.btn_pay_now);
 
     }
 
@@ -80,5 +97,31 @@ public class PaymentActivity extends AppCompatActivity {
                 .into(ivCourse);
 
         tvAmountPayment.setText("￦ "+course.getPrice());
+        
+        rgPaymentMethod.setOnCheckedChangeListener((group, checkedId) -> {
+            if (group==rgPaymentMethod){
+                if (checkedId == R.id.rb_domestic_card){
+                    Log.d(TAG, "setItem: 국내카드");
+                    btnPayNow.setOnClickListener(v -> {
+                        Intent intent = new Intent(this, IamportActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        intent.putExtra("course",course);
+                        startActivity(intent);
+                    });
+                } else if(checkedId == R.id.rb_kakao_pay){
+                    Log.d(TAG, "setItem: 카카오페이");
+                } else if(checkedId == R.id.rb_overseas_card){
+                    Log.d(TAG, "setItem: 해외카드");
+                } else{
+                    Log.d(TAG, "setItem: 선택안함");
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Iamport.INSTANCE.close();
     }
 }

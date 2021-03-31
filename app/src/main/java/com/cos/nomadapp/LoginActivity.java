@@ -17,6 +17,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cos.nomadapp.model.user.LoginDto;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -107,29 +108,22 @@ public class LoginActivity extends AppCompatActivity {
 
 
             OAuthApi oauthApi = OAuthApi.retrofit.create(OAuthApi.class);
-            Call<CMRespDto> call = oauthApi.postOauth(account.getIdToken());
-            call.enqueue(new Callback<CMRespDto>() {
+            Call<CMRespDto<LoginDto>> call = oauthApi.postOauth(account.getIdToken());
+            call.enqueue(new Callback<CMRespDto<LoginDto>>() {
                 @Override
-                public void onResponse(Call<CMRespDto> call, Response<CMRespDto> response) {
+                public void onResponse(Call<CMRespDto<LoginDto>> call, Response<CMRespDto<LoginDto>> response) {
                     Log.d(TAG, "onResponse: 응답 : "+response.body());
                     if (response.body().getStatusCode()==200){
                         Log.d(TAG, "onResponse: 200 성공");
-                        Map<String, Object> data = (Map<String, Object>) response.body().getData();
-                        Log.d(TAG, "onResponse: data : " + data);
+                        LoginDto loginDto = response.body().getData();
+                        Log.d(TAG, "onResponse: data : 구글로그인 " + loginDto);
 
-                        User user = User.builder()
-                                .email(data.get("email").toString())
-                                .name(data.get("name").toString())
-                                .provider(data.get("provider").toString())
-                                .roles(data.get("roles").toString())
-                                .build();
 
                         pref = getSharedPreferences("pref", MODE_PRIVATE);
                         editor = pref.edit();
-                        editor.putString("token",data.get("token").toString());
+                        editor.putString("token",loginDto.getToken());
                         editor.commit();
 
-                        Log.d(TAG, "onResponse: User (구글로그인) : "+user);
                         finish();
 
                     } else {
@@ -139,7 +133,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<CMRespDto> call, Throwable t) {
+                public void onFailure(Call<CMRespDto<LoginDto>> call, Throwable t) {
                     Log.d(TAG, "onFailure: onFailure");
                 }
             });

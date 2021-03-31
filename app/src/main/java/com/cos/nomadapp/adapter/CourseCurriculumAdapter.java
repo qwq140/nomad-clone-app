@@ -21,11 +21,13 @@ public class CourseCurriculumAdapter extends RecyclerView.Adapter<CourseCurricul
 
     private final List<Curriculum> curriculumList;
     private Context context;
+    private long videoId;
 
-    public CourseCurriculumAdapter(List<Curriculum> curriculumList, Context context) {
+    public CourseCurriculumAdapter(List<Curriculum> curriculumList, Context context, long videoId) {
 
         this.curriculumList = curriculumList;
         this.context = context;
+        this.videoId = videoId;
     }
 
 
@@ -49,7 +51,7 @@ public class CourseCurriculumAdapter extends RecyclerView.Adapter<CourseCurricul
 
         LinearLayoutManager manager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
         holder.rvCurriculumSpace.setLayoutManager(manager);
-        holder.rvCurriculumSpace.setAdapter(new CurriculumSpaceAdapter(items));
+        holder.rvCurriculumSpace.setAdapter(new CurriculumSpaceAdapter(items,context,videoId));
 
     }
 

@@ -71,7 +71,7 @@
                         android:buttonTint="@color/colorPrimary"/>
 
                     <RadioButton
-                        android:id="@+id/rv_overseas_card"
+                        android:id="@+id/rb_overseas_card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="-15dp"

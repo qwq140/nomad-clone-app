@@ -40,6 +40,7 @@ import com.cos.nomadapp.model.courses.CourseFaqContent;
 import com.cos.nomadapp.model.courses.CourseFaqTitle;
 import com.cos.nomadapp.model.courses.CourseSimple;
 import com.cos.nomadapp.model.courses.Curriculum;
+import com.cos.nomadapp.model.user.LoginDto;
 import com.cos.nomadapp.model.video.Video;
 import com.cos.nomadapp.model.video.VideoContent;
 import com.cos.nomadapp.service.NomadApi;
@@ -397,7 +398,7 @@ public class CourseDetailActivity extends AppCompatActivity {
 
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rvCourseCurriculum.setLayoutManager(manager);
-        rvCourseCurriculum.setAdapter(new CourseCurriculumAdapter(curriculumList,this));
+        rvCourseCurriculum.setAdapter(new CourseCurriculumAdapter(curriculumList,this, video.getId()));
 
     }
 
@@ -405,11 +406,31 @@ public class CourseDetailActivity extends AppCompatActivity {
         layoutTopSection9.setBackgroundColor(Color.parseColor(course.getBackgroundColor()));
         tvPayTitle.setTextColor(Color.parseColor(course.getTextColor()));
         tvPrice.setText("월 "+course.getPrice());
+
         btnPayment.setOnClickListener(v -> {
-            Intent intent = new Intent(this, PaymentActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            intent.putExtra("course",course);
-            startActivity(intent);
+            Call<CMRespDto<LoginDto>> call = nomadApi.loadUser("Bearer "+token);
+            call.enqueue(new Callback<CMRespDto<LoginDto>>() {
+                @Override
+                public void onResponse(Call<CMRespDto<LoginDto>> call, Response<CMRespDto<LoginDto>> response) {
+                    Log.d(TAG, "onResponse: section9 "+response.body());
+                    if (response.body()!=null){
+                        Intent intent = new Intent(CourseDetailActivity.this, PaymentActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        intent.putExtra("course",course);
+                        startActivity(intent);
+                    }else{
+                        Intent intent = new Intent(CourseDetailActivity.this,LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(intent);
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<CMRespDto<LoginDto>> call, Throwable t) {
+                    Log.d(TAG, "onFailure: ");
+                }
+            });
         });
     }
 
@@ -435,5 +456,11 @@ public class CourseDetailActivity extends AppCompatActivity {
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rvCourseFaq.setLayoutManager(manager);
         rvCourseFaq.setAdapter(new CourseFaqAdapter(titles));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        token = pref.getString("token","");
     }
 }

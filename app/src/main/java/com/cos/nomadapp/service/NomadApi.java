@@ -7,10 +7,13 @@ import com.cos.nomadapp.model.courses.Course;
 import com.cos.nomadapp.model.courses.CoursesPreview;
 import com.cos.nomadapp.model.faq.Faq;
 import com.cos.nomadapp.model.faq.FaqCategory;
+import com.cos.nomadapp.model.user.LoginDto;
 import com.cos.nomadapp.model.user.UserUpdateReqDto;
 import com.cos.nomadapp.model.community.CReply;
 import com.cos.nomadapp.model.community.Category;
 import com.cos.nomadapp.model.community.Community;
+import com.cos.nomadapp.model.video.VideoReply;
+import com.cos.nomadapp.model.video.dto.VideoReplySaveReqDto;
 
 import java.util.List;
 
@@ -42,6 +45,9 @@ public interface NomadApi {
 
     @DELETE("user/{id}")
     Call<CMRespDto> userDelete(@Header("Authorization") String token, @Path("id") long id);
+
+    @GET("user/load")
+    Call<CMRespDto<LoginDto>> loadUser(@Header("Authorization") String token);
 
     @GET("/courses")
     Call<CMRespDto<List<CoursesPreview>>> getAllCourses();
@@ -80,9 +86,13 @@ public interface NomadApi {
     Call<CMRespDto<CReply>> cReplySave(@Header("Authorization") String token, @Body CReplySaveReqDto cReplySaveReqDto);
     //--- community End ---
 
+    // 비디오 댓글
+    @POST("vreply")
+    Call<CMRespDto<VideoReply>> videoReplySave(@Header("Authorization") String token, @Body VideoReplySaveReqDto videoReplySaveReqDto);
+
 
     public static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://172.30.1.19:8080/")
+            .baseUrl("http://192.168.43.74:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 

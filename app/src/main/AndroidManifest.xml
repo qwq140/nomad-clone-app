@@ -14,8 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Nomadapp"
+        android:name=".BaseApplication"
         android:usesCleartextTraffic="true">
-        <activity android:name=".PaymentActivity"></activity>
+        <activity android:name=".IamportActivity"></activity>
+        <activity android:name=".PaymentActivity" />
         <activity android:name=".VideoActivity" />
         <activity android:name=".SeeProfileActivity" />
         <activity android:name=".EditProfileActivity" />
