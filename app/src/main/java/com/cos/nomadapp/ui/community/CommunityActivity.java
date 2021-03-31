@@ -81,7 +81,7 @@ public class CommunityActivity extends AppCompatActivity {
 
 
 
-        //전체 카테고리 불러오기
+        //전체 카테고리 불러오기 get
         //ViewPager
         vpContainer = findViewById(R.id.vp_container);
         tabs = findViewById(R.id.tabs);
@@ -101,8 +101,10 @@ public class CommunityActivity extends AppCompatActivity {
                     Log.d(TAG, "onResponse: "+ response.body().getData());
                     if(i==0){
                         communityPagerAdapter.addFragment(new CommunityFragAll());
+                        communityPagerAdapter.notifyDataSetChanged();
                     }else{
                         communityPagerAdapter.addFragment(new CommunityFragSub(comCategoryList.get(i).getId()));    //카테고리의 id
+                        communityPagerAdapter.notifyDataSetChanged();
                     }
 
                 }
@@ -117,6 +119,11 @@ public class CommunityActivity extends AppCompatActivity {
                 Log.d(TAG, "onFailure: "+t.getMessage());
             }
         });
+        communityPagerAdapter.notifyDataSetChanged();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }

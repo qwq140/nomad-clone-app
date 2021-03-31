@@ -32,7 +32,7 @@ public class CommunityFragAll extends Fragment {
     private Context mContext;
     private static final String TAG = "CommunityFragAll";
     private List<Community> communities;
-
+    private CommunityAdapter communityAdapter;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,7 +57,8 @@ public class CommunityFragAll extends Fragment {
                 Log.d(TAG, "onResponse: "+ response.body().getData());
                 communities = (List<Community>) response.body().getData();
                 rvCommunityNew.setLayoutManager(manager);
-                rvCommunityNew.setAdapter(new CommunityAdapter(communities,mContext));
+                communityAdapter =new CommunityAdapter(communities,mContext);
+                rvCommunityNew.setAdapter(communityAdapter);
             }
 
             @Override

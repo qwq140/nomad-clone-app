@@ -38,7 +38,6 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     @Override
     public void onBindViewHolder(@NonNull CommunityViewHolder holder, int position) {
         holder.setCommunityItem(communities.get(position));
-
     }
 
     @Override
@@ -77,6 +76,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             tvRegTime.setText(community.getCreateDate().toString());
             tvUsername.setText(community.getUser().getName());
             tvReplyCount.setText(community.getReplys().size()+"");
+            btnLike.setText(community.getCount().toString());
         }
     }
 

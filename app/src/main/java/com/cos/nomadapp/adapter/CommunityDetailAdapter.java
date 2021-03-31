@@ -24,7 +24,6 @@ public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.V
     private CommunityDetailActivity communityDetailActivity;
 
     public CommunityDetailAdapter(List<Item> items, CommunityDetailActivity communityDetailActivity) {
-
         this.items = items;
         this.communityDetailActivity = communityDetailActivity;
     }
@@ -127,6 +126,7 @@ public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.V
             tvReplyContent.setText(cReply.getContent());
             tvReplyTime.setText(cReply.getCreateDate().toString());
         }
+
     }
 
 
