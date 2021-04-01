@@ -15,6 +15,7 @@ import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cos.nomadapp.model.CMRespDto;
 import com.cos.nomadapp.model.community.CReply;
 import com.cos.nomadapp.model.community.CReplySaveReqDto;
+import com.cos.nomadapp.model.video.VideoContent;
 import com.cos.nomadapp.model.video.VideoReply;
 import com.cos.nomadapp.model.video.dto.VideoReplySaveReqDto;
 import com.cos.nomadapp.service.NomadApi;
@@ -48,15 +50,25 @@ public class VideoDetailFragment extends Fragment {
     private RelativeLayout replyBar;
     private boolean isReady=false;  //edittext열고 닫기 댓글쓰면 사라짐
     private EditText etReply;
+    private TextView tvVideoTitle;
 
     private SharedPreferences pref;
     private String token;
+
+    private VideoContent videoContent;
+
+    public VideoDetailFragment(VideoContent videoContent) {
+        this.videoContent = videoContent;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate( R.layout.video_frag_detail, container, false );
 
         context = container.getContext();
+        tvVideoTitle = view.findViewById(R.id.tv_video_title);
+        tvVideoTitle.setText(videoContent.getTitle());
         videoView = view.findViewById(R.id.video_view);
 //        videoView.getSettings().setAppCacheMaxSize( 10 * 1024 * 1024 ); // 10MB
 //        videoView.getSettings().setAllowFileAccess( true );

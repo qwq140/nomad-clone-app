@@ -1,4 +1,4 @@
-package com.cos.nomadapp.model;
+package com.cos.nomadapp.model.tech;
 
 import com.cos.nomadapp.model.courses.Course;
 

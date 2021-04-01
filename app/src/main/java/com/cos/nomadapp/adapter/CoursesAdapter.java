@@ -9,22 +9,25 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.cos.nomadapp.SeeProfileActivity;
+import com.cos.nomadapp.model.CMRespDto;
+import com.cos.nomadapp.model.tech.Tech;
 import com.cos.nomadapp.model.courses.CoursesPreview;
 import com.cos.nomadapp.model.courses.PreviewImage;
+import com.cos.nomadapp.service.NomadApi;
 import com.cos.nomadapp.ui.courses.CourseDetailActivity;
 import com.cos.nomadapp.FooterViewHolder;
 import com.cos.nomadapp.R;
-import com.cos.nomadapp.ui.courses.CoursesActivity;
-import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
-import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
@@ -92,6 +95,7 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
             titleViewHolder.setTitleItem();
         } else if (holder instanceof FilterViewHolder){
             FilterViewHolder filterViewHolder = (FilterViewHolder) holder;
+            filterViewHolder.setTechItem();
         } else if (holder instanceof  FooterViewHolder){
             FooterViewHolder footerViewHolder = (FooterViewHolder) holder;
         } else {
@@ -178,8 +182,32 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public class FilterViewHolder extends RecyclerView.ViewHolder{
 
+        private RecyclerView rvTech;
+
         public FilterViewHolder(@NonNull View itemView) {
             super(itemView);
+            rvTech = itemView.findViewById(R.id.rv_tech);
+        }
+
+        public void setTechItem(){
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(context,4);
+            rvTech.setLayoutManager(gridLayoutManager);
+
+            NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
+            Call<CMRespDto<List<Tech>>> call = nomadApi.getTechList();
+            call.enqueue(new Callback<CMRespDto<List<Tech>>>() {
+                @Override
+                public void onResponse(Call<CMRespDto<List<Tech>>> call, Response<CMRespDto<List<Tech>>> response) {
+                    Log.d(TAG, "onResponse: 성공 " + response.body());
+                    List<Tech> teches = response.body().getData();
+                    rvTech.setAdapter(new TechAdapter(teches,context));
+                }
+
+                @Override
+                public void onFailure(Call<CMRespDto<List<Tech>>> call, Throwable t) {
+                    Log.d(TAG, "onFailure: 실패");
+                }
+            });
         }
     }
 

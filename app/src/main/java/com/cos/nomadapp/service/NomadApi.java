@@ -1,6 +1,8 @@
 package com.cos.nomadapp.service;
 
 import com.cos.nomadapp.model.CMRespDto;
+import com.cos.nomadapp.model.FileRespDto;
+import com.cos.nomadapp.model.tech.Tech;
 import com.cos.nomadapp.model.community.CReplySaveReqDto;
 import com.cos.nomadapp.model.community.CommunitySaveReqDto;
 import com.cos.nomadapp.model.courses.Course;
@@ -12,11 +14,13 @@ import com.cos.nomadapp.model.user.UserUpdateReqDto;
 import com.cos.nomadapp.model.community.CReply;
 import com.cos.nomadapp.model.community.Category;
 import com.cos.nomadapp.model.community.Community;
+import com.cos.nomadapp.model.video.Video;
 import com.cos.nomadapp.model.video.VideoReply;
 import com.cos.nomadapp.model.video.dto.VideoReplySaveReqDto;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -24,8 +28,10 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public interface NomadApi {
@@ -49,17 +55,17 @@ public interface NomadApi {
     @GET("user/load")
     Call<CMRespDto<LoginDto>> loadUser(@Header("Authorization") String token);
 
-    @GET("/courses")
+    @GET("courses")
     Call<CMRespDto<List<CoursesPreview>>> getAllCourses();
 
-    @GET("/courses/{id}")
+    @GET("courses/{id}")
     Call<CMRespDto<Course>> getDetailCourses(@Path("id") long id);
 
-    @GET("/homeCourses")
+    @GET("homeCourses")
     Call<CMRespDto<List<CoursesPreview>>> getHomeCourses();
 
-    @GET("/admin/video/{id}")
-    Call<CMRespDto> getVideoList(@Header("Authorization") String token ,@Path("id") long id);
+    @GET("video/{id}")
+    Call<CMRespDto<Video>> getVideoList(@Header("Authorization") String token , @Path("id") long id);
 
     //--- community Start ---
 
@@ -90,9 +96,17 @@ public interface NomadApi {
     @POST("vreply")
     Call<CMRespDto<VideoReply>> videoReplySave(@Header("Authorization") String token, @Body VideoReplySaveReqDto videoReplySaveReqDto);
 
+    // 이미지 업로드
+    @Multipart
+    @POST("profile")
+    Call<CMRespDto> postImage(@Header("Authorization") String token ,@Part MultipartBody.Part uploadFile);
+
+    // 테크 목록
+    @GET("tech")
+    Call<CMRespDto<List<Tech>>> getTechList();
 
     public static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://192.168.43.74:8080/")
+            .baseUrl("http://172.30.1.17:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 

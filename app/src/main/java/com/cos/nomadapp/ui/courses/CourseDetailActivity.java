@@ -251,10 +251,10 @@ public class CourseDetailActivity extends AppCompatActivity {
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
         rvLangLogo.setLayoutManager(manager);
 
-        List<Map<String,Object>> simpleImage = course.getSimpleImage();
+        List<Map<String,Object>> tech = course.getTech();
         List<String> logos = new ArrayList<>();
-        for (Map<String,Object> i:simpleImage) {
-            String logoUrl = i.get("url").toString();
+        for (Map<String,Object> i:tech) {
+            String logoUrl = i.get("imageUrl").toString();
             logos.add(logoUrl);
         }
         rvLangLogo.setAdapter(new CourseLogoAdapter(logos,this));
@@ -372,7 +372,7 @@ public class CourseDetailActivity extends AppCompatActivity {
 
         Video video = (Video) course.getVideo();
         Log.d(TAG, "section8: "+video);
-        // 임시 데이터
+
         List<Curriculum> curriculumList = new ArrayList<>();
 
         for(int i = 0 ; i < video.getContents().size() ; i++){

@@ -21,6 +21,6 @@ public class Video implements Serializable {
     private String vimeoFolderId;
 
     private List<Map<String,Object>> contents = new ArrayList<>();
-    //private List<List<Map<String, Object>>> contentList = new ArrayList<>();
+
     private Timestamp createDate;
 }

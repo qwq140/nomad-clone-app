@@ -158,12 +158,23 @@ public class UserDashboardActivity extends AppCompatActivity {
                         tvDashName.setText(user.getName());
                         tvDashUsername.setText(user.getUsername());
 
-                        Glide
-                                .with(UserDashboardActivity.this)
-                                .load(user.getImageUrl())
-                                .centerCrop()
-                                .placeholder(R.drawable.ic_user)
-                                .into(rivDashboardUser);
+                        if (data.get("file")==null){
+                            Glide
+                                    .with(UserDashboardActivity.this)
+                                    .load(user.getImageUrl())
+                                    .centerCrop()
+                                    .placeholder(R.drawable.ic_user)
+                                    .into(rivDashboardUser);
+                        } else {
+                            Map<String, Object> file = (Map<String, Object>) data.get("file");
+                            Glide
+                                    .with(UserDashboardActivity.this)
+                                    .load(file.get("fileUrl"))
+                                    .centerCrop()
+                                    .placeholder(R.drawable.ic_user)
+                                    .into(rivDashboardUser);
+                        }
+
                     } else {
                         Intent intent = new Intent(UserDashboardActivity.this, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

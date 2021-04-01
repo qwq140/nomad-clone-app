@@ -1,7 +1,5 @@
 package com.cos.nomadapp.model.courses;
 
-import com.cos.nomadapp.model.Tech;
-import com.cos.nomadapp.model.TechCourses;
 import com.cos.nomadapp.model.video.Video;
 
 import java.io.Serializable;
@@ -26,11 +24,10 @@ public class Course implements Serializable {
     private String textColor;
     private String level;
 
-    //private List<Tech> techs;
+    private List<Map<String, Object>> tech = new ArrayList<>();
 
     private Map<String,Object> previewImage = new HashMap<>();
     private Map<String,Object> mainImage = new HashMap<>();
-    private List<Map<String,Object>> simpleImage = new ArrayList<>();
     private Map<String, Object> videoInfo = new HashMap<>();
     private List<Map<String, Object>> simpleInfo = new ArrayList<>();
     private List<Map<String, Object>> levelContent = new ArrayList<>();
