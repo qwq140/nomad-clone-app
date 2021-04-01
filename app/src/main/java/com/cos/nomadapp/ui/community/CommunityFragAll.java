@@ -32,6 +32,7 @@ public class CommunityFragAll extends Fragment {
     private Context mContext;
     private static final String TAG = "CommunityFragAll";
     private List<Community> communities;
+    private CommunityAdapter communityAdapter;
 
     @Nullable
     @Override
@@ -54,10 +55,11 @@ public class CommunityFragAll extends Fragment {
 
             @Override
             public void onResponse(Call<CMRespDto<List<Community>>> call, Response<CMRespDto<List<Community>>> response) {
-                Log.d(TAG, "onResponse: "+ response.body().getData());
+                Log.d(TAG, "onResponse: 데이터받아온다 :"+ response.body().getData());
                 communities = (List<Community>) response.body().getData();
                 rvCommunityNew.setLayoutManager(manager);
-                rvCommunityNew.setAdapter(new CommunityAdapter(communities,mContext));
+                communityAdapter =new CommunityAdapter(communities,mContext);
+                rvCommunityNew.setAdapter(communityAdapter);
             }
 
             @Override

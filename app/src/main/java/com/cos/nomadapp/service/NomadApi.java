@@ -82,7 +82,7 @@ public interface NomadApi {
 
 
     public static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://172.17.21.146:8080/")
+            .baseUrl("http://172.17.66.44:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 

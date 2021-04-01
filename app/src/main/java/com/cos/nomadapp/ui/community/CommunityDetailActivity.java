@@ -39,13 +39,18 @@ public class CommunityDetailActivity extends AppCompatActivity {
     private EditText etReply;
     private List<CReply> replies;
     private RelativeLayout replyBar;
-    private boolean isReady=false;  //edittext열고 닫기 댓글쓰면 사라짐
     private EditText et_reply;
+    private CommunityDetailAdapter communityDetailAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community_detail);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         Intent intent = getIntent();
 
         Community community = (Community) intent.getSerializableExtra("community");
@@ -80,6 +85,7 @@ public class CommunityDetailActivity extends AppCompatActivity {
                 replies = response.body().getData().getReplys();
                 for(int i=0;i<replies.size();i++){
                     items.add(new Item(1,replies.get(i)));
+                    Log.d(TAG, "onResponse: test321: "+replies.get(i));
                 }
             }
 
@@ -89,9 +95,7 @@ public class CommunityDetailActivity extends AppCompatActivity {
             }
 
         });
-        rvCommunityDetail.setLayoutManager(manager);
-        rvCommunityDetail.setAdapter(new CommunityDetailAdapter(items,this));
-
+        //댓글쓰기
         ivSendReply.setOnClickListener(v->{
 
             SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
@@ -110,7 +114,9 @@ public class CommunityDetailActivity extends AppCompatActivity {
             call2.enqueue(new Callback<CMRespDto<CReply>>() {
                 @Override
                 public void onResponse(Call<CMRespDto<CReply>> call, Response<CMRespDto<CReply>> response) {
-                    Log.d(TAG, "onResponse: test123 : "+response.body());
+                    items.add(new Item(1,response.body().getData()));
+                    Log.d(TAG, "onResponse: test123 : "+response.body().getData());
+                    shutdownReplyInput();
                 }
 
                 @Override
@@ -118,43 +124,29 @@ public class CommunityDetailActivity extends AppCompatActivity {
                     Log.d(TAG, "onFailure: ");
                 }
             });
-            shutdownReplyInput();
         });
-
-
-
+        rvCommunityDetail.setLayoutManager(manager);
+        communityDetailAdapter=new CommunityDetailAdapter(items,this);
+        rvCommunityDetail.setAdapter(communityDetailAdapter);
+        communityDetailAdapter.notifyDataSetChanged();
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
-    public void showReplyInput(){           //댓글 쓰기
+    public void showReplyInput(){           //댓글 키보드 쓰기
         RelativeLayout replyBar = (RelativeLayout) findViewById(R.id.reply_bar);
-        if(isReady){
-            isReady=false;
-            replyBar.setVisibility(View.INVISIBLE);
-        }
-        else{
-            isReady=true;
-            replyBar.setVisibility(View.VISIBLE);
-        }
+        replyBar.setVisibility(View.VISIBLE);
+
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         etReply = (EditText) findViewById(R.id.et_reply);
         etReply.requestFocus();
         imm.showSoftInput(etReply, InputMethodManager.SHOW_IMPLICIT);
     }
-    public void shutdownReplyInput(){           //댓글 닫기
+    public void shutdownReplyInput(){           //댓글 키보드 닫기
         RelativeLayout replyBar = (RelativeLayout) findViewById(R.id.reply_bar);
         replyBar.setVisibility(View.INVISIBLE);
 
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         etReply = (EditText) findViewById(R.id.et_reply);
         etReply.requestFocus();
-        imm.showSoftInput(etReply, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        View view = this.getCurrentFocus();
+        imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
-
-
 }

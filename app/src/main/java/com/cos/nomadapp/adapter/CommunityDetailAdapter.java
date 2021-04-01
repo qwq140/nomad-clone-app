@@ -102,7 +102,6 @@ public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.V
             tvDetailUsername.setText(community.getUser().getName());
             tvDetailCategory.setText(community.getCategory().getTitle());
             tvDetailTime.setText(community.getCreateDate().toString());
-            btnCommunityLike.setText(community.getCount().toString());
             tvReplyCount.setText(community.getReplys().size()+"");
         }
     }

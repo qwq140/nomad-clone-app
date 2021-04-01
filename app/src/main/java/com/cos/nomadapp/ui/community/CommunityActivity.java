@@ -38,6 +38,11 @@ public class CommunityActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         ivBack = findViewById(R.id.iv_back);
 
         tvToolbarTitle = findViewById(R.id.tv_toolbar_title);
@@ -101,8 +106,10 @@ public class CommunityActivity extends AppCompatActivity {
                     Log.d(TAG, "onResponse: "+ response.body().getData());
                     if(i==0){
                         communityPagerAdapter.addFragment(new CommunityFragAll());
+                        communityPagerAdapter.notifyDataSetChanged();
                     }else{
                         communityPagerAdapter.addFragment(new CommunityFragSub(comCategoryList.get(i).getId()));    //카테고리의 id
+                        communityPagerAdapter.notifyDataSetChanged();
                     }
 
                 }
@@ -117,6 +124,6 @@ public class CommunityActivity extends AppCompatActivity {
                 Log.d(TAG, "onFailure: "+t.getMessage());
             }
         });
-
+        communityPagerAdapter.notifyDataSetChanged();
     }
 }
