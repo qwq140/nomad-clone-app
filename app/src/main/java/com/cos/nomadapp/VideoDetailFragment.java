@@ -14,6 +14,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -57,6 +58,8 @@ public class VideoDetailFragment extends Fragment {
 
     private VideoContent videoContent;
 
+    private LinearLayout videoLayout;
+
     public VideoDetailFragment(VideoContent videoContent) {
         this.videoContent = videoContent;
     }
@@ -94,6 +97,7 @@ public class VideoDetailFragment extends Fragment {
             showReplyInput();
         });
 
+
         ivSendReply.setOnClickListener(v -> {
             pref = context.getSharedPreferences("pref",Context.MODE_PRIVATE);
             token = pref.getString("token","");
@@ -115,31 +119,26 @@ public class VideoDetailFragment extends Fragment {
                     Log.d(TAG, "onFailure: ");
                 }
             });
-            shutdownReplyInput();
+            showReplyInput();
         });
-
 
         return view;
     }
 
+
     public void showReplyInput(){           //댓글 쓰기
+
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
         if(isReady){
             isReady=false;
             replyBar.setVisibility(View.INVISIBLE);
+            imm.hideSoftInputFromWindow(etReply.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
         }
         else{
             isReady=true;
             replyBar.setVisibility(View.VISIBLE);
+            etReply.requestFocus();
+            imm.showSoftInput(etReply, InputMethodManager.SHOW_IMPLICIT);
         }
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
-        etReply.requestFocus();
-        imm.showSoftInput(etReply, InputMethodManager.SHOW_IMPLICIT);
-    }
-    public void shutdownReplyInput(){           //댓글 닫기
-        replyBar.setVisibility(View.INVISIBLE);
-        isReady=false;
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
-        etReply.requestFocus();
-        imm.hideSoftInputFromWindow(etReply.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 }

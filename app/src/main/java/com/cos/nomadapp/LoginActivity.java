@@ -116,12 +116,14 @@ public class LoginActivity extends AppCompatActivity {
                     if (response.body().getStatusCode()==200){
                         Log.d(TAG, "onResponse: 200 성공");
                         LoginDto loginDto = response.body().getData();
+                        Gson gson = new Gson();
+                        String basicUserInfo = gson.toJson(loginDto);
+
                         Log.d(TAG, "onResponse: data : 구글로그인 " + loginDto);
-
-
                         pref = getSharedPreferences("pref", MODE_PRIVATE);
                         editor = pref.edit();
                         editor.putString("token",loginDto.getToken());
+                        editor.putString("user",basicUserInfo);
                         editor.commit();
 
                         finish();

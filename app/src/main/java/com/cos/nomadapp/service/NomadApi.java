@@ -1,7 +1,7 @@
 package com.cos.nomadapp.service;
 
 import com.cos.nomadapp.model.CMRespDto;
-import com.cos.nomadapp.model.FileRespDto;
+import com.cos.nomadapp.model.pay.PaySaveReqDto;
 import com.cos.nomadapp.model.tech.Tech;
 import com.cos.nomadapp.model.community.CReplySaveReqDto;
 import com.cos.nomadapp.model.community.CommunitySaveReqDto;
@@ -93,7 +93,7 @@ public interface NomadApi {
     //--- community End ---
 
     // 비디오 댓글
-    @POST("vreply")
+    @POST("vReply")
     Call<CMRespDto<VideoReply>> videoReplySave(@Header("Authorization") String token, @Body VideoReplySaveReqDto videoReplySaveReqDto);
 
     // 이미지 업로드
@@ -104,6 +104,10 @@ public interface NomadApi {
     // 테크 목록
     @GET("tech")
     Call<CMRespDto<List<Tech>>> getTechList();
+
+    //pay
+    @POST("pay")
+    Call<CMRespDto> paySave(@Header("Authorization") String token, @Body PaySaveReqDto paySaveReqDto);
 
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://172.30.1.17:8080/")

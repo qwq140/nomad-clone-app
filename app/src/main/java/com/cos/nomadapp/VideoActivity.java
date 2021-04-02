@@ -53,7 +53,6 @@ public class VideoActivity extends AppCompatActivity {
             finish();
         });
 
-
     }
 
 

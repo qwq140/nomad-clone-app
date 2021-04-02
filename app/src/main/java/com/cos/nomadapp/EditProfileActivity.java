@@ -184,21 +184,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     Log.d(TAG, "onFailure: 실패");
                 }
             });
-            //uploadImage();
         });
-
-    }
-
-    private void uploadImage() {
-
-//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.PNG,75, byteArrayOutputStream);
-//        byte[] imageInByte = byteArrayOutputStream.toByteArray();
-//
-//        String encodedImage = Base64.encodeToString(imageInByte, Base64.DEFAULT);
-//        Log.d(TAG, "uploadImage: "+encodedImage);
-//
-//        Call<CMRespDto> call = nomadApi.postImage(encodedImage)
 
     }
 
@@ -249,18 +235,11 @@ public class EditProfileActivity extends AppCompatActivity {
                     //선택한 이미지에서 비트맵 생성
                     Log.d(TAG, "onActivityResult: data : "+data.getData());
                     path = data.getData();
-//                    InputStream in = getContentResolver().openInputStream(data.getData());
-//                    Bitmap img = BitmapFactory.decodeStream(in);
-//                    Log.d(TAG, "onActivityResult: Bitmap 확인 : "+ img);
-//                    in.close();
-//                    //이미지 표시
-//                    ivProfileImg.setImageBitmap(img);
 
                     bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),path);
                     ivProfileImg.setImageBitmap(bitmap);
                     Log.d(TAG, "onActivityResult: Uri"+path);
                     file = new File(getFilePathFromURI(context,path));
-//                    Log.d(TAG, "onActivityResult: file"+file);
 
 
                 } catch (Exception e) {

@@ -447,11 +447,12 @@ public class CourseDetailActivity extends AppCompatActivity {
         titles.add(courseFaqTitle1);
 
         List<CourseFaqContent> courseFaqContents2 = new ArrayList<>();
-        CourseFaqContent courseFaqContent2 = new CourseFaqContent("수강신청을 하신 후에 언제든이요! 이 수업은 본인이 원하시는 시간에, 본인에게 맞는 속도와 스피드로 페이스를 조정하여, 언제든지 다시 반복하여 들을 수 있는 온라인 수업입니다.");
+        CourseFaqContent courseFaqContent2 = new CourseFaqContent("무제한이요! 강의 영상의 경우 무제한으로, 언제든지, 어디서든 로그인하셔서 반복 재생, 수강하실 수 있습니다.");
         courseFaqContents2.add(courseFaqContent2);
 
         CourseFaqTitle courseFaqTitle2 = new CourseFaqTitle("수업은 언제까지 들을 수 있나요?",courseFaqContents2);
         titles.add(courseFaqTitle2);
+
 
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rvCourseFaq.setLayoutManager(manager);
