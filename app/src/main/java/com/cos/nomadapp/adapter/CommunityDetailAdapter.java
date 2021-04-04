@@ -1,6 +1,8 @@
 package com.cos.nomadapp.adapter;
 
+import android.content.SharedPreferences;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cos.nomadapp.model.CMRespDto;
 import com.cos.nomadapp.model.community.CReply;
+import com.cos.nomadapp.model.community.CommunityItemRespDto;
+import com.cos.nomadapp.model.community.CommunityListRespDto;
+import com.cos.nomadapp.model.likes.LikeClickRespDto;
+import com.cos.nomadapp.model.likes.Likes;
+import com.cos.nomadapp.service.NomadApi;
 import com.cos.nomadapp.ui.community.CommunityDetailActivity;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.common.Item;
@@ -18,21 +26,25 @@ import com.cos.nomadapp.model.community.Community;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private List<Item> items;
     private CommunityDetailActivity communityDetailActivity;
-
-    public CommunityDetailAdapter(List<Item> items, CommunityDetailActivity communityDetailActivity) {
-
+    private String token;
+    private static final String TAG = "CommunityDetailAdapter:";
+    public CommunityDetailAdapter(List<Item> items, CommunityDetailActivity communityDetailActivity,String token) {
         this.items = items;
         this.communityDetailActivity = communityDetailActivity;
+        this.token = token;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         if(viewType == 0){
             return new DetailContentViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(
@@ -54,11 +66,13 @@ public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        Log.d(TAG, "onBindViewHolder: "+position);
         if(getItemViewType(position)==0){
-            Community community = (Community) items.get(position).getObject();
+            CommunityItemRespDto community = (CommunityItemRespDto) items.get(position).getObject();
             ((DetailContentViewHolder) holder).setItem(community);
         }else if(getItemViewType(position)==1){
-            CReply creply = (CReply) items.get(position).getObject();
+            Log.d(TAG, "onBindViewHolder: "+items.get(position));
+            CReply creply = (CReply)items.get(position).getObject();
             ((ReplyViewHolder) holder).setItem(creply);
         }
     }
@@ -93,35 +107,49 @@ public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.V
                 communityDetailActivity.showReplyInput();
             });
             btnsendReply=itemView.findViewById(R.id.iv_reply_send);
-
         }
 
-        void setItem(Community community){
-            tvDetailTitle.setText(community.getTitle());
-            tvDetailContent.setText(Html.fromHtml(community.getContent()));
-            tvDetailUsername.setText(community.getUser().getName());
-            tvDetailCategory.setText(community.getCategory().getTitle());
-            tvDetailTime.setText(community.getCreateDate().toString());
-            tvReplyCount.setText(community.getReplys().size()+"");
+        public void setItem(CommunityItemRespDto community){
+            Log.d(TAG, "setItem: "+community.toString());
+            tvDetailTitle.setText(community.getCommunity().getTitle());
+            tvDetailContent.setText(Html.fromHtml(community.getCommunity().getContent()));
+            tvDetailUsername.setText(community.getCommunity().getUser().getName());
+            tvDetailCategory.setText(community.getCommunity().getCategory().getTitle());
+            tvDetailTime.setText(community.getCommunity().getCreateDate().toString());
+            tvReplyCount.setText(community.getCommunity().getReplys().size()+"");
+
+            //좋아요
+            btnCommunityLike.setOnClickListener(v->{
+                NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
+                Call<CMRespDto<LikeClickRespDto>> call = nomadApi.likeUp("Bearer "+token,community.getId().longValue());
+                call.enqueue(new Callback<CMRespDto<LikeClickRespDto>>() {
+                    @Override
+                    public void onResponse(Call<CMRespDto<LikeClickRespDto>> call, Response<CMRespDto<LikeClickRespDto>> response) {
+                        Log.d(TAG, "onResponse: getLikes"+community.getLikeCount());
+                        notifyDataSetChanged();
+                    }
+                    @Override
+                    public void onFailure(Call<CMRespDto<LikeClickRespDto>> call, Throwable t) {
+                        Log.d(TAG, "onFailure: 실패");
+                    }
+                });
+            });
+            btnCommunityLike.setText(community.getLikeCount()+"");
         }
     }
 
     public class ReplyViewHolder extends RecyclerView.ViewHolder{
 
-        private AppCompatButton btnReplyLike;
         private TextView tvReplyContent, tvReplyUsername, tvReplyTime,tvReplyCount;
 
         public ReplyViewHolder(@NonNull View itemView) {
             super(itemView);
-            btnReplyLike = itemView.findViewById(R.id.btn_reply_like);
             tvReplyUsername = itemView.findViewById(R.id.tv_reply_username);
             tvReplyContent = itemView.findViewById(R.id.tv_reply_content);
             tvReplyTime = itemView.findViewById(R.id.tv_reply_time);
-            tvReplyCount = itemView.findViewById(R.id.tv_reply_count);
         }
 
-        void setItem(CReply cReply){
-            btnReplyLike.setText("0");
+       public void setItem(CReply cReply){
             tvReplyUsername.setText(cReply.getUser().getName());
             tvReplyContent.setText(cReply.getContent());
             tvReplyTime.setText(cReply.getCreateDate().toString());

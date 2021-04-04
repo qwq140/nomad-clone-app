@@ -95,7 +95,5 @@ public class FooterViewHolder extends RecyclerView.ViewHolder {
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             v.getContext().startActivity(intent);
         });
-
     }
-
 }

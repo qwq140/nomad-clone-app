@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.adapter.CommunityAdapter;
 import com.cos.nomadapp.model.community.Community;
+import com.cos.nomadapp.model.community.CommunityListRespDto;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class CommunitySearchActivity extends AppCompatActivity {
 
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
 
-        List<Community> communities = new ArrayList<>();
+        List<CommunityListRespDto> communities = new ArrayList<>();
 
 
 
@@ -50,7 +51,7 @@ public class CommunitySearchActivity extends AppCompatActivity {
 
         rvSearchList.setLayoutManager(manager);
 
-        communityAdapter = new CommunityAdapter(communities,this);
+        communityAdapter = new CommunityAdapter(communities,this,null);
 
         rvSearchList.setAdapter(communityAdapter);
 

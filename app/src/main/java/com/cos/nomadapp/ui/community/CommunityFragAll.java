@@ -1,7 +1,10 @@
 package com.cos.nomadapp.ui.community;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.drawable.shapes.Shape;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +20,11 @@ import com.cos.nomadapp.R;
 import com.cos.nomadapp.adapter.CommunityAdapter;
 import com.cos.nomadapp.model.CMRespDto;
 import com.cos.nomadapp.model.community.Community;
+import com.cos.nomadapp.model.community.CommunityFindReqDto;
+import com.cos.nomadapp.model.community.CommunityListRespDto;
 import com.cos.nomadapp.service.NomadApi;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,44 +38,116 @@ public class CommunityFragAll extends Fragment {
     private RecyclerView rvCommunityNew;
     private Context mContext;
     private static final String TAG = "CommunityFragAll";
-    private List<Community> communities;
+    private List<CommunityListRespDto> communities = new ArrayList<>();
+    private boolean isLoading = false;
     private CommunityAdapter communityAdapter;
+    private String token,sort;
+    private Long categoryId;
+    private MaterialButtonToggleGroup materialButtonToggleGroup;
+    private int page=0;
+    private LinearLayoutManager manager;
+    private NomadApi nomadApi;
 
+    public CommunityFragAll(String sort,String token,long categoryId){
+        this.sort=sort;
+        this.token=token;
+        this.categoryId=categoryId;
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.community_frag_all,container,false);
+        View view = inflater.inflate(R.layout.community_frag_all, container, false);
 
-        rvCommunityNew = view.findViewById(R.id.rv_community_all);
         mContext = container.getContext();
 
-        LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
+        //토글 그룹
+        materialButtonToggleGroup = view.findViewById(R.id.btg_order_community);
+        int buttonId = materialButtonToggleGroup.getCheckedButtonId();
+        MaterialButton button = materialButtonToggleGroup.findViewById(buttonId);
 
-        communities= new ArrayList<>();
-
-        //전체 커뮤니티 불러오기
-        //RecyclerView
-
-        NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
-        Call<CMRespDto<List<Community>>> call = nomadApi.comFindAll();
-        call.enqueue(new Callback<CMRespDto<List<Community>>>() {
-
-            @Override
-            public void onResponse(Call<CMRespDto<List<Community>>> call, Response<CMRespDto<List<Community>>> response) {
-                Log.d(TAG, "onResponse: 데이터받아온다 :"+ response.body().getData());
-                communities = (List<Community>) response.body().getData();
-                rvCommunityNew.setLayoutManager(manager);
-                communityAdapter =new CommunityAdapter(communities,mContext);
-                rvCommunityNew.setAdapter(communityAdapter);
-            }
-
-            @Override
-            public void onFailure(Call<CMRespDto<List<Community>>> call, Throwable t) {
-
-            }
-        });
-
+        manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
+        rvCommunityNew = view.findViewById(R.id.rv_community_all);
+        
+        addFrag();
+        buttonListener();
 
         return view;
+    }
+    private void buttonListener(){
+        materialButtonToggleGroup.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
+            @Override
+            public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
+                if(isChecked){
+                    if(checkedId == R.id.btn_sort_popular){
+                        page=0;
+                        sort="popular";
+                        addFrag();
+                        initScrollListener();
+
+                    }else if(checkedId == R.id.btn_sort_new){
+                        page=0;
+                        sort="new";
+                        addFrag();
+                        initScrollListener();
+                    }
+                }else{
+                    sort="new";
+                    addFrag();
+                    initScrollListener();
+                }
+            }
+        });
+    }
+
+
+
+    private void addFrag(){
+        nomadApi = NomadApi.retrofit.create(NomadApi.class);
+        Call<CMRespDto<List<CommunityListRespDto>>> call2= nomadApi.comFindAll("Bearer "+token,sort,categoryId,page);
+        call2.enqueue(new Callback<CMRespDto<List<CommunityListRespDto>>>() {
+            @Override
+            public void onResponse(Call<CMRespDto<List<CommunityListRespDto>>> call, Response<CMRespDto<List<CommunityListRespDto>>> response) {
+                communities= response.body().getData();
+                communityAdapter = new CommunityAdapter(communities, mContext,token);
+                rvCommunityNew.setAdapter(communityAdapter);
+                rvCommunityNew.setLayoutManager(manager);
+            }
+
+            @Override
+            public void onFailure(Call<CMRespDto<List<CommunityListRespDto>>> call, Throwable t) {
+                Log.d(TAG, "onFailure: 실패");
+            }
+        });
+    }
+    private void initScrollListener(){
+        rvCommunityNew.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(!rvCommunityNew.canScrollVertically(1)){
+                    if(page<communities.size()/10)
+                        page++;
+                    Call<CMRespDto<List<CommunityListRespDto>>> call2= nomadApi.comFindAll("Bearer "+token,sort,categoryId,page);
+                    call2.enqueue(new Callback<CMRespDto<List<CommunityListRespDto>>>() {
+                        @Override
+                        public void onResponse(Call<CMRespDto<List<CommunityListRespDto>>> call, Response<CMRespDto<List<CommunityListRespDto>>> response) {
+                            for(int i=0;i<response.body().getData().size();i++){
+                                communities.add(response.body().getData().get(i));
+                                communityAdapter.notifyDataSetChanged();
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<CMRespDto<List<CommunityListRespDto>>> call, Throwable t) {
+                            Log.d(TAG, "onFailure: 실패");
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
     }
 }

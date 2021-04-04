@@ -69,7 +69,7 @@ public class CommunityWriteActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<CMRespDto<List<Category>>> call, Response<CMRespDto<List<Category>>> response) {
                 categories=response.body().getData();
-                for(int i=1;i<categories.size();i++){   //All:0은 빼고
+                for(int i=0;i<categories.size();i++){   //All:0은 빼고
                     category.add(categories.get(i).getTitle());
                 }
             }

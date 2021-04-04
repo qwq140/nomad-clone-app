@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -15,6 +16,8 @@ import com.cos.nomadapp.adapter.CommunityPagerAdapter;
 import com.cos.nomadapp.model.CMRespDto;
 import com.cos.nomadapp.model.community.Category;
 import com.cos.nomadapp.service.NomadApi;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -34,6 +37,9 @@ public class CommunityActivity extends AppCompatActivity {
     private TabLayout tabs;
     private CommunityPagerAdapter communityPagerAdapter;
     private List<Category> comCategoryList;
+    private String token;
+    private SharedPreferences pref;
+    private NomadApi nomadApi;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +89,31 @@ public class CommunityActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
         });
+        pref = getSharedPreferences("pref", MODE_PRIVATE);
+        token = pref.getString("token","");
 
+//        //토글 그룹
+//        materialButtonToggleGroup = findViewById(R.id.btg_order_community);
+//        int buttonId = materialButtonToggleGroup.getCheckedButtonId();
+//        MaterialButton button = materialButtonToggleGroup.findViewById(buttonId);
+//
+//        materialButtonToggleGroup.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
+//            @Override
+//            public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
+//                if(isChecked){
+//                    if(checkedId == R.id.btn_sort_popular){
+//                        sort="popular";
+//                        Log.d(TAG, "onButtonChecked: popular"+sort);
+//                    }else if(checkedId == R.id.btn_sort_new){
+//                        sort="new";
+//                        Log.d(TAG, "onButtonChecked: new" + sort);
+//                    }
+//                }else{
+//                    sort="new";
+//                    Log.d(TAG, "onButtonChecked: notChecked"+sort);
+//                }
+//            }
+//        });
 
 
         //전체 카테고리 불러오기
@@ -91,32 +121,24 @@ public class CommunityActivity extends AppCompatActivity {
         vpContainer = findViewById(R.id.vp_container);
         tabs = findViewById(R.id.tabs);
         communityPagerAdapter = new CommunityPagerAdapter(getSupportFragmentManager(), 1);
-
         comCategoryList = new ArrayList<>();
 
-        NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
+        nomadApi = NomadApi.retrofit.create(NomadApi.class);
         Call<CMRespDto<List<Category>>> call = nomadApi.comCategoryFindAll();
         call.enqueue(new Callback<CMRespDto<List<Category>>>() {
+
             @Override
             public void onResponse(Call<CMRespDto<List<Category>>> call, Response<CMRespDto<List<Category>>> response) {
-                Log.d(TAG, "onResponse: "+response.body());
                 comCategoryList = (List<Category>) response.body().getData();
-
+                communityPagerAdapter.addFragment(new CommunityFragAll("new",token,0L));
                 for(int i=0;i<comCategoryList.size();i++){
-                    Log.d(TAG, "onResponse: "+ response.body().getData());
-                    if(i==0){
-                        communityPagerAdapter.addFragment(new CommunityFragAll());
-                        communityPagerAdapter.notifyDataSetChanged();
-                    }else{
-                        communityPagerAdapter.addFragment(new CommunityFragSub(comCategoryList.get(i).getId()));    //카테고리의 id
-                        communityPagerAdapter.notifyDataSetChanged();
-                    }
-
+                    communityPagerAdapter.addFragment(new CommunityFragAll("new",token,comCategoryList.get(i).getId()));    //카테고리의 id
                 }
                 vpContainer.setAdapter(communityPagerAdapter);
                 tabs.setupWithViewPager(vpContainer);
+                tabs.getTabAt(0).setText("# ALL");
                 for(int i=0;i<comCategoryList.size();i++){
-                    tabs.getTabAt(i).setText(comCategoryList.get(i).getTitle());
+                    tabs.getTabAt(i+1).setText(comCategoryList.get(i).getTitle());
                 }
             }
             @Override

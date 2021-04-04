@@ -12,20 +12,31 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cos.nomadapp.model.CMRespDto;
+import com.cos.nomadapp.model.community.CommunityListRespDto;
+import com.cos.nomadapp.model.likes.LikeClickRespDto;
+import com.cos.nomadapp.service.NomadApi;
 import com.cos.nomadapp.ui.community.CommunityDetailActivity;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.community.Community;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder>{
 
-    private List<Community> communities;
+    private List<CommunityListRespDto> communities;
     private Context mContext;
+    private String token;
+    private int i=0;
     private static final String TAG = "CommunityAdapter";
-    public CommunityAdapter(List<Community> communities, Context mContext) {
+    public CommunityAdapter(List<CommunityListRespDto> communities, Context mContext, String token) {
         this.communities = communities;
         this.mContext = mContext;
+        this.token = token;
     }
 
     @NonNull
@@ -38,7 +49,6 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     @Override
     public void onBindViewHolder(@NonNull CommunityViewHolder holder, int position) {
         holder.setCommunityItem(communities.get(position));
-
     }
 
     @Override
@@ -59,28 +69,44 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             tvUsername = itemView.findViewById(R.id.tv_username);
             tvReplyCount = itemView.findViewById(R.id.tv_reply_count);
             btnLike = itemView.findViewById(R.id.btn_like);
+            btnLike.setOnClickListener(v -> {           //좋아요
+                int pos = getAdapterPosition();
+                NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
+                Call<CMRespDto<LikeClickRespDto>> call = nomadApi.likeUp("Bearer "+token,communities.get(pos).getId().longValue());
+                call.enqueue(new Callback<CMRespDto<LikeClickRespDto>>() {
+                    @Override
+                    public void onResponse(Call<CMRespDto<LikeClickRespDto>> call, Response<CMRespDto<LikeClickRespDto>> response) {
+                        btnLike.setText(communities.get(pos).getLikeCount()+"");
 
+                    }
+                    @Override
+                    public void onFailure(Call<CMRespDto<LikeClickRespDto>> call, Throwable t) {
+                        Log.d(TAG, "onFailure: 실패");
+                    }
+                });
+
+            });
+            //상세
             itemView.setOnClickListener(v->{
                 int pos = getAdapterPosition();
-
                 Intent intent = new Intent(mContext, CommunityDetailActivity.class);
-
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra("community",communities.get(pos));
                 mContext.startActivity(intent);
             });
         }
 
-        public void setCommunityItem(Community community){
+        public void setCommunityItem(CommunityListRespDto community){
             tvCommunityTitle.setText(community.getTitle());
-            tvCommunityCategory.setText(community.getCategory().getTitle());
+            tvCommunityCategory.setText(community.getCategoryTitle());
             tvRegTime.setText(community.getCreateDate().toString());
-            tvUsername.setText(community.getUser().getName());
-            tvReplyCount.setText(community.getReplys().size()+"");
+            tvUsername.setText(community.getName());
+            tvReplyCount.setText(community.getReplyCount()+"");
+            btnLike.setText(community.getLikeCount()+"");
         }
     }
 
-    public void filterList(List<Community> filterItems) {
+    public void filterList(List<CommunityListRespDto> filterItems) {
         this.communities = filterItems;
         notifyDataSetChanged();
     }

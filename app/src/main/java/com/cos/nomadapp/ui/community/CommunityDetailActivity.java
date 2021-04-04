@@ -4,8 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,7 +21,9 @@ import com.cos.nomadapp.model.CMRespDto;
 import com.cos.nomadapp.model.common.Item;
 import com.cos.nomadapp.model.community.CReply;
 import com.cos.nomadapp.model.community.CReplySaveReqDto;
-import com.cos.nomadapp.model.community.Community;
+
+import com.cos.nomadapp.model.community.CommunityItemRespDto;
+import com.cos.nomadapp.model.community.CommunityListRespDto;
 import com.cos.nomadapp.service.NomadApi;
 
 import java.util.ArrayList;
@@ -33,7 +35,8 @@ import retrofit2.Response;
 
 public class CommunityDetailActivity extends AppCompatActivity {
     private static final String TAG = "CommunityDetailActivity";
-    private ImageView ivBack,ivSendReply;
+    private Context mContext = CommunityDetailActivity.this;
+    private ImageView ivBack, ivSendReply;
     private TextView tvToolbarTitle;
     private RecyclerView rvCommunityDetail;
     private EditText etReply;
@@ -41,96 +44,86 @@ public class CommunityDetailActivity extends AppCompatActivity {
     private RelativeLayout replyBar;
     private EditText et_reply;
     private CommunityDetailAdapter communityDetailAdapter;
-
+    private CommunityItemRespDto communityItem;
+    private NomadApi nomadApi;
+    private List<Item> items;
+    private String token;
+    private LinearLayoutManager manager;
+    private CommunityListRespDto community;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community_detail);
+        Intent intent = getIntent();
+        community = (CommunityListRespDto) intent.getSerializableExtra("community");
+
+        //토큰
+        token = getSharedPreferences("pref", MODE_PRIVATE).getString("token", "");
+        Log.d(TAG, "onCreate: token "+token);
+
+        //댓글 쓰기
+        replyBar = (RelativeLayout) findViewById(R.id.reply_bar);
+        replyBar.setVisibility(View.INVISIBLE);
+        ivSendReply = findViewById(R.id.iv_reply_send);
+        et_reply = findViewById(R.id.et_reply);
+        //툴바
+        ivBack = findViewById(R.id.iv_back);
+        ivBack.setOnClickListener(v -> {
+            finish();
+        });
+
+        tvToolbarTitle = findViewById(R.id.tv_toolbar_title);
+        tvToolbarTitle.setText("");
+
+        manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        rvCommunityDetail = findViewById(R.id.rv_community_detail);
+
+        items = new ArrayList<>();
+
+        //게시글마다 댓글 불러오기
+        replies = new ArrayList<>();
+
+        nomadApi = NomadApi.retrofit.create(NomadApi.class);
+        test();
+
+        //댓글 쓰기
+        ivSendReply.setOnClickListener(v -> {
+            //long principalId = pref.getLong("principalId",0);
+            Log.d(TAG, "token :" + token);
+
+            CReplySaveReqDto cReplySaveReqDto = new CReplySaveReqDto();
+            //댓글내용
+            cReplySaveReqDto.setContent(et_reply.getText().toString());
+            //커뮤니티 아이디
+            cReplySaveReqDto.setComId(community.getId().longValue());
+            //cReplySaveReqDto.setUserId(principalId);
+
+            Call<CMRespDto<CReply>> call3 = nomadApi.cReplySave("Bearer " + token, cReplySaveReqDto);
+            call3.enqueue(new Callback<CMRespDto<CReply>>() {
+                @Override
+                public void onResponse(Call<CMRespDto<CReply>> call, Response<CMRespDto<CReply>> response) {
+                    items.add(new Item(1, response.body().getData()));
+                    Log.d(TAG, "onResponse: 3 item : " + items);
+                    shutdownReplyInput();       //댓글 작성 완료하고 키보드 닫기
+                    //test();
+                }
+
+                @Override
+                public void onFailure(Call<CMRespDto<CReply>> call, Throwable t) {
+                    Log.d(TAG, "onFailure: 댓글 쓰기 실패");
+                }
+            });
+
+        });
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Intent intent = getIntent();
-
-        Community community = (Community) intent.getSerializableExtra("community");
-        //댓글 쓰기
-        replyBar = (RelativeLayout) findViewById(R.id.reply_bar);
-        replyBar.setVisibility(View.INVISIBLE);
-        ivSendReply=findViewById(R.id.iv_reply_send);
-        et_reply = findViewById(R.id.et_reply);
-        //댓글 쓰기
-
-        ivBack = findViewById(R.id.iv_back);
-        tvToolbarTitle = findViewById(R.id.tv_toolbar_title);
-        tvToolbarTitle.setText("");
-
-        ivBack.setOnClickListener(v -> {
-            finish();
-        });
-
-        LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-        rvCommunityDetail = findViewById(R.id.rv_community_detail);
-        List<Item> items = new ArrayList<>();
-        items.add(new Item(0,community));
-
-        //게시글마다 댓글 불러오기
-        replies = new ArrayList<>();
-
-        NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
-        Call<CMRespDto<Community>> call = nomadApi.comFindById(community.getId());
-        call.enqueue(new Callback<CMRespDto<Community>>() {
-            @Override
-            public void onResponse(Call<CMRespDto<Community>> call, Response<CMRespDto<Community>> response) {
-                replies = response.body().getData().getReplys();
-                for(int i=0;i<replies.size();i++){
-                    items.add(new Item(1,replies.get(i)));
-                    Log.d(TAG, "onResponse: test321: "+replies.get(i));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CMRespDto<Community>> call, Throwable t) {
-                Log.d(TAG, "onFailure: 실패");
-            }
-
-        });
-        //댓글쓰기
-        ivSendReply.setOnClickListener(v->{
-
-            SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
-            String token = pref.getString("token","");
-            //long principalId = pref.getLong("principalId",0);
-            Log.d(TAG, "token :"+token);
-
-            CReplySaveReqDto cReplySaveReqDto=new CReplySaveReqDto();
-            cReplySaveReqDto.setContent(et_reply.getText().toString());
-            cReplySaveReqDto.setComId(community.getId());
-            //cReplySaveReqDto.setUserId(principalId);
-
-            Log.d(TAG, "onCreate: "+cReplySaveReqDto);
-            NomadApi nomadApi2 = NomadApi.retrofit.create(NomadApi.class);
-            Call<CMRespDto<CReply>> call2 = nomadApi2.cReplySave("Bearer "+token,cReplySaveReqDto);
-            call2.enqueue(new Callback<CMRespDto<CReply>>() {
-                @Override
-                public void onResponse(Call<CMRespDto<CReply>> call, Response<CMRespDto<CReply>> response) {
-                    items.add(new Item(1,response.body().getData()));
-                    Log.d(TAG, "onResponse: test123 : "+response.body().getData());
-                    shutdownReplyInput();
-                }
-
-                @Override
-                public void onFailure(Call<CMRespDto<CReply>> call, Throwable t) {
-                    Log.d(TAG, "onFailure: ");
-                }
-            });
-        });
-        rvCommunityDetail.setLayoutManager(manager);
-        communityDetailAdapter=new CommunityDetailAdapter(items,this);
-        rvCommunityDetail.setAdapter(communityDetailAdapter);
-        communityDetailAdapter.notifyDataSetChanged();
     }
-    public void showReplyInput(){           //댓글 키보드 쓰기
+
+    public void showReplyInput() {           //댓글 키보드 쓰기
         RelativeLayout replyBar = (RelativeLayout) findViewById(R.id.reply_bar);
         replyBar.setVisibility(View.VISIBLE);
 
@@ -139,7 +132,8 @@ public class CommunityDetailActivity extends AppCompatActivity {
         etReply.requestFocus();
         imm.showSoftInput(etReply, InputMethodManager.SHOW_IMPLICIT);
     }
-    public void shutdownReplyInput(){           //댓글 키보드 닫기
+
+    public void shutdownReplyInput() {           //댓글 키보드 닫기
         RelativeLayout replyBar = (RelativeLayout) findViewById(R.id.reply_bar);
         replyBar.setVisibility(View.INVISIBLE);
 
@@ -148,5 +142,31 @@ public class CommunityDetailActivity extends AppCompatActivity {
         etReply.requestFocus();
         View view = this.getCurrentFocus();
         imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+    }
+
+    private void test(){
+        Call<CMRespDto<CommunityItemRespDto>> call = nomadApi.comFindById("Bearer " + token, community.getId().longValue());
+        call.enqueue(new Callback<CMRespDto<CommunityItemRespDto>>() {
+            @Override
+            public void onResponse(Call<CMRespDto<CommunityItemRespDto>> call, Response<CMRespDto<CommunityItemRespDto>> response) {
+                communityItem = response.body().getData();
+                items.add(new Item(0, communityItem));
+                for (int i = 0; i < communityItem.getCommunity().getReplys().size(); i++) {
+                    items.add(new Item(1, communityItem.getCommunity().getReplys().get(i)));
+                    Log.d(TAG, "onResponse: 1 items : " + items);
+                }
+//                items.add(new Item(1, communityItem.getCommunity().getReplys()));
+                Log.d(TAG, "onResponse: " + items);
+                rvCommunityDetail.setLayoutManager(manager);
+                communityDetailAdapter = new CommunityDetailAdapter(items, (CommunityDetailActivity)mContext, token);
+                rvCommunityDetail.setAdapter(communityDetailAdapter);
+                communityDetailAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<CMRespDto<CommunityItemRespDto>> call, Throwable t) {
+                Log.d(TAG, "onFailure: 실패");
+            }
+        });
     }
 }

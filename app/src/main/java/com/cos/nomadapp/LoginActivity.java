@@ -108,6 +108,7 @@ public class LoginActivity extends AppCompatActivity {
 
             OAuthApi oauthApi = OAuthApi.retrofit.create(OAuthApi.class);
             Call<CMRespDto> call = oauthApi.postOauth(account.getIdToken());
+            Log.d(TAG, "handleSignInResult: getIdToken"+account.getIdToken());
             call.enqueue(new Callback<CMRespDto>() {
                 @Override
                 public void onResponse(Call<CMRespDto> call, Response<CMRespDto> response) {
