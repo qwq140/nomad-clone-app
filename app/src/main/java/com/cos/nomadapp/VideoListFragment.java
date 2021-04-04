@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,7 +36,7 @@ import retrofit2.Response;
 public class VideoListFragment extends Fragment {
 
     private static final String TAG = "VideoListFragment";
-    
+
     private RecyclerView rvVideoList;
     private TextView tvVlistTitle;
     private long videoId;
@@ -43,55 +44,61 @@ public class VideoListFragment extends Fragment {
     private SharedPreferences pref;
     private Context context;
     private String token;
-    
-    public VideoListFragment(long videoId) {
+    private String status;
+
+    private AppCompatButton btnShow;
+
+    public VideoListFragment(long videoId, String status) {
         this.videoId = videoId;
+        this.status = status;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate( R.layout.video_frag_list, container, false );
+        View view = inflater.inflate(R.layout.video_frag_list, container, false);
         context = getActivity();
         tvVlistTitle = view.findViewById(R.id.tv_vlist_title);
         rvVideoList = view.findViewById(R.id.rv_video_list);
-        
+        btnShow = ((VideoActivity)context).findViewById(R.id.btn_show);
+        btnShow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cancel,0,0,0);
+        btnShow.setText("   Hide Sidebar");
+
+        pref = context.getSharedPreferences("pref", Context.MODE_PRIVATE);
+        token = pref.getString("token", "");
+
         nomadApi = NomadApi.retrofit.create(NomadApi.class);
+
+        download();
 
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        pref = context.getSharedPreferences("pref",Context.MODE_PRIVATE);
-        token = pref.getString("token","");
+    private void download(){
+        Log.d(TAG, "onResume: videoId" + videoId);
         Call<CMRespDto<Video>> call = nomadApi.getVideoList("Bearer " + token, videoId);
         call.enqueue(new Callback<CMRespDto<Video>>() {
             @Override
             public void onResponse(Call<CMRespDto<Video>> call, Response<CMRespDto<Video>> response) {
-                if (response.body()==null){
-                    Intent intent = new Intent(context, LoginActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    context.startActivity(intent);
-                } else {
-                    Log.d(TAG, "onResponse: "+response.body());
+                if (response.body()!=null){
+                    Log.d(TAG, "onResponse: " + response.body());
                     Video video = response.body().getData();
                     tvVlistTitle.setText(video.getName());
                     List<Curriculum> curriculumList = new ArrayList<>();
 
-                    for(int i = 0 ; i < video.getContents().size() ; i++){
+                    for (int i = 0; i < video.getContents().size(); i++) {
                         Curriculum curriculum = new Curriculum();
-                        curriculum.setChapter(video.getContents().get(i).get("title").toString());
+                        curriculum.setChapter("#" + (i + 1) + " " + video.getContents().get(i).get("title").toString());
                         List<VideoContent> curriculumContent = new ArrayList<>();
-                        Log.d(TAG, "section8: chapter : "+curriculum.getChapter());
-                        Log.d(TAG, "section8: "+video.getContents().get(i).get("list"));
-                        List<Map<String, Object>> content = (List<Map<String, Object>>)video.getContents().get(i).get("list");
-                        Log.d(TAG, "section8: "+content);
-                        for (int j=0; j<content.size();j++){
-                            Log.d(TAG, "section8: curriculumContent"+content.get(j));
+                        Log.d(TAG, "section8: chapter : " + curriculum.getChapter());
+                        Log.d(TAG, "section8: " + video.getContents().get(i).get("list"));
+                        List<Map<String, Object>> content = (List<Map<String, Object>>) video.getContents().get(i).get("list");
+                        Log.d(TAG, "section8: " + content);
+                        for (int j = 0; j < content.size(); j++) {
+                            Log.d(TAG, "section8: curriculumContent" + content.get(j));
+                            String number = "#"+(i+1)+"."+j+" ";
                             VideoContent videoContent = VideoContent.builder()
-                                    .title(content.get(j).get("title").toString())
+                                    .title(number + content.get(j).get("title").toString())
                                     .isFree(Boolean.parseBoolean(content.get(j).get("isFree").toString()))
                                     .vimeoId(content.get(j).get("vimeoId").toString())
                                     .build();
@@ -103,10 +110,11 @@ public class VideoListFragment extends Fragment {
 
                     LinearLayoutManager manager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
                     rvVideoList.setLayoutManager(manager);
-                    rvVideoList.setAdapter(new VideoListAdapter(curriculumList,context, video.getId()));
+                    rvVideoList.setAdapter(new VideoListAdapter(curriculumList, context, video.getId(), status));
                 }
 
             }
+
 
             @Override
             public void onFailure(Call<CMRespDto<Video>> call, Throwable t) {
@@ -114,4 +122,5 @@ public class VideoListFragment extends Fragment {
             }
         });
     }
+
 }

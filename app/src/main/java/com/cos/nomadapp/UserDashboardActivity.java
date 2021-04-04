@@ -1,33 +1,33 @@
 package com.cos.nomadapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+
 import com.bumptech.glide.Glide;
-import com.cos.nomadapp.adapter.DashboardAdapter;
+import com.cos.nomadapp.adapter.DashboardFragmentAdapter;
+import com.cos.nomadapp.adapter.TechDashAdapter;
 import com.cos.nomadapp.model.CMRespDto;
 import com.cos.nomadapp.model.common.Item;
+import com.cos.nomadapp.model.tech.Tech;
 import com.cos.nomadapp.model.user.User;
 import com.cos.nomadapp.model.user.UserDashboardSecondSection;
 import com.cos.nomadapp.service.NomadApi;
 import com.cos.nomadapp.utils.JwtUtils;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.android.material.tabs.TabLayout;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import org.json.JSONObject;
@@ -46,14 +46,18 @@ public class UserDashboardActivity extends AppCompatActivity {
     private ImageView ivBack;
     private TextView tvToolbarTitle, tvDashName, tvDashUsername;
     private RoundedImageView rivUser, rivDashboardUser;
-    private RecyclerView rvDashboard;
+    private RecyclerView rvDashTech;
     private SharedPreferences pref;
-    private Button btnEditProfile, btnSeeProfile;
+    private AppCompatButton btnEditProfile;
     private NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
     private User user;
 
     private long id;
     private String token;
+
+    private DashboardFragmentAdapter dashboardFragmentAdapter;
+    private ViewPager vpContainer;
+    private TabLayout tabsDashboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +65,7 @@ public class UserDashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_dashboard);
 
         ivBack = findViewById(R.id.iv_back);
+        pref = getSharedPreferences("pref",MODE_PRIVATE);
 
         tvToolbarTitle = findViewById(R.id.tv_toolbar_title);
         tvToolbarTitle.setText("DashBoard");
@@ -70,10 +75,6 @@ public class UserDashboardActivity extends AppCompatActivity {
         });
 
         rivDashboardUser = findViewById(R.id.riv_dashboard_user);
-        tvDashName = findViewById(R.id.tv_dash_name);
-        tvDashUsername = findViewById(R.id.tv_dash_username);
-
-
 
         //roundedImageView 이벤트
         rivUser = (RoundedImageView) findViewById(R.id.riv_user);
@@ -95,6 +96,12 @@ public class UserDashboardActivity extends AppCompatActivity {
                             v.getContext().startActivity(intent);
                         } else {
                             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putString("token","");
+                            editor.commit();
+                            Intent intent = new Intent(v.getContext(), MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            v.getContext().startActivity(intent);
                         }
                         return false;
                     }
@@ -104,103 +111,28 @@ public class UserDashboardActivity extends AppCompatActivity {
         });
         //roundedImageView End
 
-        LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-        rvDashboard = findViewById(R.id.rv_dashboard);
-        rvDashboard.setLayoutManager(manager);
+        // TabLayout
+        vpContainer = findViewById(R.id.vp_container);
+        tabsDashboard = findViewById(R.id.tabs_dashboard);
 
-        List<Item> items = new ArrayList<>();
+        dashboardFragmentAdapter = new DashboardFragmentAdapter(getSupportFragmentManager(),1);
 
-        UserDashboardSecondSection userDashboardSecondSection = new UserDashboardSecondSection("Join more courses and complete challenges to unlock the next level!");
-        items.add(new Item(1, userDashboardSecondSection));
-        Log.d(TAG, "onCreate: " + userDashboardSecondSection);
+        dashboardFragmentAdapter.addFragment(new DashboardFragment1());
+        dashboardFragmentAdapter.addFragment(new DashboardFragment2());
+        dashboardFragmentAdapter.addFragment(new DashboardFragment3());
 
-        rvDashboard.setAdapter(new DashboardAdapter(items, UserDashboardActivity.this));
+        vpContainer.setAdapter(dashboardFragmentAdapter);
+
+        tabsDashboard.setupWithViewPager(vpContainer);
+
+        tabsDashboard.getTabAt(0).setText("My Profile");
+        tabsDashboard.getTabAt(1).setText("My Courses");
+        tabsDashboard.getTabAt(2).setText("My Payment History");
 
     }
 
-    @SneakyThrows
     @Override
     protected void onResume() {
         super.onResume();
-        // 토큰 불러오기, principal 불러오기
-        pref = getSharedPreferences("pref", MODE_PRIVATE);
-        token = pref.getString("token", "");
-        Log.d(TAG, "onCreate: token : " + token);
-
-        if (token!=""){
-            // 토큰 디코딩
-            String payload = JwtUtils.payloadDecoded(token);
-            JSONObject payloadObj = new JSONObject(payload);
-            Log.d(TAG, "onCreate: Payload : " + payloadObj);
-
-            id = payloadObj.getLong("id");
-
-            // 개인 정보 얻기
-            Call<CMRespDto> call = nomadApi.getProfile("Bearer " + token, id);
-            call.enqueue(new Callback<CMRespDto>() {
-                @Override
-                public void onResponse(Call<CMRespDto> call, Response<CMRespDto> response) {
-                    Log.d(TAG, "onResponse: " + response.body());
-                    if (response.body()!=null){
-                        Log.d(TAG, "onResponse: " + response.body().getData());
-                        Map<String, Object> data = (Map<String, Object>) response.body().getData();
-                        Log.d(TAG, "onResponse: data : " + data);
-
-                        user = User.builder()
-                                .username(data.get("username").toString())
-                                .email(data.get("email").toString())
-                                .name(data.get("name").toString())
-                                .provider(data.get("provider").toString())
-                                .roles(data.get("roles").toString())
-                                .imageUrl(data.get("imageUrl").toString())
-                                .build();
-
-                        tvDashName.setText(user.getName());
-                        tvDashUsername.setText(user.getUsername());
-
-                        Glide
-                                .with(UserDashboardActivity.this)
-                                .load(user.getImageUrl())
-                                .centerCrop()
-                                .placeholder(R.drawable.ic_user)
-                                .into(rivDashboardUser);
-
-                    } else {
-                        Intent intent = new Intent(UserDashboardActivity.this, LoginActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        UserDashboardActivity.this.startActivity(intent);
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<CMRespDto> call, Throwable t) {
-                    Log.d(TAG, "onFailure: ");
-                }
-            });
-        } else {
-            Intent intent = new Intent(UserDashboardActivity.this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            UserDashboardActivity.this.startActivity(intent);
-        }
-
-
-        btnEditProfile = findViewById(R.id.btn_edit_profile);
-        btnSeeProfile = findViewById(R.id.btn_see_profile);
-
-        btnEditProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(v.getContext(), EditProfileActivity.class);
-            intent.putExtra("principal",user);
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            v.getContext().startActivity(intent);
-        });
-
-        btnSeeProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(v.getContext(), SeeProfileActivity.class);
-            intent.putExtra("principal",user);
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            v.getContext().startActivity(intent);
-        });
-
     }
 }

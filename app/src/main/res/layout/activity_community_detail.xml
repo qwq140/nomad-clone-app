@@ -41,7 +41,7 @@
             android:background="#f3f3f3"
             android:paddingTop="10.0dip"
             android:paddingBottom="10.0dip"
-            android:visibility="invisible"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">

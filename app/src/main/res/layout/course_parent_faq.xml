@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="수업은 언제 시작하고 종료되나요?"
+        android:textColor="@color/black"
         android:textSize="17dp"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"/>

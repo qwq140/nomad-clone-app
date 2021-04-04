@@ -65,7 +65,7 @@ public class IamportActivity extends AppCompatActivity {
                 .buyer_email(loginDto.getEmail())
                 .name(course.getTitle())
                 .merchant_uid(merchant_uid)
-                .amount("100")
+                .amount(course.getPrice())
                 .buyer_name(loginDto.getName()).build();
 
         Iamport.INSTANCE.payment("imp39401762", request,
@@ -80,6 +80,7 @@ public class IamportActivity extends AppCompatActivity {
                     paySave(iamPortResponse);
                     return Unit.INSTANCE;
                 });
+
     }
     @Override
     protected void onDestroy() {
@@ -94,12 +95,13 @@ public class IamportActivity extends AppCompatActivity {
                 .pay_method(PayMethod.card.toString())
                 .imp_uid(iamPortResponse.getImp_uid())
                 .merchant_uid(merchant_uid)
-                .paid_amount(100) // 임시로 100원함 course에서 가격을 불러와야함
+                .paid_amount(Integer.parseInt(course.getPrice())) // 임시로 100원함 course에서 가격을 불러와야함
                 .name(course.getTitle())
                 .buyer_name(loginDto.getName())
                 .buyer_email(loginDto.getEmail())
-                .status(iamPortResponse.getImp_success().toString())
+                .status("paid")
                 .courseId(course.getId())
+                .userId(loginDto.getId())
                 .build();
         NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
         Call<CMRespDto> call = nomadApi.paySave("Bearer "+token,paySaveReqDto);
@@ -107,6 +109,9 @@ public class IamportActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<CMRespDto> call, Response<CMRespDto> response) {
                 Log.d(TAG, "onResponse: "+response.body());
+                if (response.body()!=null){
+                    finish();
+                }
             }
 
             @Override

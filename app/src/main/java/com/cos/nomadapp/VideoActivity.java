@@ -30,6 +30,7 @@ public class VideoActivity extends AppCompatActivity {
         Intent intent = getIntent();
         VideoContent videoContent = (VideoContent) intent.getSerializableExtra("videoContent");
         long videoId = intent.getLongExtra("videoId",0);
+        String status = intent.getStringExtra("status");
 
         getSupportFragmentManager().beginTransaction().replace(R.id.video_container, new VideoDetailFragment(videoContent)).commit();
         btnShow = findViewById(R.id.btn_show);
@@ -37,12 +38,12 @@ public class VideoActivity extends AppCompatActivity {
             isShow = !isShow;
             Fragment selectedFragment = null;
             if (isShow == true){
-                btnShow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cancel,0,0,0);
-                btnShow.setText("   Hide Sidebar");
-                selectedFragment = new VideoListFragment(videoId);
+//                btnShow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cancel,0,0,0);
+//                btnShow.setText("   Hide Sidebar");
+                selectedFragment = new VideoListFragment(videoId,status);
             } else {
-                btnShow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_info_24,0,0,0);
-                btnShow.setText("   Show Sidebar");
+//                btnShow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_info_24,0,0,0);
+//                btnShow.setText("   Show Sidebar");
                 selectedFragment = new VideoDetailFragment(videoContent);
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.video_container, selectedFragment).commit();

@@ -50,7 +50,7 @@ public class FaqAdapter extends ExpandableRecyclerViewAdapter<FaqAdapter.FaqGubu
     @Override
     public void onBindChildViewHolder(FaqItemViewHolder holder, int flatPosition, ExpandableGroup group, int childIndex) {
         final FaqItem faqItem = (FaqItem) group.getItems().get(childIndex);
-        holder.bind(faqItem);
+        holder.setItem(faqItem);
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, FaqDetailActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -64,7 +64,7 @@ public class FaqAdapter extends ExpandableRecyclerViewAdapter<FaqAdapter.FaqGubu
     @Override
     public void onBindGroupViewHolder(FaqGubunViewHolder holder, int flatPosition, ExpandableGroup group) {
         final FaqGubun faqGubun = (FaqGubun) group;
-        holder.bind(faqGubun);
+        holder.setItem(faqGubun);
     }
 
     public class FaqGubunViewHolder extends GroupViewHolder {
@@ -78,7 +78,7 @@ public class FaqAdapter extends ExpandableRecyclerViewAdapter<FaqAdapter.FaqGubu
             tvFaqTitle = itemView.findViewById(R.id.tv_faq_title);
         }
 
-        public void bind(FaqGubun faqGubun){
+        public void setItem(FaqGubun faqGubun){
 
             tvFaqTitle.setText(faqGubun.getTitle());
             Log.d(TAG, "bind: "+ faqGubun.getTitle());
@@ -96,7 +96,7 @@ public class FaqAdapter extends ExpandableRecyclerViewAdapter<FaqAdapter.FaqGubu
 
         }
 
-        public void bind(FaqItem faqItem){
+        public void setItem(FaqItem faqItem){
             tvFaqItem.setText(faqItem.getName());
             Log.d(TAG, "bind: "+faqItem);
         }

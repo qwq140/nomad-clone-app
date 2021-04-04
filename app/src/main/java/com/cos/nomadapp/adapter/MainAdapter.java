@@ -12,8 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.cos.nomadapp.VideoLobbyActivity;
+import com.cos.nomadapp.model.CMRespDto;
 import com.cos.nomadapp.model.courses.CoursesPreview;
 import com.cos.nomadapp.model.courses.PreviewImage;
+import com.cos.nomadapp.model.pay.Pay;
+import com.cos.nomadapp.model.pay.PayCheckReqDto;
+import com.cos.nomadapp.service.NomadApi;
 import com.cos.nomadapp.ui.courses.CourseDetailActivity;
 import com.cos.nomadapp.ui.courses.CoursesActivity;
 import com.cos.nomadapp.FooterViewHolder;
@@ -24,6 +29,10 @@ import com.cos.nomadapp.model.common.MainTitle;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
@@ -36,10 +45,12 @@ public class MainAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private List<CoursesPreview> coursesPreviews;
     private Context context;
+    private String token;
 
-    public MainAdapter(Context context, List<CoursesPreview> coursesPreviews) {
+    public MainAdapter(Context context, List<CoursesPreview> coursesPreviews, String token) {
         this.context = context;
         this.coursesPreviews = coursesPreviews;
+        this.token = token;
     }
 
 
@@ -121,6 +132,7 @@ public class MainAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         private RoundedImageView ivCourse;
         private TextView tvTitle, tvSubTitle, tvLevel;
+        private NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
 
         public CourseViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -150,11 +162,42 @@ public class MainAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
             Log.d(TAG, "setCourseItem: id : " +id);
             itemView.setOnClickListener(v -> {
-                Context context = v.getContext();
-                Intent intent = new Intent(context, CourseDetailActivity.class);
-                intent.putExtra("id", id);
-                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                context.startActivity(intent);
+                PayCheckReqDto payCheckReqDto = new PayCheckReqDto();
+                payCheckReqDto.setCourseId(id);
+                Call<CMRespDto<Pay>> call = nomadApi.payCheck("Bearer "+token, payCheckReqDto);
+                call.enqueue(new Callback<CMRespDto<Pay>>() {
+                    @Override
+                    public void onResponse(Call<CMRespDto<Pay>> call, Response<CMRespDto<Pay>> response) {
+                        Log.d(TAG, "onResponse: 페이체크"+response.body());
+                        if (response.body()!=null){ // 로그인 o
+                            if (response.body().getData()==null){ // 결제 x
+                                Context context = v.getContext();
+                                Intent intent = new Intent(context, CourseDetailActivity.class);
+                                intent.putExtra("id", id);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                context.startActivity(intent);
+                            } else { // 결제 o
+                                Context context = v.getContext();
+                                Intent intent = new Intent(context, VideoLobbyActivity.class);
+                                intent.putExtra("videoId", coursesPreview.getVideoId());
+                                intent.putExtra("status",response.body().getData().getStatus());
+                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                context.startActivity(intent);
+                            }
+                        } else { // 로그인 x
+                            Context context = v.getContext();
+                            Intent intent = new Intent(context, CourseDetailActivity.class);
+                            intent.putExtra("id", id);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            context.startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CMRespDto<Pay>> call, Throwable t) {
+
+                    }
+                });
             });
         }
     }

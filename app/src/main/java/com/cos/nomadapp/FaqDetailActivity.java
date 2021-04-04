@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.widget.ImageView;
@@ -14,6 +15,7 @@ import com.cos.nomadapp.model.CMRespDto;
 import com.cos.nomadapp.model.faq.Faq;
 import com.cos.nomadapp.model.faq.FaqItem;
 import com.cos.nomadapp.service.NomadApi;
+import com.cos.nomadapp.utils.GlideImageGetter;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,7 +58,9 @@ public class FaqDetailActivity extends AppCompatActivity {
                 Faq faq = response.body().getData();
                 Log.d(TAG, "onResponse: "+faq);
                 tvToolbarTitle.setText(faq.getTitle());
-                tvFaqDetailContent.setText(Html.fromHtml(faq.getContent()));
+                GlideImageGetter getter = new GlideImageGetter(FaqDetailActivity.this,tvFaqDetailContent);
+                Spanned htmlSpan = Html.fromHtml(faq.getContent(), getter, null);
+                tvFaqDetailContent.setText(htmlSpan);
             }
 
             @Override

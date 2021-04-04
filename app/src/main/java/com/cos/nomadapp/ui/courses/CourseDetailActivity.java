@@ -240,6 +240,9 @@ public class CourseDetailActivity extends AppCompatActivity {
                 .placeholder(R.drawable.test)
                 .into(mainImage);
 
+
+        Log.d(TAG, "section1: "+course.getTextColor());
+
         tvMainTitle.setText(course.getTitle());
         tvMainTitle.setTextColor(Color.parseColor(course.getTextColor()));
         tvMainSubTitle.setText(course.getSubTitle());
@@ -377,7 +380,7 @@ public class CourseDetailActivity extends AppCompatActivity {
 
         for(int i = 0 ; i < video.getContents().size() ; i++){
             Curriculum curriculum = new Curriculum();
-            curriculum.setChapter(video.getContents().get(i).get("title").toString());
+            curriculum.setChapter("#"+(i+1)+" "+video.getContents().get(i).get("title").toString());
             List<VideoContent> curriculumContent = new ArrayList<>();
             Log.d(TAG, "section8: chapter : "+curriculum.getChapter());
             Log.d(TAG, "section8: "+video.getContents().get(i).get("list"));
@@ -385,8 +388,9 @@ public class CourseDetailActivity extends AppCompatActivity {
             Log.d(TAG, "section8: "+content);
             for (int j=0; j<content.size();j++){
                 Log.d(TAG, "section8: curriculumContent"+content.get(j));
+                String number = "#"+(i+1)+"."+j+" ";
                 VideoContent videoContent = VideoContent.builder()
-                        .title(content.get(j).get("title").toString())
+                        .title(number+content.get(j).get("title").toString())
                         .isFree(Boolean.parseBoolean(content.get(j).get("isFree").toString()))
                         .vimeoId(content.get(j).get("vimeoId").toString())
                         .build();
@@ -398,14 +402,14 @@ public class CourseDetailActivity extends AppCompatActivity {
 
         LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rvCourseCurriculum.setLayoutManager(manager);
-        rvCourseCurriculum.setAdapter(new CourseCurriculumAdapter(curriculumList,this, video.getId()));
+        rvCourseCurriculum.setAdapter(new CourseCurriculumAdapter(curriculumList,this, video.getId(),""));
 
     }
 
     private void section9(){
         layoutTopSection9.setBackgroundColor(Color.parseColor(course.getBackgroundColor()));
         tvPayTitle.setTextColor(Color.parseColor(course.getTextColor()));
-        tvPrice.setText("월 "+course.getPrice());
+        tvPrice.setText(course.getPrice()+"원");
 
         btnPayment.setOnClickListener(v -> {
             Call<CMRespDto<LoginDto>> call = nomadApi.loadUser("Bearer "+token);

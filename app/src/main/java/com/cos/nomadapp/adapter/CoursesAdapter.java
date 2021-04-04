@@ -6,21 +6,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.cos.nomadapp.R;
+import com.cos.nomadapp.VideoLobbyActivity;
 import com.cos.nomadapp.model.CMRespDto;
-import com.cos.nomadapp.model.tech.Tech;
 import com.cos.nomadapp.model.courses.CoursesPreview;
 import com.cos.nomadapp.model.courses.PreviewImage;
+import com.cos.nomadapp.model.pay.Pay;
+import com.cos.nomadapp.model.pay.PayCheckReqDto;
+import com.cos.nomadapp.model.tech.Tech;
 import com.cos.nomadapp.service.NomadApi;
 import com.cos.nomadapp.ui.courses.CourseDetailActivity;
-import com.cos.nomadapp.FooterViewHolder;
-import com.cos.nomadapp.R;
+import com.cos.nomadapp.ui.courses.CoursesActivity;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
@@ -29,98 +32,45 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseViewHolder>{
 
-    private static final String TAG = "CoursesAdapter";
-
-    private static final int TYPE_HEADER = 0;
-    private static final int TYPE_FILTER = 1;
-    private static final int TYPE_ITEM = 2;
-    private static final int TYPE_FOOTER = 3;
-
+    private static final String TAG = "TechAdapter";
     private List<CoursesPreview> coursesPreviews;
     private Context context;
+    private NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
+    private String token;
 
-    public CoursesAdapter(Context context, List<CoursesPreview> coursesPreviews) {
-        this.context = context;
+
+    public CoursesAdapter(List<CoursesPreview> coursesPreviews, Context context, String token) {
+
         this.coursesPreviews = coursesPreviews;
+        this.context = context;
+        this.token = token;
     }
 
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CourseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        if(viewType == TYPE_HEADER){
-            return new TitleViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(
-                            R.layout.title_item,
-                            parent,
-                            false
-                    )
-            );
-        }else if(viewType == TYPE_FILTER){
-            return new FilterViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(
-                            R.layout.courses_filter_item,
-                            parent,
-                            false
-                    )
-            );
-
-        }else if(viewType == TYPE_ITEM){
-            return new CourseViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(
-                            R.layout.course_item,
-                            parent,
-                            false
-                    )
-            );
-        }else if (viewType == TYPE_FOOTER){
-            return new FooterViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(
-                            R.layout.footer,
-                            parent,
-                            false
-                    )
-            );
-        }
-        return null;
+        LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.course_item,parent, false);
+        return new CourseViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof TitleViewHolder){
-            TitleViewHolder titleViewHolder = (TitleViewHolder) holder;
-            titleViewHolder.setTitleItem();
-        } else if (holder instanceof FilterViewHolder){
-            FilterViewHolder filterViewHolder = (FilterViewHolder) holder;
-            filterViewHolder.setTechItem();
-        } else if (holder instanceof  FooterViewHolder){
-            FooterViewHolder footerViewHolder = (FooterViewHolder) holder;
-        } else {
-            CourseViewHolder courseViewHolder = (CourseViewHolder) holder;
-            courseViewHolder.setCourseItem(coursesPreviews.get(position-2));
-        }
+    public void onBindViewHolder(@NonNull CourseViewHolder holder, int position) {
+        holder.setItem(coursesPreviews.get(position));
+
+
     }
+
 
     @Override
     public int getItemCount() {
-        return coursesPreviews.size()+3;
+        return coursesPreviews.size();
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        if (position == 0){
-            return TYPE_HEADER;
-        } else if (position == 1){
-            return TYPE_FILTER;
-        }else if (position == coursesPreviews.size()+2){
-            return TYPE_FOOTER;
-        } else {
-            return TYPE_ITEM;
-        }
-    }
 
     public class CourseViewHolder extends RecyclerView.ViewHolder{
 
@@ -135,7 +85,7 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
             tvLevel = itemView.findViewById(R.id.tv_courses_level);
         }
 
-        void setCourseItem(CoursesPreview coursesPreview){
+        public void setItem(CoursesPreview coursesPreview){
             //ivCourse.setImageResource(coursesPreview.get());
             tvLevel.setText(coursesPreview.getLevel());
             tvTitle.setText(coursesPreview.getTitle());
@@ -155,60 +105,43 @@ public class CoursesAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolde
 
             Log.d(TAG, "setCourseItem: id : " +id);
             itemView.setOnClickListener(v -> {
-                Context context = v.getContext();
-                Intent intent = new Intent(context, CourseDetailActivity.class);
-                intent.putExtra("id", id);
-                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                context.startActivity(intent);
+                PayCheckReqDto payCheckReqDto = new PayCheckReqDto();
+                payCheckReqDto.setCourseId(id);
+                Call<CMRespDto<Pay>> call = nomadApi.payCheck("Bearer "+token, payCheckReqDto);
+                call.enqueue(new Callback<CMRespDto<Pay>>() {
+                    @Override
+                    public void onResponse(Call<CMRespDto<Pay>> call, Response<CMRespDto<Pay>> response) {
+                        Log.d(TAG, "onResponse: 페이체크"+response.body());
+                        if (response.body()!=null){ // 로그인 o
+                            if (response.body().getData()==null){ // 결제 x
+                                Context context = v.getContext();
+                                Intent intent = new Intent(context, CourseDetailActivity.class);
+                                intent.putExtra("id", id);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                context.startActivity(intent);
+                            } else { // 결제 o
+                                Context context = v.getContext();
+                                Intent intent = new Intent(context, VideoLobbyActivity.class);
+                                intent.putExtra("videoId", coursesPreview.getVideoId());
+                                intent.putExtra("status",response.body().getData().getStatus());
+                                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                context.startActivity(intent);
+                            }
+                        } else { // 로그인 x
+                            Context context = v.getContext();
+                            Intent intent = new Intent(context, CourseDetailActivity.class);
+                            intent.putExtra("id", id);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            context.startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CMRespDto<Pay>> call, Throwable t) {
+
+                    }
+                });
             });
         }
     }
-
-    public class TitleViewHolder extends RecyclerView.ViewHolder{
-
-        private TextView tvCoursesTitle, tvCoursesSubTitle;
-
-        public TitleViewHolder(@NonNull View itemView) {
-            super(itemView);
-            tvCoursesTitle = itemView.findViewById(R.id.tv_title);
-            tvCoursesSubTitle = itemView.findViewById(R.id.tv_subtitle);
-        }
-
-        void setTitleItem(){
-            tvCoursesTitle.setText("All Courses");
-            tvCoursesSubTitle.setText("초급부터 고급까지! 니꼬쌤과 함께 풀스택으로 성장하세요!");
-        }
-    }
-
-    public class FilterViewHolder extends RecyclerView.ViewHolder{
-
-        private RecyclerView rvTech;
-
-        public FilterViewHolder(@NonNull View itemView) {
-            super(itemView);
-            rvTech = itemView.findViewById(R.id.rv_tech);
-        }
-
-        public void setTechItem(){
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(context,4);
-            rvTech.setLayoutManager(gridLayoutManager);
-
-            NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
-            Call<CMRespDto<List<Tech>>> call = nomadApi.getTechList();
-            call.enqueue(new Callback<CMRespDto<List<Tech>>>() {
-                @Override
-                public void onResponse(Call<CMRespDto<List<Tech>>> call, Response<CMRespDto<List<Tech>>> response) {
-                    Log.d(TAG, "onResponse: 성공 " + response.body());
-                    List<Tech> teches = response.body().getData();
-                    rvTech.setAdapter(new TechAdapter(teches,context));
-                }
-
-                @Override
-                public void onFailure(Call<CMRespDto<List<Tech>>> call, Throwable t) {
-                    Log.d(TAG, "onFailure: 실패");
-                }
-            });
-        }
-    }
-
 }

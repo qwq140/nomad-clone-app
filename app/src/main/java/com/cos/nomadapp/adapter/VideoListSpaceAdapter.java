@@ -30,11 +30,13 @@ public class VideoListSpaceAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
     private List<Item> items;
     private Context context;
     private long videoId;
+    private String status;
 
-    public VideoListSpaceAdapter(List<Item> items, Context context, long videoId) {
+    public VideoListSpaceAdapter(List<Item> items, Context context, long videoId, String status) {
         this.items = items;
         this.context = context;
         this.videoId = videoId;
+        this.status = status;
     }
 
     @NonNull
@@ -63,7 +65,7 @@ public class VideoListSpaceAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(getItemViewType(position)==0){
-            String chapter = (String) items.get(position).getObject();
+            String chapter = (String)items.get(position).getObject();
             ((ChapterViewHolder) holder).setItem(chapter);
         }else if(getItemViewType(position)==1){
             VideoContent videoContent = (VideoContent) items.get(position).getObject();
@@ -98,33 +100,41 @@ public class VideoListSpaceAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
     public class ContentViewHolder extends RecyclerView.ViewHolder{
 
         private TextView tvCurriculumContent;
-        private AppCompatButton btnShow;
+//        private AppCompatButton btnShow;
 
         public ContentViewHolder(@NonNull View itemView) {
             super(itemView);
             tvCurriculumContent = itemView.findViewById(R.id.tv_curriculum_content);
-            btnShow = ((VideoActivity)context).findViewById(R.id.btn_show);
+//            btnShow = ((VideoActivity)context).findViewById(R.id.btn_show);
         }
 
         void setItem(VideoContent videoContent){
-           tvCurriculumContent.setText(videoContent.getTitle());
+            tvCurriculumContent.setText(videoContent.getTitle());
             Log.d(TAG, "setItem: "+videoContent.isFree());
-            if (videoContent.isFree()==false){
-                tvCurriculumContent.setTextColor(Color.parseColor("#cdd1d7"));
-                tvCurriculumContent.setClickable(false);
-                tvCurriculumContent.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_lock,0);
-            } else {
+            if (status.equals("paid")){
                 tvCurriculumContent.setOnClickListener(v -> {
                     Log.d(TAG, "setItem: 커리큘럼 클릭");
                     Log.d(TAG, "setItem: "+videoContent.isFree());
-                    btnShow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_info_24,0,0,0);
-                    btnShow.setText("   Show Sidebar");
-                    ((VideoActivity)context).isShow = false;
                     Fragment videoDetailFragment = new VideoDetailFragment(videoContent);
                     ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.video_container, videoDetailFragment).commit();
 
                 });
+            } else {
+                if (videoContent.isFree()==false){
+                    tvCurriculumContent.setTextColor(Color.parseColor("#cdd1d7"));
+                    tvCurriculumContent.setClickable(false);
+                    tvCurriculumContent.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_lock,0);
+                } else {
+                    tvCurriculumContent.setOnClickListener(v -> {
+                        Log.d(TAG, "setItem: 커리큘럼 클릭");
+                        Log.d(TAG, "setItem: "+videoContent.isFree());
+                        Fragment videoDetailFragment = new VideoDetailFragment(videoContent);
+                        ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.video_container, videoDetailFragment).commit();
+
+                    });
+                }
             }
+
 
         }
     }

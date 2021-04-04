@@ -1,6 +1,8 @@
 package com.cos.nomadapp.service;
 
 import com.cos.nomadapp.model.CMRespDto;
+import com.cos.nomadapp.model.pay.Pay;
+import com.cos.nomadapp.model.pay.PayCheckReqDto;
 import com.cos.nomadapp.model.pay.PaySaveReqDto;
 import com.cos.nomadapp.model.tech.Tech;
 import com.cos.nomadapp.model.community.CReplySaveReqDto;
@@ -33,6 +35,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface NomadApi {
 
@@ -55,8 +58,8 @@ public interface NomadApi {
     @GET("user/load")
     Call<CMRespDto<LoginDto>> loadUser(@Header("Authorization") String token);
 
-    @GET("courses")
-    Call<CMRespDto<List<CoursesPreview>>> getAllCourses();
+    @GET("courses/filter")
+    Call<CMRespDto<List<CoursesPreview>>> getAllCourses(@Query("level") String level, @Query("isFree") String isFree, @Query("techId") long techId);
 
     @GET("courses/{id}")
     Call<CMRespDto<Course>> getDetailCourses(@Path("id") long id);
@@ -109,8 +112,14 @@ public interface NomadApi {
     @POST("pay")
     Call<CMRespDto> paySave(@Header("Authorization") String token, @Body PaySaveReqDto paySaveReqDto);
 
+    @GET("pay/{userId}")
+    Call<CMRespDto<List<Pay>>> myPayList(@Header("Authorization") String token, @Path("userId") long id);
+
+    @POST("pay/check")
+    Call<CMRespDto<Pay>> payCheck(@Header("Authorization") String token, @Body PayCheckReqDto payCheckReqDto);
+
     public static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://172.30.1.17:8080/")
+            .baseUrl("http://172.30.1.53:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 

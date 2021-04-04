@@ -1,6 +1,7 @@
 package com.cos.nomadapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,7 +39,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class VideoDetailFragment extends Fragment {
+public class VideoDetailFragment extends Fragment{
 
     private static final String TAG = "VideoDetailFragment";
 
@@ -57,8 +58,13 @@ public class VideoDetailFragment extends Fragment {
     private String token;
 
     private VideoContent videoContent;
+    private String reply;
 
     private LinearLayout videoLayout;
+
+    private String replyContent;
+
+    private AppCompatButton btnShow;
 
     public VideoDetailFragment(VideoContent videoContent) {
         this.videoContent = videoContent;
@@ -73,72 +79,62 @@ public class VideoDetailFragment extends Fragment {
         tvVideoTitle = view.findViewById(R.id.tv_video_title);
         tvVideoTitle.setText(videoContent.getTitle());
         videoView = view.findViewById(R.id.video_view);
-//        videoView.getSettings().setAppCacheMaxSize( 10 * 1024 * 1024 ); // 10MB
-//        videoView.getSettings().setAllowFileAccess( true );
-//        videoView.getSettings().setAppCacheEnabled( true );
         videoView.getSettings().setJavaScriptEnabled( true );
-//        videoView.getSettings().setCacheMode( WebSettings.LOAD_DEFAULT );
-//        videoView.getSettings().setDomStorageEnabled(true);
-//        videoView.setWebChromeClient(new WebChromeClient());
-//        videoView.setWebViewClient(new WebViewClient());
         videoView.loadUrl("https://player.vimeo.com/video/180491843");
 
         rvVideoReply = view.findViewById(R.id.rv_video_reply);
         LinearLayoutManager manager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
         rvVideoReply.setLayoutManager(manager);
 
-        replyBar = view.findViewById(R.id.reply_bar);
-        replyBar.setVisibility(View.INVISIBLE);
-        ivSendReply=view.findViewById(R.id.iv_reply_send);
-        etReply = view.findViewById(R.id.et_reply);
+        btnShow = ((VideoActivity)context).findViewById(R.id.btn_show);
 
         btnVreply = view.findViewById(R.id.btn_vrepley);
         btnVreply.setOnClickListener(v -> {
-            showReplyInput();
+            //showReplyInput();
+            openReply();
         });
+        btnShow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_info_24,0,0,0);
+        btnShow.setText("   Show Sidebar");
 
-
-        ivSendReply.setOnClickListener(v -> {
-            pref = context.getSharedPreferences("pref",Context.MODE_PRIVATE);
-            token = pref.getString("token","");
-
-            VideoReplySaveReqDto videoReplySaveReqDto =new VideoReplySaveReqDto();
-            videoReplySaveReqDto.setContent(etReply.getText().toString());
-
-
-            NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
-            Call<CMRespDto<VideoReply>> call = nomadApi.videoReplySave("Bearer "+token,videoReplySaveReqDto);
-            call.enqueue(new Callback<CMRespDto<VideoReply>>() {
-                @Override
-                public void onResponse(Call<CMRespDto<VideoReply>> call, Response<CMRespDto<VideoReply>> response) {
-                    Log.d(TAG, "onResponse: test123 : "+response.body());
-                }
-
-                @Override
-                public void onFailure(Call<CMRespDto<VideoReply>> call, Throwable t) {
-                    Log.d(TAG, "onFailure: ");
-                }
-            });
-            showReplyInput();
-        });
+        ((VideoActivity)context).isShow = false;
 
         return view;
     }
 
 
-    public void showReplyInput(){           //댓글 쓰기
-
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
-        if(isReady){
-            isReady=false;
-            replyBar.setVisibility(View.INVISIBLE);
-            imm.hideSoftInputFromWindow(etReply.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
-        }
-        else{
-            isReady=true;
-            replyBar.setVisibility(View.VISIBLE);
-            etReply.requestFocus();
-            imm.showSoftInput(etReply, InputMethodManager.SHOW_IMPLICIT);
-        }
+    private void openReply(){
+        ReplyDialog replyDialog = new ReplyDialog(context);
+        replyDialog.show(getActivity().getSupportFragmentManager(),"reply");
+        replyDialog.setReplyDialogListener(new ReplyDialog.ReplyDialogListener() {
+            @Override
+            public void replyText(String message) {
+                sendReply(message);
+            }
+        });
     }
+
+    private void sendReply(String message){
+        Log.d(TAG, "sendReply: "+message);
+//        pref = context.getSharedPreferences("pref",Context.MODE_PRIVATE);
+//        token = pref.getString("token","");
+//
+//        VideoReplySaveReqDto videoReplySaveReqDto =new VideoReplySaveReqDto();
+//        videoReplySaveReqDto.setContent(etReply.getText().toString());
+//
+//
+//        NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
+//        Call<CMRespDto<VideoReply>> call = nomadApi.videoReplySave("Bearer "+token,videoReplySaveReqDto);
+//        call.enqueue(new Callback<CMRespDto<VideoReply>>() {
+//            @Override
+//            public void onResponse(Call<CMRespDto<VideoReply>> call, Response<CMRespDto<VideoReply>> response) {
+//                Log.d(TAG, "onResponse: test123 : "+response.body());
+//            }
+//
+//            @Override
+//            public void onFailure(Call<CMRespDto<VideoReply>> call, Throwable t) {
+//                Log.d(TAG, "onFailure: ");
+//            }
+//        });
+    }
+
 }

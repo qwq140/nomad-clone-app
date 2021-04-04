@@ -1,16 +1,21 @@
 package com.cos.nomadapp.model.pay;
 
+import com.cos.nomadapp.model.courses.Course;
+import com.cos.nomadapp.model.user.User;
+
+import java.sql.Timestamp;
+
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class PaySaveReqDto {
+public class Pay {
 
+    private Long id;
     private String pay_method;  	// 결제수단
     private String imp_uid;			// 고유주문번호
     private String merchant_uid;	// 고유 주문번호
@@ -22,6 +27,11 @@ public class PaySaveReqDto {
     private String currency;		// 화폐단위
     private int card_quota;			// 할부
     private String status;			// 상태
-    private Long courseId;
-    private Long userId;
+
+
+    private Course course;
+
+    private User user;
+
+    private Timestamp createDate;
 }

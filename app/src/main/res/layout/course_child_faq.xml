@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="수강신청을 하신 후에 언제든이요! 이 수업은 보인이 원하시는 시간에, 본인에게 ..."
+        android:textColor="@color/black"
         android:layout_marginRight="20dp"
         android:paddingBottom="20dp"/>
 

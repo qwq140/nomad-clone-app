@@ -1,9 +1,11 @@
 package com.cos.nomadapp.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,19 +13,25 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.model.tech.Tech;
+import com.cos.nomadapp.ui.courses.CoursesActivity;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
 public class TechAdapter extends RecyclerView.Adapter<TechAdapter.MyViewHolder>{
 
+    private static final String TAG = "TechAdapter";
     private final List<Tech> teches;
     private Context context;
 
-    public TechAdapter(List<Tech> teches, Context context) {
+    private ImageButton btnTechCancel;
+
+
+    public TechAdapter(List<Tech> teches, Context context, ImageButton btnTechCancel) {
 
         this.teches = teches;
         this.context = context;
+        this.btnTechCancel = btnTechCancel;
     }
 
 
@@ -57,6 +65,14 @@ public class TechAdapter extends RecyclerView.Adapter<TechAdapter.MyViewHolder>{
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             ivTech = itemView.findViewById(R.id.iv_session1_logo);
+
+            CoursesActivity test = (CoursesActivity)context;
+
+            btnTechCancel.setOnClickListener(v -> {
+                test.getCoursesSort().setTechId(0);
+                btnTechCancel.setVisibility(View.INVISIBLE);
+                test.downloadCourses();
+            });
         }
 
         public void setItem(Tech tech){
@@ -66,6 +82,13 @@ public class TechAdapter extends RecyclerView.Adapter<TechAdapter.MyViewHolder>{
                     .centerCrop()
                     .placeholder(R.drawable.ic_js)
                     .into(ivTech);
+
+            CoursesActivity test = (CoursesActivity)context;
+            ivTech.setOnClickListener(v -> {
+                test.getCoursesSort().setTechId(tech.getId());
+                btnTechCancel.setVisibility(View.VISIBLE);
+                test.downloadCourses();
+            });
         }
 
     }
