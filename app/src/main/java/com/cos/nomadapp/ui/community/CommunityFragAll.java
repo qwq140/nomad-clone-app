@@ -124,10 +124,9 @@ public class CommunityFragAll extends Fragment {
                 super.onScrollStateChanged(recyclerView, newState);
                 if(!rvCommunityNew.canScrollVertically(1)){
                     progressBar.setVisibility(View.VISIBLE);
-                    if(page<=(communities.size()/10)){  //page무한 증가 방지
+                    if(page<(communities.size()/10)){  //page무한 증가 방지
                         page++;
                     }
-                    Log.d(TAG, "onScrollStateChanged: "+page);
                     Call<CMRespDto<List<CommunityListRespDto>>> call2= nomadApi.comFindAll("Bearer "+token,sort,categoryId,page);
                     call2.enqueue(new Callback<CMRespDto<List<CommunityListRespDto>>>() {
                         @Override
