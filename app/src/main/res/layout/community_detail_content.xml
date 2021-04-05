@@ -101,11 +101,10 @@
 
             </LinearLayout>
 
-            <TextView
+            <WebView
                 android:id="@+id/tv_detail_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="제가 니콜라스님이 한 것 처럼 트윗들을 긁어와서 감정을 분석하는 ~~~~~~~~"
                 android:textSize="17dp"
                 android:textColor="#111827"
                 android:layout_margin="20dp"

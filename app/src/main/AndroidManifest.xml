@@ -22,9 +22,9 @@
         <activity android:name=".VideoActivity" />
         <activity android:name=".EditProfileActivity" />
         <activity android:name=".FaqDetailActivity" />
-        <activity android:name=".ui.community.CommunityDetailActivity" />
+        <activity android:name=".ui.community.CommunityDetailActivity" android:hardwareAccelerated="true"/>
         <activity android:name=".ui.community.CommunitySearchActivity" />
-        <activity android:name=".ui.community.CommunityWriteActivity" />
+        <activity android:name=".ui.community.CommunityWriteActivity" android:hardwareAccelerated="true"/>
         <activity android:name=".ui.courses.CourseDetailActivity" />
         <activity android:name=".UserDashboardActivity" />
         <activity android:name=".CancleOrRefundPolicyActivity" />

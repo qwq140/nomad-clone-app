@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -105,13 +107,20 @@ public class CommunityDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public class DetailContentViewHolder extends RecyclerView.ViewHolder {
 
         private AppCompatButton btnCommunityLike, btnReply, btnsendReply;
-        private TextView tvDetailTitle, tvDetailContent, tvDetailUsername, tvDetailTime, tvReplyCount, tvDetailCategory;
-
+        private TextView tvDetailTitle, tvDetailUsername, tvDetailTime, tvReplyCount, tvDetailCategory;
+        private WebView wvDetailContent;
+        private WebSettings webSettings;
 
         public DetailContentViewHolder(@NonNull View itemView) {
             super(itemView);
             tvDetailTitle = itemView.findViewById(R.id.tv_detail_title);
-            tvDetailContent = itemView.findViewById(R.id.tv_detail_content);
+            wvDetailContent = (WebView) itemView.findViewById(R.id.tv_detail_content);
+            webSettings=wvDetailContent.getSettings();
+            webSettings.setJavaScriptEnabled(true);
+            webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+            webSettings.setAllowFileAccess(true);
+            webSettings.setAllowFileAccessFromFileURLs(true);
+            webSettings.setAllowUniversalAccessFromFileURLs(true);
             tvDetailUsername = itemView.findViewById(R.id.tv_detail_username);
             tvDetailCategory = itemView.findViewById(R.id.tv_detail_category);
             tvDetailTime = itemView.findViewById(R.id.tv_detail_time);
@@ -126,7 +135,7 @@ public class CommunityDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         public void setItem(CommunityItemRespDto community) {
             tvDetailTitle.setText(community.getCommunity().getTitle());
-            tvDetailContent.setText(Html.fromHtml(community.getCommunity().getContent()));
+            wvDetailContent.loadData(community.getCommunity().getContent(),"text/html; charset=UTF-8",null);
             tvDetailUsername.setText(community.getCommunity().getUser().getName());
             tvDetailCategory.setText(community.getCommunity().getCategory().getTitle());
             tvDetailTime.setText(community.getCommunity().getCreateDate().toString());

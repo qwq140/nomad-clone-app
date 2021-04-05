@@ -76,7 +76,7 @@ public class FooterViewHolder extends RecyclerView.ViewHolder {
             v.getContext().startActivity(intent);
         });
         ftvInsta.setOnClickListener(v->{
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/nomad_coders/?hl=ko"));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/nomad_coders/"));
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             v.getContext().startActivity(intent);
         });
@@ -86,12 +86,12 @@ public class FooterViewHolder extends RecyclerView.ViewHolder {
             v.getContext().startActivity(intent);
         });
         ftvFacebook.setOnClickListener(v->{
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://ko-kr.facebook.com/nomadcoders/"));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/nomadcoders"));
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             v.getContext().startActivity(intent);
         });
         ftvGithub.setOnClickListener(v->{
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/nomadcoders"));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/serranoarevalo"));
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             v.getContext().startActivity(intent);
         });
