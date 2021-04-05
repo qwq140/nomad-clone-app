@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         pref = getSharedPreferences("pref", MODE_PRIVATE);
         token = pref.getString("token","");
-        Log.d(TAG, "onResume: "+token);
+
         if (token.equals("")){
             nv.getMenu().findItem(R.id.login).setVisible(true);
             nv.getMenu().findItem(R.id.dashboard).setVisible(false);
