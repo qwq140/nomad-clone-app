@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,8 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.adapter.CommunityAdapter;
 import com.cos.nomadapp.model.CMRespDto;
-import com.cos.nomadapp.model.community.Community;
+import com.cos.nomadapp.model.community.CommunityListRespDto;
 import com.cos.nomadapp.service.NomadApi;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,42 +34,118 @@ public class CommunityFragAll extends Fragment {
     private RecyclerView rvCommunityNew;
     private Context mContext;
     private static final String TAG = "CommunityFragAll";
-    private List<Community> communities;
-
+    private List<CommunityListRespDto> communities = new ArrayList<>();
+    private CommunityAdapter communityAdapter;
+    private String token,sort;
+    private Long categoryId;
+    private MaterialButtonToggleGroup materialButtonToggleGroup;
+    private int page;
+    private LinearLayoutManager manager;
+    private NomadApi nomadApi;
+    private ProgressBar progressBar;
+    public CommunityFragAll(String sort,String token,long categoryId){
+        this.sort=sort;
+        this.token=token;
+        this.categoryId=categoryId;
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.community_frag_all,container,false);
+        View view = inflater.inflate(R.layout.community_frag_all, container, false);
 
-        rvCommunityNew = view.findViewById(R.id.rv_community_all);
         mContext = container.getContext();
+        //토글 그룹
+        materialButtonToggleGroup = view.findViewById(R.id.btg_order_community);
+        int buttonId = materialButtonToggleGroup.getCheckedButtonId();
+        MaterialButton button = materialButtonToggleGroup.findViewById(buttonId);
 
-        LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
+        progressBar = view.findViewById(R.id.progressbar);
+        progressBar.setVisibility(View.INVISIBLE);
 
-        communities= new ArrayList<>();
+        manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
+        rvCommunityNew = view.findViewById(R.id.rv_community_all);
 
-        //전체 커뮤니티 불러오기
-        //RecyclerView
-
-        NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
-        Call<CMRespDto<List<Community>>> call = nomadApi.comFindAll();
-        call.enqueue(new Callback<CMRespDto<List<Community>>>() {
-
+        addFrag();
+        buttonListener();
+        initScrollListener();
+        return view;
+    }
+    private void buttonListener(){
+        materialButtonToggleGroup.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
             @Override
-            public void onResponse(Call<CMRespDto<List<Community>>> call, Response<CMRespDto<List<Community>>> response) {
-                Log.d(TAG, "onResponse: "+ response.body().getData());
-                communities = (List<Community>) response.body().getData();
-                rvCommunityNew.setLayoutManager(manager);
-                rvCommunityNew.setAdapter(new CommunityAdapter(communities,mContext));
-            }
+            public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
+                if(isChecked){
+                    if(checkedId == R.id.btn_sort_popular){
+                        sort="popular";
+                        addFrag();
+                        initScrollListener();
 
-            @Override
-            public void onFailure(Call<CMRespDto<List<Community>>> call, Throwable t) {
-
+                    }else if(checkedId == R.id.btn_sort_new){
+                        sort="new";
+                        addFrag();
+                        initScrollListener();
+                    }
+                }
             }
         });
+    }
 
 
-        return view;
+
+    private void addFrag(){
+        page=0;
+        nomadApi = NomadApi.retrofit.create(NomadApi.class);
+        Call<CMRespDto<List<CommunityListRespDto>>> call2= nomadApi.comFindAll("Bearer "+token,sort,categoryId,page);
+        call2.enqueue(new Callback<CMRespDto<List<CommunityListRespDto>>>() {
+            @Override
+            public void onResponse(Call<CMRespDto<List<CommunityListRespDto>>> call, Response<CMRespDto<List<CommunityListRespDto>>> response) {
+                communities= response.body().getData();
+                communityAdapter = new CommunityAdapter(communities, mContext,token);
+                rvCommunityNew.setAdapter(communityAdapter);
+                rvCommunityNew.setLayoutManager(manager);
+            }
+
+            @Override
+            public void onFailure(Call<CMRespDto<List<CommunityListRespDto>>> call, Throwable t) {
+                Log.d(TAG, "onFailure: 실패");
+            }
+        });
+    }
+    private void initScrollListener(){
+        rvCommunityNew.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(!rvCommunityNew.canScrollVertically(1)){
+                    progressBar.setVisibility(View.VISIBLE);
+                    if(page<(communities.size()/10)){  //page무한 증가 방지
+                        page++;
+                        Call<CMRespDto<List<CommunityListRespDto>>> call2= nomadApi.comFindAll("Bearer "+token,sort,categoryId,page);
+                        call2.enqueue(new Callback<CMRespDto<List<CommunityListRespDto>>>() {
+                            @Override
+                            public void onResponse(Call<CMRespDto<List<CommunityListRespDto>>> call, Response<CMRespDto<List<CommunityListRespDto>>> response) {
+                                for(int i=0;i<response.body().getData().size();i++){
+                                    communities.add(response.body().getData().get(i));
+                                    communityAdapter.notifyDataSetChanged();
+                                }
+                            }
+                            @Override
+                            public void onFailure(Call<CMRespDto<List<CommunityListRespDto>>> call, Throwable t) {
+                                Log.d(TAG, "onFailure: 실패");
+                            }
+                        });
+                    }
+                    Log.d(TAG, "onScrollStateChanged: Page: "+page+" communities.size()"+communities.size());
+
+                }else{
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
     }
 }

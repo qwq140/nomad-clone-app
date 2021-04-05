@@ -25,7 +25,7 @@
                 android:layout_height="50dp"
                 android:background="@drawable/btn_like"
                 android:drawableTop="@drawable/ic_arrow_up"
-                android:text="0"
+                android:text="15"
                 android:textSize="20dp"
                 android:textColor="#6b7280"
                 android:textStyle="bold"

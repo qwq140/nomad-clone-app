@@ -1,23 +1,17 @@
 package com.cos.nomadapp.ui.community;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import com.cos.nomadapp.R;
-import com.cos.nomadapp.adapter.CommunityPagerAdapter;
 import com.cos.nomadapp.model.CMRespDto;
-import com.cos.nomadapp.model.community.CReply;
-import com.cos.nomadapp.model.community.CReplySaveReqDto;
 import com.cos.nomadapp.model.community.Category;
 import com.cos.nomadapp.model.community.Community;
 import com.cos.nomadapp.model.community.CommunitySaveReqDto;
@@ -46,9 +40,6 @@ public class CommunityWriteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community_write);
-
-
-
     }
 
     @Override
@@ -71,13 +62,14 @@ public class CommunityWriteActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<CMRespDto<List<Category>>> call, Response<CMRespDto<List<Category>>> response) {
                 categories=response.body().getData();
-                for(int i=1;i<categories.size();i++){   //All:0은 빼고
+                for(int i=0;i<categories.size();i++){   //All:0은 빼고
                     category.add(categories.get(i).getTitle());
+                    Log.d(TAG, "onResponse: 카테고리 뿌리기 성공");
                 }
             }
             @Override
             public void onFailure(Call<CMRespDto<List<Category>>> call, Throwable t) {
-                Log.d(TAG, "onFailure: 실패");
+                Log.d(TAG, "onFailure: 카테고리 뿌리기 실패");
             }
         });
 
@@ -94,7 +86,6 @@ public class CommunityWriteActivity extends AppCompatActivity {
         btnSaveCommunity.setOnClickListener(v->{
             SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
             String token = pref.getString("token","");
-            Log.d(TAG, "token :"+token);
 
             CommunitySaveReqDto communitySaveReqDto=new CommunitySaveReqDto();
             communitySaveReqDto.setTitle(etTitle.getText().toString());
@@ -115,7 +106,7 @@ public class CommunityWriteActivity extends AppCompatActivity {
             call2.enqueue(new Callback<CMRespDto<Community>>() {
                 @Override
                 public void onResponse(Call<CMRespDto<Community>> call, Response<CMRespDto<Community>> response) {
-                    Log.d(TAG, "onResponse: test123 : "+response.body());
+                    Log.d(TAG, "onResponse: 커뮤니티 게시글 추가 "+response.body());
                 }
 
                 @Override
@@ -125,12 +116,5 @@ public class CommunityWriteActivity extends AppCompatActivity {
             });
             finish();
         });
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        summernote.onActivityResult(requestCode,resultCode,data);
     }
 }
