@@ -7,6 +7,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 
 import android.content.SharedPreferences;
@@ -23,25 +24,32 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.cos.nomadapp.adapter.MainAdapter;
 import com.cos.nomadapp.model.CMRespDto;
 
 import com.cos.nomadapp.model.courses.CoursesPreview;
 import com.cos.nomadapp.model.pay.Pay;
+import com.cos.nomadapp.model.user.LoginDto;
+import com.cos.nomadapp.model.user.User;
 import com.cos.nomadapp.service.NomadApi;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
+import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Context mContext = MainActivity.this;
 
     private Toolbar toolbarNomad;
     private ImageView ivMenu;
@@ -54,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences pref;
     private String token;
+
+    private LoginDto loginDto;
+    private long userId;
 
     private RoundedImageView rivUser;
     private NomadApi nomadApi;
@@ -71,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
         ivMenu = findViewById(R.id.iv_back);
         drawer = findViewById(R.id.drawer);
+        rivUser = (RoundedImageView) findViewById(R.id.riv_user);
 
         ivMenu.setOnClickListener(v -> {
             drawer.openDrawer(Gravity.LEFT);
@@ -85,7 +97,104 @@ public class MainActivity extends AppCompatActivity {
 
 
         //roundedImageView 이벤트
-        rivUser = (RoundedImageView) findViewById(R.id.riv_user);
+
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        pref = getSharedPreferences("pref", MODE_PRIVATE);
+        token = pref.getString("token", "");
+        Log.d(TAG, "onResume: " + token);
+
+        if (token.equals("")) {
+            nv.getMenu().findItem(R.id.login).setVisible(true);
+            nv.getMenu().findItem(R.id.dashboard).setVisible(false);
+        } else {
+            nv.getMenu().findItem(R.id.login).setVisible(false);
+            nv.getMenu().findItem(R.id.dashboard).setVisible(true);
+        }
+
+        appbarRight();
+
+        //mAuth = FirebaseAuth.getInstance();
+
+        LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+
+        rvMainList = findViewById(R.id.rv_main_list);
+        rvMainList.setLayoutManager(manager);
+
+
+        Call<CMRespDto<List<CoursesPreview>>> call = nomadApi.getHomeCourses();
+        call.enqueue(new Callback<CMRespDto<List<CoursesPreview>>>() {
+            @Override
+            public void onResponse(Call<CMRespDto<List<CoursesPreview>>> call, Response<CMRespDto<List<CoursesPreview>>> response) {
+                Log.d(TAG, "onResponse: " + response.body());
+                List<CoursesPreview> coursesPreviews = response.body().getData();
+                //Log.d(TAG, "onResponse: "+coursesPreviews.get(0).getId());
+                rvMainList.setAdapter(new MainAdapter(getApplicationContext(), coursesPreviews, token));
+            }
+
+            @Override
+            public void onFailure(Call<CMRespDto<List<CoursesPreview>>> call, Throwable t) {
+                Log.d(TAG, "onFailure: ");
+            }
+        });
+
+    }
+
+    private void appbarRight(){
+        if(token.equals("")){
+            rivUser.setVisibility(View.INVISIBLE);
+        } else {
+            String loginDtoJson = pref.getString("user","");
+            Gson gson = new Gson();
+            loginDto = gson.fromJson(loginDtoJson, LoginDto.class);
+            userId = loginDto.getId();
+
+            rivUser.setVisibility(View.VISIBLE);
+            Call<CMRespDto> call = nomadApi.getProfile("Bearer " + token, userId);
+            call.enqueue(new Callback<CMRespDto>() {
+                @Override
+                public void onResponse(Call<CMRespDto> call, Response<CMRespDto> response) {
+                    Log.d(TAG, "onResponse: " + response.body());
+                    if (response.body()!=null){
+                        Log.d(TAG, "onResponse: " + response.body().getData());
+                        Map<String, Object> data = (Map<String, Object>) response.body().getData();
+                        Log.d(TAG, "onResponse: data : " + data);
+
+                        Glide
+                                .with(mContext)
+                                .load(data.get("imageUrl").toString())
+                                .centerCrop()
+                                .placeholder(R.drawable.ic_user)
+                                .into(rivUser);
+
+                        rivUserClick();
+
+                    } else {
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("token", "");
+                        editor.commit();
+                        Intent intent = new Intent(mContext, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(intent);
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<CMRespDto> call, Throwable t) {
+                    Log.d(TAG, "onFailure: ");
+                }
+            });
+
+        }
+    }
+
+    private void rivUserClick(){
         rivUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,51 +231,6 @@ public class MainActivity extends AppCompatActivity {
         //roundedImageView End
 
         //navigationView
-
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        pref = getSharedPreferences("pref", MODE_PRIVATE);
-        token = pref.getString("token", "");
-        Log.d(TAG, "onResume: " + token);
-
-
-        if (token.equals("")) {
-            nv.getMenu().findItem(R.id.login).setVisible(true);
-            nv.getMenu().findItem(R.id.dashboard).setVisible(false);
-        } else {
-            nv.getMenu().findItem(R.id.login).setVisible(false);
-            nv.getMenu().findItem(R.id.dashboard).setVisible(true);
-        }
-
-
-        //mAuth = FirebaseAuth.getInstance();
-
-        LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-
-        rvMainList = findViewById(R.id.rv_main_list);
-        rvMainList.setLayoutManager(manager);
-
-
-        Call<CMRespDto<List<CoursesPreview>>> call = nomadApi.getHomeCourses();
-        call.enqueue(new Callback<CMRespDto<List<CoursesPreview>>>() {
-            @Override
-            public void onResponse(Call<CMRespDto<List<CoursesPreview>>> call, Response<CMRespDto<List<CoursesPreview>>> response) {
-                Log.d(TAG, "onResponse: " + response.body());
-                List<CoursesPreview> coursesPreviews = response.body().getData();
-                //Log.d(TAG, "onResponse: "+coursesPreviews.get(0).getId());
-                rvMainList.setAdapter(new MainAdapter(getApplicationContext(), coursesPreviews, token));
-            }
-
-            @Override
-            public void onFailure(Call<CMRespDto<List<CoursesPreview>>> call, Throwable t) {
-                Log.d(TAG, "onFailure: ");
-            }
-        });
-
     }
 
     @Override

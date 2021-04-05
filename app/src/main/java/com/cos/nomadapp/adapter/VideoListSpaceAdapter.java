@@ -115,7 +115,7 @@ public class VideoListSpaceAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
                 tvCurriculumContent.setOnClickListener(v -> {
                     Log.d(TAG, "setItem: 커리큘럼 클릭");
                     Log.d(TAG, "setItem: "+videoContent.isFree());
-                    Fragment videoDetailFragment = new VideoDetailFragment(videoContent);
+                    Fragment videoDetailFragment = new VideoDetailFragment(videoId,videoContent);
                     ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.video_container, videoDetailFragment).commit();
 
                 });
@@ -128,7 +128,7 @@ public class VideoListSpaceAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
                     tvCurriculumContent.setOnClickListener(v -> {
                         Log.d(TAG, "setItem: 커리큘럼 클릭");
                         Log.d(TAG, "setItem: "+videoContent.isFree());
-                        Fragment videoDetailFragment = new VideoDetailFragment(videoContent);
+                        Fragment videoDetailFragment = new VideoDetailFragment(videoId,videoContent);
                         ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.video_container, videoDetailFragment).commit();
 
                     });

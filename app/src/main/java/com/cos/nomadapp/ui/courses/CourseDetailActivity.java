@@ -25,6 +25,7 @@ import com.cos.nomadapp.LoginActivity;
 import com.cos.nomadapp.PaymentActivity;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.UserDashboardActivity;
+import com.cos.nomadapp.VideoLobbyActivity;
 import com.cos.nomadapp.adapter.CourseConceptAdapter;
 import com.cos.nomadapp.adapter.CourseCurriculumAdapter;
 import com.cos.nomadapp.adapter.CourseFaqAdapter;
@@ -40,6 +41,7 @@ import com.cos.nomadapp.model.courses.CourseFaqContent;
 import com.cos.nomadapp.model.courses.CourseFaqTitle;
 import com.cos.nomadapp.model.courses.CourseSimple;
 import com.cos.nomadapp.model.courses.Curriculum;
+import com.cos.nomadapp.model.pay.FreeSaveReqDto;
 import com.cos.nomadapp.model.user.LoginDto;
 import com.cos.nomadapp.model.video.Video;
 import com.cos.nomadapp.model.video.VideoContent;
@@ -90,6 +92,8 @@ public class CourseDetailActivity extends AppCompatActivity {
     // 토큰
     private SharedPreferences pref;
     private String token;
+
+    private Video video;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -373,7 +377,7 @@ public class CourseDetailActivity extends AppCompatActivity {
     private void section8(){
         Log.d(TAG, "section8: video "+course.getVideo());
 
-        Video video = (Video) course.getVideo();
+        video = (Video) course.getVideo();
         Log.d(TAG, "section8: "+video);
 
         List<Curriculum> curriculumList = new ArrayList<>();
@@ -409,7 +413,12 @@ public class CourseDetailActivity extends AppCompatActivity {
     private void section9(){
         layoutTopSection9.setBackgroundColor(Color.parseColor(course.getBackgroundColor()));
         tvPayTitle.setTextColor(Color.parseColor(course.getTextColor()));
-        tvPrice.setText(course.getPrice()+"원");
+        if (course.getPrice().equals("0")){
+            tvPrice.setText("Free");
+            btnPayment.setText("Enroll now →");
+        } else {
+            tvPrice.setText(course.getPrice()+"원");
+        }
 
         btnPayment.setOnClickListener(v -> {
             Call<CMRespDto<LoginDto>> call = nomadApi.loadUser("Bearer "+token);
@@ -418,10 +427,36 @@ public class CourseDetailActivity extends AppCompatActivity {
                 public void onResponse(Call<CMRespDto<LoginDto>> call, Response<CMRespDto<LoginDto>> response) {
                     Log.d(TAG, "onResponse: section9 "+response.body());
                     if (response.body()!=null){
-                        Intent intent = new Intent(CourseDetailActivity.this, PaymentActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        intent.putExtra("course",course);
-                        startActivity(intent);
+                        if(course.getPrice().equals("0")){
+                            FreeSaveReqDto freeSaveReqDto = FreeSaveReqDto.builder()
+                                    .name(response.body().getData().getName())
+                                    .courseId(course.getId())
+                                    .paid_amount(Integer.parseInt(course.getPrice()))
+                                    .build();
+                            Call<CMRespDto> call2 = nomadApi.freePay("Bearer "+token, freeSaveReqDto);
+                            call2.enqueue(new Callback<CMRespDto>() {
+                                @Override
+                                public void onResponse(Call<CMRespDto> call, Response<CMRespDto> response) {
+                                    Log.d(TAG, "onResponse: "+response.body());
+                                    Intent intent = new Intent(CourseDetailActivity.this, VideoLobbyActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                    intent.putExtra("videoId",video.getId());
+                                    intent.putExtra("status","paid");
+                                    startActivity(intent);
+                                    finish();
+                                }
+
+                                @Override
+                                public void onFailure(Call<CMRespDto> call, Throwable t) {
+                                    Log.d(TAG, "onFailure: ");
+                                }
+                            });
+                        } else {
+                            Intent intent = new Intent(CourseDetailActivity.this, PaymentActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            intent.putExtra("course",course);
+                            startActivity(intent);
+                        }
                     }else{
                         Intent intent = new Intent(CourseDetailActivity.this,LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

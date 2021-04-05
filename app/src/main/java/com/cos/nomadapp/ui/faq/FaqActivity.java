@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,7 +17,9 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.cos.nomadapp.CancleOrRefundPolicyActivity;
+import com.cos.nomadapp.LoginActivity;
 import com.cos.nomadapp.MainActivity;
 import com.cos.nomadapp.PrivacyPolicyActivity;
 import com.cos.nomadapp.R;
@@ -28,14 +31,17 @@ import com.cos.nomadapp.model.faq.Faq;
 import com.cos.nomadapp.model.faq.FaqCategory;
 import com.cos.nomadapp.model.faq.FaqGubun;
 import com.cos.nomadapp.model.faq.FaqItem;
+import com.cos.nomadapp.model.user.LoginDto;
 import com.cos.nomadapp.service.NomadApi;
 import com.cos.nomadapp.ui.challenges.ChallengesActivity;
 import com.cos.nomadapp.ui.community.CommunityActivity;
 import com.cos.nomadapp.ui.courses.CoursesActivity;
+import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import info.androidhive.fontawesome.FontTextView;
 import lombok.SneakyThrows;
@@ -47,15 +53,23 @@ public class FaqActivity extends AppCompatActivity {
 
     private static final String TAG = "FaqActivity";
 
+    private Context mContext = FaqActivity.this;
+
     private ImageView ivBack;
     private TextView tvToolbarTitle;
     private RecyclerView rvFaqList;
     private List<FaqGubun> faqGubunList;
     private List<FaqCategory> faqCategoryList = new ArrayList<>();
     private List<Faq> faqList = new ArrayList<>();
-    private Context mContext = this;
+
+    private SharedPreferences pref;
+    private String token;
+
+    private LoginDto loginDto;
+    private long userId;
 
     private RoundedImageView rivUser;
+    private NomadApi nomadApi;
 
     //footer
     private TextView tvRoadMap,tvCourses,tvCommunity,tvFaq,tvChallenges,tvServiceTerm,tvPrivacyPolicy,tvCancleOrRefundPolicy;
@@ -158,7 +172,7 @@ public class FaqActivity extends AppCompatActivity {
         faqGubunList = new ArrayList<>();
 
         //전체 카테고리 불러오기
-        NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
+        nomadApi = NomadApi.retrofit.create(NomadApi.class);
         Call<CMRespDto<List<FaqCategory>>> call = nomadApi.faqCategoryFindAll();
         call.enqueue(new Callback<CMRespDto<List<FaqCategory>>>() {
             @Override
@@ -187,6 +201,67 @@ public class FaqActivity extends AppCompatActivity {
 
         //roundedImageView 이벤트
         rivUser = (RoundedImageView) findViewById(R.id.riv_user);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        pref = getSharedPreferences("pref", MODE_PRIVATE);
+        token = pref.getString("token", "");
+        appbarRight();
+    }
+
+    private void appbarRight(){
+        if(token.equals("")){
+            rivUser.setVisibility(View.INVISIBLE);
+        } else {
+            String loginDtoJson = pref.getString("user","");
+            Gson gson = new Gson();
+            loginDto = gson.fromJson(loginDtoJson, LoginDto.class);
+            userId = loginDto.getId();
+
+            rivUser.setVisibility(View.VISIBLE);
+            Call<CMRespDto> call = nomadApi.getProfile("Bearer " + token, userId);
+            call.enqueue(new Callback<CMRespDto>() {
+                @Override
+                public void onResponse(Call<CMRespDto> call, Response<CMRespDto> response) {
+                    Log.d(TAG, "onResponse: " + response.body());
+                    if (response.body()!=null){
+                        Log.d(TAG, "onResponse: " + response.body().getData());
+                        Map<String, Object> data = (Map<String, Object>) response.body().getData();
+                        Log.d(TAG, "onResponse: data : " + data);
+
+                        Glide
+                                .with(mContext)
+                                .load(data.get("imageUrl").toString())
+                                .centerCrop()
+                                .placeholder(R.drawable.ic_user)
+                                .into(rivUser);
+
+                        rivUserClick();
+
+                    } else {
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("token", "");
+                        editor.commit();
+                        Intent intent = new Intent(mContext, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(intent);
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<CMRespDto> call, Throwable t) {
+                    Log.d(TAG, "onFailure: ");
+                }
+            });
+
+        }
+    }
+
+    private void rivUserClick(){
         rivUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -203,8 +278,16 @@ public class FaqActivity extends AppCompatActivity {
                             Intent intent = new Intent(v.getContext(), UserDashboardActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             v.getContext().startActivity(intent);
+
                         } else {
                             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putString("token", "");
+                            editor.commit();
+                            Intent intent = new Intent(v.getContext(), MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            v.getContext().startActivity(intent);
+
                         }
                         return false;
                     }
@@ -214,8 +297,6 @@ public class FaqActivity extends AppCompatActivity {
         });
         //roundedImageView End
 
-
-
+        //navigationView
     }
-
 }

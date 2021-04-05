@@ -131,22 +131,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <LinearLayout
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
 
-        <ImageButton
+
+
+
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_tech_cancel"
-            android:layout_width="25dp"
+            android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:background="@drawable/circle_button"
+            android:layout_marginTop="5dp"
+            android:text="javascript"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:drawableLeft="@drawable/ic_close"
+            android:textAllCaps="false"
             android:src="@drawable/ic_close"
             android:backgroundTint="#CACACA"
             android:visibility="invisible"/>
 
-    </LinearLayout>
 
 
 </LinearLayout>

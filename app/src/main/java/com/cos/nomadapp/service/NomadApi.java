@@ -1,6 +1,7 @@
 package com.cos.nomadapp.service;
 
 import com.cos.nomadapp.model.CMRespDto;
+import com.cos.nomadapp.model.pay.FreeSaveReqDto;
 import com.cos.nomadapp.model.pay.Pay;
 import com.cos.nomadapp.model.pay.PayCheckReqDto;
 import com.cos.nomadapp.model.pay.PaySaveReqDto;
@@ -117,6 +118,9 @@ public interface NomadApi {
 
     @POST("pay/check")
     Call<CMRespDto<Pay>> payCheck(@Header("Authorization") String token, @Body PayCheckReqDto payCheckReqDto);
+
+    @POST("pay/free")
+    Call<CMRespDto> freePay(@Header("Authorization") String token, @Body FreeSaveReqDto freeSaveReqDto);
 
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://172.30.1.53:8080/")

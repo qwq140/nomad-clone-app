@@ -34,6 +34,9 @@ import com.cos.nomadapp.model.video.VideoReply;
 import com.cos.nomadapp.model.video.dto.VideoReplySaveReqDto;
 import com.cos.nomadapp.service.NomadApi;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,9 +68,12 @@ public class VideoDetailFragment extends Fragment{
     private String replyContent;
 
     private AppCompatButton btnShow;
+    private long videoId;
 
-    public VideoDetailFragment(VideoContent videoContent) {
+
+    public VideoDetailFragment(long videoId,VideoContent videoContent) {
         this.videoContent = videoContent;
+        this.videoId = videoId;
     }
 
     @Nullable
@@ -76,42 +82,53 @@ public class VideoDetailFragment extends Fragment{
         View view = inflater.inflate( R.layout.video_frag_detail, container, false );
 
         context = container.getContext();
+        pref = context.getSharedPreferences("pref",Context.MODE_PRIVATE);
+        String token = pref.getString("token","");
+
         tvVideoTitle = view.findViewById(R.id.tv_video_title);
         tvVideoTitle.setText(videoContent.getTitle());
         videoView = view.findViewById(R.id.video_view);
-        videoView.getSettings().setJavaScriptEnabled( true );
-        videoView.loadUrl("https://player.vimeo.com/video/180491843");
+        videoView.getSettings().setJavaScriptEnabled(true);
+        String url = "http://172.30.1.53:3100/video/"+videoId;
+        Map<String, String> device = new HashMap<>();
+        device.put("Authorization","Bearer "+token);
 
-        rvVideoReply = view.findViewById(R.id.rv_video_reply);
-        LinearLayoutManager manager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
-        rvVideoReply.setLayoutManager(manager);
+        videoView.loadUrl(url, device);
 
-        btnShow = ((VideoActivity)context).findViewById(R.id.btn_show);
+        //videoView.loadUrl("https://player.vimeo.com/video/180491843");
 
-        btnVreply = view.findViewById(R.id.btn_vrepley);
-        btnVreply.setOnClickListener(v -> {
-            //showReplyInput();
-            openReply();
-        });
-        btnShow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_info_24,0,0,0);
-        btnShow.setText("   Show Sidebar");
 
-        ((VideoActivity)context).isShow = false;
+        // 댓글
+//        rvVideoReply = view.findViewById(R.id.rv_video_reply);
+//        LinearLayoutManager manager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
+//        rvVideoReply.setLayoutManager(manager);
+//
+//        btnShow = ((VideoActivity)context).findViewById(R.id.btn_show);
+
+//        btnVreply = view.findViewById(R.id.btn_vrepley);
+//        btnVreply.setOnClickListener(v -> {
+//            //showReplyInput();
+//            openReply();
+//        });
+//        btnShow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_info_24,0,0,0);
+//        btnShow.setText("   Show Sidebar");
+
+//        ((VideoActivity)context).isShow = false;
 
         return view;
     }
 
 
-    private void openReply(){
-        ReplyDialog replyDialog = new ReplyDialog(context);
-        replyDialog.show(getActivity().getSupportFragmentManager(),"reply");
-        replyDialog.setReplyDialogListener(new ReplyDialog.ReplyDialogListener() {
-            @Override
-            public void replyText(String message) {
-                sendReply(message);
-            }
-        });
-    }
+//    private void openReply(){
+//        ReplyDialog replyDialog = new ReplyDialog(context);
+//        replyDialog.show(getActivity().getSupportFragmentManager(),"reply");
+//        replyDialog.setReplyDialogListener(new ReplyDialog.ReplyDialogListener() {
+//            @Override
+//            public void replyText(String message) {
+//                sendReply(message);
+//            }
+//        });
+//    }
 
     private void sendReply(String message){
         Log.d(TAG, "sendReply: "+message);

@@ -106,6 +106,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
             Log.d(TAG, "setCourseItem: id : " +id);
             itemView.setOnClickListener(v -> {
                 PayCheckReqDto payCheckReqDto = new PayCheckReqDto();
+//                Log.d(TAG, "setItem: 코스 아이디확인"+id);
                 payCheckReqDto.setCourseId(id);
                 Call<CMRespDto<Pay>> call = nomadApi.payCheck("Bearer "+token, payCheckReqDto);
                 call.enqueue(new Callback<CMRespDto<Pay>>() {
@@ -114,14 +115,18 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
                         Log.d(TAG, "onResponse: 페이체크"+response.body());
                         if (response.body()!=null){ // 로그인 o
                             if (response.body().getData()==null){ // 결제 x
+                                Log.d(TAG, "onResponse: 결제안함 "+response.body().getData());
                                 Context context = v.getContext();
                                 Intent intent = new Intent(context, CourseDetailActivity.class);
                                 intent.putExtra("id", id);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                 context.startActivity(intent);
                             } else { // 결제 o
+                                Log.d(TAG, "onResponse: 결제함 "+response.body().getData());
                                 Context context = v.getContext();
                                 Intent intent = new Intent(context, VideoLobbyActivity.class);
+                                Log.d(TAG, "onResponse: 비디오아이디"+coursesPreview.getVideoId());
+                                Log.d(TAG, "onResponse: 결제상태 "+response.body().getData().getStatus());
                                 intent.putExtra("videoId", coursesPreview.getVideoId());
                                 intent.putExtra("status",response.body().getData().getStatus());
                                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

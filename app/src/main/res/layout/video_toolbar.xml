@@ -40,27 +40,7 @@
             app:layout_constraintStart_toEndOf="@+id/btn_video_back"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/appCompatButton"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/circle_button"
-            android:backgroundTint="#059669"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/btn_complete"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:src="@drawable/ic_check_white"
-            android:elevation="10dp"
-            app:layout_constraintBottom_toBottomOf="@+id/appCompatButton"
-            app:layout_constraintEnd_toEndOf="@+id/appCompatButton"
-            app:layout_constraintStart_toStartOf="@+id/appCompatButton"
-            app:layout_constraintTop_toTopOf="@+id/appCompatButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.appcompat.widget.Toolbar>

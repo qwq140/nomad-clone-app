@@ -1,5 +1,6 @@
 package com.cos.nomadapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,11 +24,13 @@ import com.cos.nomadapp.adapter.TechDashAdapter;
 import com.cos.nomadapp.model.CMRespDto;
 import com.cos.nomadapp.model.common.Item;
 import com.cos.nomadapp.model.tech.Tech;
+import com.cos.nomadapp.model.user.LoginDto;
 import com.cos.nomadapp.model.user.User;
 import com.cos.nomadapp.model.user.UserDashboardSecondSection;
 import com.cos.nomadapp.service.NomadApi;
 import com.cos.nomadapp.utils.JwtUtils;
 import com.google.android.material.tabs.TabLayout;
+import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import org.json.JSONObject;
@@ -43,6 +46,8 @@ import retrofit2.Response;
 
 public class UserDashboardActivity extends AppCompatActivity {
     private static final String TAG = "UserDashboardActivity";
+
+    private Context mContext = UserDashboardActivity.this;
     private ImageView ivBack;
     private TextView tvToolbarTitle, tvDashName, tvDashUsername;
     private RoundedImageView rivUser, rivDashboardUser;
@@ -58,6 +63,9 @@ public class UserDashboardActivity extends AppCompatActivity {
     private DashboardFragmentAdapter dashboardFragmentAdapter;
     private ViewPager vpContainer;
     private TabLayout tabsDashboard;
+
+    private LoginDto loginDto;
+    private long userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +86,30 @@ public class UserDashboardActivity extends AppCompatActivity {
 
         //roundedImageView 이벤트
         rivUser = (RoundedImageView) findViewById(R.id.riv_user);
+        rivUserClick();
+
+        // TabLayout
+        vpContainer = findViewById(R.id.vp_container);
+        tabsDashboard = findViewById(R.id.tabs_dashboard);
+
+        dashboardFragmentAdapter = new DashboardFragmentAdapter(getSupportFragmentManager(),1);
+
+        dashboardFragmentAdapter.addFragment(new DashboardFragment1(rivUser));
+        dashboardFragmentAdapter.addFragment(new DashboardFragment2());
+        dashboardFragmentAdapter.addFragment(new DashboardFragment3());
+
+        vpContainer.setAdapter(dashboardFragmentAdapter);
+
+        tabsDashboard.setupWithViewPager(vpContainer);
+
+        tabsDashboard.getTabAt(0).setText("My Profile");
+        tabsDashboard.getTabAt(1).setText("My Courses");
+        tabsDashboard.getTabAt(2).setText("My Payment History");
+
+    }
+
+
+    private void rivUserClick(){
         rivUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,14 +126,17 @@ public class UserDashboardActivity extends AppCompatActivity {
                             Intent intent = new Intent(v.getContext(), UserDashboardActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             v.getContext().startActivity(intent);
+
                         } else {
                             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
                             SharedPreferences.Editor editor = pref.edit();
-                            editor.putString("token","");
+                            editor.putString("token", "");
                             editor.commit();
                             Intent intent = new Intent(v.getContext(), MainActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             v.getContext().startActivity(intent);
+                            finish();
+
                         }
                         return false;
                     }
@@ -111,28 +146,6 @@ public class UserDashboardActivity extends AppCompatActivity {
         });
         //roundedImageView End
 
-        // TabLayout
-        vpContainer = findViewById(R.id.vp_container);
-        tabsDashboard = findViewById(R.id.tabs_dashboard);
-
-        dashboardFragmentAdapter = new DashboardFragmentAdapter(getSupportFragmentManager(),1);
-
-        dashboardFragmentAdapter.addFragment(new DashboardFragment1());
-        dashboardFragmentAdapter.addFragment(new DashboardFragment2());
-        dashboardFragmentAdapter.addFragment(new DashboardFragment3());
-
-        vpContainer.setAdapter(dashboardFragmentAdapter);
-
-        tabsDashboard.setupWithViewPager(vpContainer);
-
-        tabsDashboard.getTabAt(0).setText("My Profile");
-        tabsDashboard.getTabAt(1).setText("My Courses");
-        tabsDashboard.getTabAt(2).setText("My Payment History");
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
+        //navigationView
     }
 }

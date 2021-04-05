@@ -1,6 +1,7 @@
 package com.cos.nomadapp.ui.courses;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,7 +21,10 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.cos.nomadapp.CoursesSort;
+import com.cos.nomadapp.LoginActivity;
+import com.cos.nomadapp.MainActivity;
 import com.cos.nomadapp.R;
 import com.cos.nomadapp.UserDashboardActivity;
 import com.cos.nomadapp.adapter.CoursesAdapter;
@@ -29,13 +33,16 @@ import com.cos.nomadapp.model.CMRespDto;
 
 import com.cos.nomadapp.model.courses.CoursesPreview;
 import com.cos.nomadapp.model.tech.Tech;
+import com.cos.nomadapp.model.user.LoginDto;
 import com.cos.nomadapp.service.NomadApi;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 
 import java.util.List;
+import java.util.Map;
 
 import lombok.SneakyThrows;
 import retrofit2.Call;
@@ -46,7 +53,7 @@ import retrofit2.Response;
 public class CoursesActivity extends AppCompatActivity {
 
     private static final String TAG = "CoursesActivity";
-    private Context context = CoursesActivity.this;
+    private Context mContext = CoursesActivity.this;
 
     private TextView tvToolbarTitle, tvCoursesTitle, tvCoursesSubTitle;
     private SharedPreferences pref;
@@ -59,11 +66,15 @@ public class CoursesActivity extends AppCompatActivity {
     private Chip chipBeginner, chipIntermediate, chipAdvanced, chipFree, chipPaid;
     private ChipGroup chipGroup1, chipGroup2;
 
-    private ImageButton btnTechCancel, btnLevelCancel, btnPriceCancel;
+    private ImageButton btnLevelCancel, btnPriceCancel;
+    private AppCompatButton btnTechCancel;
 
     private NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
 
     private String token;
+
+    private LoginDto loginDto;
+    private long userId;
 
     public CoursesSort getCoursesSort(){
         return coursesSort;
@@ -77,40 +88,15 @@ public class CoursesActivity extends AppCompatActivity {
 
         init();
 
-        downloadCourses();
+        appbarRight();
 
         downloadTech();
 
+        downloadCourses();
+
         coursesSort();
 
-        //roundedImageView 이벤트
-        rivUser = (RoundedImageView) findViewById(R.id.riv_user);
-        rivUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu p = new PopupMenu(
-                        getApplicationContext(),//화면제어권자
-                        v);             //팝업을 띄울 기준이될 위젯
-                getMenuInflater().inflate(R.menu.user_menu, p.getMenu());
-                //이벤트 처리
-                p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getTitle().equals("Dashboard")) {
-                            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(v.getContext(), UserDashboardActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            v.getContext().startActivity(intent);
-                        } else {
-                            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
-                        }
-                        return false;
-                    }
-                });
-                p.show();
-            }
-        });
-        //roundedImageView End
+
     }
 
     // download courses list
@@ -123,7 +109,7 @@ public class CoursesActivity extends AppCompatActivity {
             public void onResponse(Call<CMRespDto<List<CoursesPreview>>> call, Response<CMRespDto<List<CoursesPreview>>> response) {
                 Log.d(TAG, "onResponse: "+response.body());
                 List<CoursesPreview> coursesPreviews = response.body().getData();
-                rvCoursesList.setAdapter(new CoursesAdapter(coursesPreviews,context, token));
+                rvCoursesList.setAdapter(new CoursesAdapter(coursesPreviews,mContext, token));
             }
 
             @Override
@@ -137,7 +123,7 @@ public class CoursesActivity extends AppCompatActivity {
 
     // download tech list
     private void downloadTech(){
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(context,4);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext,4);
         rvTech.setLayoutManager(gridLayoutManager);
 
         NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
@@ -148,7 +134,7 @@ public class CoursesActivity extends AppCompatActivity {
                 Log.d(TAG, "onResponse: 성공 " + response.body());
                 List<Tech> teches = response.body().getData();
                 Log.d(TAG, "onResponse: techs : "+teches);
-                rvTech.setAdapter(new TechAdapter(teches,context,btnTechCancel));
+                rvTech.setAdapter(new TechAdapter(teches,mContext,btnTechCancel));
             }
 
             @Override
@@ -203,6 +189,8 @@ public class CoursesActivity extends AppCompatActivity {
         ivBack.setOnClickListener(v -> {
             finish();
         });
+
+        rivUser = findViewById(R.id.riv_user);
 
         //초기세팅
         coursesSort.setIsFree("");
@@ -267,5 +255,93 @@ public class CoursesActivity extends AppCompatActivity {
             btnPriceCancel.setVisibility(View.INVISIBLE);
             downloadCourses();
         });
+    }
+
+    private void appbarRight(){
+        if(token.equals("")){
+            rivUser.setVisibility(View.INVISIBLE);
+        } else {
+            String loginDtoJson = pref.getString("user","");
+            Gson gson = new Gson();
+            loginDto = gson.fromJson(loginDtoJson, LoginDto.class);
+            userId = loginDto.getId();
+
+            rivUser.setVisibility(View.VISIBLE);
+            Call<CMRespDto> call = nomadApi.getProfile("Bearer " + token, userId);
+            call.enqueue(new Callback<CMRespDto>() {
+                @Override
+                public void onResponse(Call<CMRespDto> call, Response<CMRespDto> response) {
+                    Log.d(TAG, "onResponse: " + response.body());
+                    if (response.body()!=null){
+                        Log.d(TAG, "onResponse: " + response.body().getData());
+                        Map<String, Object> data = (Map<String, Object>) response.body().getData();
+                        Log.d(TAG, "onResponse: data : " + data);
+
+                        Glide
+                                .with(mContext)
+                                .load(data.get("imageUrl").toString())
+                                .centerCrop()
+                                .placeholder(R.drawable.ic_user)
+                                .into(rivUser);
+
+                        rivUserClick();
+
+                    } else {
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("token", "");
+                        editor.commit();
+                        Intent intent = new Intent(mContext, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(intent);
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<CMRespDto> call, Throwable t) {
+                    Log.d(TAG, "onFailure: ");
+                }
+            });
+
+        }
+    }
+
+    private void rivUserClick(){
+        rivUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu p = new PopupMenu(
+                        getApplicationContext(),//화면제어권자
+                        v);             //팝업을 띄울 기준이될 위젯
+                getMenuInflater().inflate(R.menu.user_menu, p.getMenu());
+                //이벤트 처리
+                p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getTitle().equals("Dashboard")) {
+                            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(v.getContext(), UserDashboardActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            v.getContext().startActivity(intent);
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putString("token", "");
+                            editor.commit();
+                            Intent intent = new Intent(v.getContext(), MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            v.getContext().startActivity(intent);
+
+                        }
+                        return false;
+                    }
+                });
+                p.show();
+            }
+        });
+        //roundedImageView End
+
+        //navigationView
     }
 }

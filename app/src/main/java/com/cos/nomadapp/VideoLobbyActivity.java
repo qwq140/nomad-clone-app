@@ -78,7 +78,7 @@ public class VideoLobbyActivity extends AppCompatActivity {
             finish();
         });
         tvToolbarTitle = findViewById(R.id.tv_toolbar_title);
-        tvToolbarTitle.setText("");
+        tvToolbarTitle.setText("Lobby");
         tvVideoTtile = findViewById(R.id.tv_video_title);
         rvVideoLobby = findViewById(R.id.rv_video_lobby);
         nomadApi = NomadApi.retrofit.create(NomadApi.class);

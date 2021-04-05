@@ -21,9 +21,11 @@ import com.bumptech.glide.Glide;
 import com.cos.nomadapp.adapter.TechDashAdapter;
 import com.cos.nomadapp.model.CMRespDto;
 import com.cos.nomadapp.model.tech.Tech;
+import com.cos.nomadapp.model.user.LoginDto;
 import com.cos.nomadapp.model.user.User;
 import com.cos.nomadapp.service.NomadApi;
 import com.cos.nomadapp.utils.JwtUtils;
+import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import org.json.JSONObject;
@@ -46,14 +48,19 @@ public class DashboardFragment1 extends Fragment {
 
     private SharedPreferences pref;
     private String token;
-    private long id;
+    private long userId;
     private User user;
+    private LoginDto loginDto;
 
     private TextView tvDashName, tvDashUsername;
-    private RoundedImageView rivDashboardUser;
+    private RoundedImageView rivDashboardUser, rivUser;
 
     private AppCompatButton btnEditProfile;
     private RecyclerView rvDashTech;
+
+    public DashboardFragment1(RoundedImageView rivUser) {
+        this.rivUser = rivUser;
+    }
 
     @SneakyThrows
     @Nullable
@@ -79,17 +86,16 @@ public class DashboardFragment1 extends Fragment {
         super.onResume();
         pref = mContext.getSharedPreferences("pref", MODE_PRIVATE);
         token = pref.getString("token", "");
-        if (token!=""){
-            // 토큰 디코딩
-            String payload = JwtUtils.payloadDecoded(token);
-            JSONObject payloadObj = new JSONObject(payload);
-            Log.d(TAG, "onCreate: Payload : " + payloadObj);
+        String loginDtoJson = pref.getString("user","");
+        Gson gson = new Gson();
+        loginDto = gson.fromJson(loginDtoJson, LoginDto.class);
+        userId = loginDto.getId();
 
-            id = payloadObj.getLong("id");
+        if (token!=""){
 
             // 개인 정보 얻기
             NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
-            Call<CMRespDto> call = nomadApi.getProfile("Bearer " + token, id);
+            Call<CMRespDto> call = nomadApi.getProfile("Bearer " + token, userId);
             call.enqueue(new Callback<CMRespDto>() {
                 @Override
                 public void onResponse(Call<CMRespDto> call, Response<CMRespDto> response) {
@@ -117,6 +123,15 @@ public class DashboardFragment1 extends Fragment {
                                 .centerCrop()
                                 .placeholder(R.drawable.ic_user)
                                 .into(rivDashboardUser);
+
+                        rivUser.setVisibility(View.VISIBLE);
+
+                        Glide
+                                .with(mContext)
+                                .load(user.getImageUrl())
+                                .centerCrop()
+                                .placeholder(R.drawable.ic_user)
+                                .into(rivUser);
 
                     } else {
                         Intent intent = new Intent(mContext, LoginActivity.class);

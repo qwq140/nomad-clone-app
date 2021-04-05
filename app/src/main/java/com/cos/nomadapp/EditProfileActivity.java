@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.android.internal.http.multipart.MultipartEntity;
 import com.bumptech.glide.Glide;
 import com.cos.nomadapp.model.CMRespDto;
+import com.cos.nomadapp.model.user.LoginDto;
 import com.cos.nomadapp.model.user.User;
 import com.cos.nomadapp.model.user.UserUpdateReqDto;
 import com.cos.nomadapp.service.NomadApi;
@@ -88,21 +89,22 @@ public class EditProfileActivity extends AppCompatActivity {
     private Bitmap bitmap;
     private Uri path;
 
-    private Context context;
+    private LoginDto loginDto;
+    private Context mContext;
+    private long id;
+
     @SneakyThrows
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        context = getApplicationContext();
+        mContext = getApplicationContext();
 
         loadPref();
 
         init();
 
-
-        long id = payloadObj.getLong("id");
 
         btnEditProfileSave.setOnClickListener(v -> {
 
@@ -143,6 +145,12 @@ public class EditProfileActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<CMRespDto> call, Response<CMRespDto> response) {
                     Log.d(TAG, "onResponse: 삭제 성공 : " + response.body());
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("token", "");
+                    editor.commit();
+                    Intent intent = new Intent(mContext, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
                 }
 
                 @Override
@@ -192,8 +200,10 @@ public class EditProfileActivity extends AppCompatActivity {
     private void loadPref() throws Exception {
         pref = getSharedPreferences("pref", MODE_PRIVATE);
         token = pref.getString("token", "");
-        String payload = JwtUtils.payloadDecoded(token);
-        payloadObj = new JSONObject(payload);
+        String loginDtoJson = pref.getString("user","");
+        Gson gson = new Gson();
+        loginDto = gson.fromJson(loginDtoJson, LoginDto.class);
+        id = loginDto.getId();
     }
 
     private void init(){
@@ -206,7 +216,7 @@ public class EditProfileActivity extends AppCompatActivity {
         btnImageSave = findViewById(R.id.btn_image_save);
 
         // 툴바 title text 설정
-        tvToolbarTitle.setText("DashBoard");
+        tvToolbarTitle.setText("Edit Profile");
 
         // 뒤로가기 버튼
         ivBack.setOnClickListener(v -> {
@@ -219,7 +229,7 @@ public class EditProfileActivity extends AppCompatActivity {
         tfEditName.setText(principal.getName());
 
         Glide
-                .with(EditProfileActivity.this)
+                .with(mContext)
                 .load(principal.getImageUrl())
                 .centerCrop()
                 .placeholder(R.drawable.test)
@@ -239,7 +249,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),path);
                     ivProfileImg.setImageBitmap(bitmap);
                     Log.d(TAG, "onActivityResult: Uri"+path);
-                    file = new File(getFilePathFromURI(context,path));
+                    file = new File(getFilePathFromURI(mContext,path));
 
 
                 } catch (Exception e) {

@@ -6,8 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -24,14 +27,15 @@ public class TechAdapter extends RecyclerView.Adapter<TechAdapter.MyViewHolder>{
     private final List<Tech> teches;
     private Context context;
 
-    private ImageButton btnTechCancel;
+    private AppCompatButton btnTechCancel;
 
 
-    public TechAdapter(List<Tech> teches, Context context, ImageButton btnTechCancel) {
+    public TechAdapter(List<Tech> teches, Context context, AppCompatButton btnTechCancel) {
 
         this.teches = teches;
         this.context = context;
         this.btnTechCancel = btnTechCancel;
+
     }
 
 
@@ -85,6 +89,7 @@ public class TechAdapter extends RecyclerView.Adapter<TechAdapter.MyViewHolder>{
 
             CoursesActivity test = (CoursesActivity)context;
             ivTech.setOnClickListener(v -> {
+                btnTechCancel.setText(tech.getTitle());
                 test.getCoursesSort().setTechId(tech.getId());
                 btnTechCancel.setVisibility(View.VISIBLE);
                 test.downloadCourses();

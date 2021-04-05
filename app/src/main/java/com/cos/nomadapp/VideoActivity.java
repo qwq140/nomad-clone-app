@@ -32,7 +32,7 @@ public class VideoActivity extends AppCompatActivity {
         long videoId = intent.getLongExtra("videoId",0);
         String status = intent.getStringExtra("status");
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.video_container, new VideoDetailFragment(videoContent)).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.video_container, new VideoDetailFragment(videoId,videoContent)).commit();
         btnShow = findViewById(R.id.btn_show);
         btnShow.setOnClickListener(v -> {
             isShow = !isShow;
@@ -44,7 +44,7 @@ public class VideoActivity extends AppCompatActivity {
             } else {
 //                btnShow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_info_24,0,0,0);
 //                btnShow.setText("   Show Sidebar");
-                selectedFragment = new VideoDetailFragment(videoContent);
+                selectedFragment = new VideoDetailFragment(videoId,videoContent);
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.video_container, selectedFragment).commit();
         });
