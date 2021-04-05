@@ -1,5 +1,7 @@
 package com.cos.nomadapp.service;
 
+import android.provider.CallLog;
+
 import com.cos.nomadapp.model.CMRespDto;
 import com.cos.nomadapp.model.community.CReplySaveReqDto;
 import com.cos.nomadapp.model.community.CommunityFindReqDto;
@@ -105,6 +107,10 @@ public interface NomadApi {
     @POST("cReply")
     Call<CMRespDto<CReply>> cReplySave(@Header("Authorization") String token, @Body CReplySaveReqDto cReplySaveReqDto);
     //--- community End ---
+
+    @DELETE("cReply/{id}")
+    Call<CMRespDto> cReplyDelete(@Header("Authorization") String token,@Path("id") long id);
+
 
     //--- like ---
     @POST("like")

@@ -16,9 +16,9 @@ import com.cos.nomadapp.model.CMRespDto;
 import com.cos.nomadapp.model.community.CommunityListRespDto;
 import com.cos.nomadapp.model.likes.LikeClickRespDto;
 import com.cos.nomadapp.service.NomadApi;
+import com.cos.nomadapp.ui.community.CommunityActivity;
 import com.cos.nomadapp.ui.community.CommunityDetailActivity;
 import com.cos.nomadapp.R;
-import com.cos.nomadapp.model.community.Community;
 
 import java.util.List;
 
@@ -27,7 +27,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder>{
-
     private List<CommunityListRespDto> communities;
     private Context mContext;
     private String token;
@@ -77,14 +76,12 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
                     @Override
                     public void onResponse(Call<CMRespDto<LikeClickRespDto>> call, Response<CMRespDto<LikeClickRespDto>> response) {
                         btnLike.setText(communities.get(pos).getLikeCount()+"");
-
                     }
                     @Override
                     public void onFailure(Call<CMRespDto<LikeClickRespDto>> call, Throwable t) {
                         Log.d(TAG, "onFailure: 실패");
                     }
                 });
-
             });
             //상세
             itemView.setOnClickListener(v->{

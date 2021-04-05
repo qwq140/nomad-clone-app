@@ -148,4 +148,10 @@ public class CommunityActivity extends AppCompatActivity {
         });
         communityPagerAdapter.notifyDataSetChanged();
     }
+//    public void refresh(){     //새로고침
+//        communityPagerAdapter.notifyDataSetChanged();
+//        Intent intent = getIntent();
+//        finish();
+//        startActivity(intent);
+//    }
 }

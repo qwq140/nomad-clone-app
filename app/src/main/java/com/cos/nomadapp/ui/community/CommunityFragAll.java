@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,7 +40,6 @@ public class CommunityFragAll extends Fragment {
     private Context mContext;
     private static final String TAG = "CommunityFragAll";
     private List<CommunityListRespDto> communities = new ArrayList<>();
-    private boolean isLoading = false;
     private CommunityAdapter communityAdapter;
     private String token,sort;
     private Long categoryId;
@@ -47,7 +47,7 @@ public class CommunityFragAll extends Fragment {
     private int page=0;
     private LinearLayoutManager manager;
     private NomadApi nomadApi;
-
+    private ProgressBar progressBar;
     public CommunityFragAll(String sort,String token,long categoryId){
         this.sort=sort;
         this.token=token;
@@ -59,18 +59,20 @@ public class CommunityFragAll extends Fragment {
         View view = inflater.inflate(R.layout.community_frag_all, container, false);
 
         mContext = container.getContext();
-
         //토글 그룹
         materialButtonToggleGroup = view.findViewById(R.id.btg_order_community);
         int buttonId = materialButtonToggleGroup.getCheckedButtonId();
         MaterialButton button = materialButtonToggleGroup.findViewById(buttonId);
 
+        progressBar = view.findViewById(R.id.progressbar);
+        progressBar.setVisibility(View.INVISIBLE);
+
         manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
         rvCommunityNew = view.findViewById(R.id.rv_community_all);
-        
+
         addFrag();
         buttonListener();
-
+        initScrollListener();
         return view;
     }
     private void buttonListener(){
@@ -90,10 +92,6 @@ public class CommunityFragAll extends Fragment {
                         addFrag();
                         initScrollListener();
                     }
-                }else{
-                    sort="new";
-                    addFrag();
-                    initScrollListener();
                 }
             }
         });
@@ -125,8 +123,11 @@ public class CommunityFragAll extends Fragment {
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if(!rvCommunityNew.canScrollVertically(1)){
-                    if(page<communities.size()/10)
+                    progressBar.setVisibility(View.VISIBLE);
+                    if(page<=(communities.size()/10)){  //page무한 증가 방지
                         page++;
+                    }
+                    Log.d(TAG, "onScrollStateChanged: "+page);
                     Call<CMRespDto<List<CommunityListRespDto>>> call2= nomadApi.comFindAll("Bearer "+token,sort,categoryId,page);
                     call2.enqueue(new Callback<CMRespDto<List<CommunityListRespDto>>>() {
                         @Override
@@ -141,6 +142,8 @@ public class CommunityFragAll extends Fragment {
                             Log.d(TAG, "onFailure: 실패");
                         }
                     });
+                }else{
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
             }
 

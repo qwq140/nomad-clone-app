@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,6 +37,7 @@ public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.V
     private CommunityDetailActivity communityDetailActivity;
     private String token;
     private static final String TAG = "CommunityDetailAdapter:";
+    private NomadApi nomadApi;
     public CommunityDetailAdapter(List<Item> items, CommunityDetailActivity communityDetailActivity,String token) {
         this.items = items;
         this.communityDetailActivity = communityDetailActivity;
@@ -120,13 +122,12 @@ public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.V
 
             //좋아요
             btnCommunityLike.setOnClickListener(v->{
-                NomadApi nomadApi = NomadApi.retrofit.create(NomadApi.class);
+                nomadApi = NomadApi.retrofit.create(NomadApi.class);
                 Call<CMRespDto<LikeClickRespDto>> call = nomadApi.likeUp("Bearer "+token,community.getId().longValue());
                 call.enqueue(new Callback<CMRespDto<LikeClickRespDto>>() {
                     @Override
                     public void onResponse(Call<CMRespDto<LikeClickRespDto>> call, Response<CMRespDto<LikeClickRespDto>> response) {
-                        Log.d(TAG, "onResponse: getLikes"+community.getLikeCount());
-                        notifyDataSetChanged();
+                        communityDetailActivity.refresh();
                     }
                     @Override
                     public void onFailure(Call<CMRespDto<LikeClickRespDto>> call, Throwable t) {
@@ -141,18 +142,34 @@ public class CommunityDetailAdapter extends  RecyclerView.Adapter<RecyclerView.V
     public class ReplyViewHolder extends RecyclerView.ViewHolder{
 
         private TextView tvReplyContent, tvReplyUsername, tvReplyTime,tvReplyCount;
-
+        private ImageButton btnReplyDelete;
         public ReplyViewHolder(@NonNull View itemView) {
             super(itemView);
             tvReplyUsername = itemView.findViewById(R.id.tv_reply_username);
             tvReplyContent = itemView.findViewById(R.id.tv_reply_content);
             tvReplyTime = itemView.findViewById(R.id.tv_reply_time);
+            btnReplyDelete = itemView.findViewById(R.id.btn_reply_delete);
         }
 
        public void setItem(CReply cReply){
             tvReplyUsername.setText(cReply.getUser().getName());
             tvReplyContent.setText(cReply.getContent());
             tvReplyTime.setText(cReply.getCreateDate().toString());
+            btnReplyDelete.setOnClickListener(v->{
+                nomadApi = NomadApi.retrofit.create(NomadApi.class);
+                Call<CMRespDto> call2 = nomadApi.cReplyDelete("Bearer "+token,cReply.getId());
+                call2.enqueue(new Callback<CMRespDto>() {
+                    @Override
+                    public void onResponse(Call<CMRespDto> call, Response<CMRespDto> response) {
+                        communityDetailActivity.refresh();
+                    }
+
+                    @Override
+                    public void onFailure(Call<CMRespDto> call, Throwable t) {
+                        Log.d(TAG, "onFailure: 댓글 삭제 실패");
+                    }
+                });
+            });
         }
     }
 

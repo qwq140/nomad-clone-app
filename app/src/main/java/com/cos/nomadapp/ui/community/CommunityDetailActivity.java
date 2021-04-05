@@ -113,7 +113,7 @@ public class CommunityDetailActivity extends AppCompatActivity {
                     Log.d(TAG, "onFailure: 댓글 쓰기 실패");
                 }
             });
-
+            refresh();
         });
 
     }
@@ -153,10 +153,7 @@ public class CommunityDetailActivity extends AppCompatActivity {
                 items.add(new Item(0, communityItem));
                 for (int i = 0; i < communityItem.getCommunity().getReplys().size(); i++) {
                     items.add(new Item(1, communityItem.getCommunity().getReplys().get(i)));
-                    Log.d(TAG, "onResponse: 1 items : " + items);
                 }
-//                items.add(new Item(1, communityItem.getCommunity().getReplys()));
-                Log.d(TAG, "onResponse: " + items);
                 rvCommunityDetail.setLayoutManager(manager);
                 communityDetailAdapter = new CommunityDetailAdapter(items, (CommunityDetailActivity)mContext, token);
                 rvCommunityDetail.setAdapter(communityDetailAdapter);
@@ -168,5 +165,10 @@ public class CommunityDetailActivity extends AppCompatActivity {
                 Log.d(TAG, "onFailure: 실패");
             }
         });
+    }
+    public void refresh(){     //새로고침
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
 }
