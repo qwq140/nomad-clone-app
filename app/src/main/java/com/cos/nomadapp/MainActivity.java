@@ -38,6 +38,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.zoyi.channel.plugin.android.ChannelIO;
+import com.zoyi.channel.plugin.android.open.config.BootConfig;
 
 
 import java.util.List;
@@ -74,6 +76,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //채팅봇
+        BootConfig bootConfig = BootConfig.create("2f146489-45bb-46cc-a6d6-74aa3b8b77be");
+        ChannelIO.boot(bootConfig);
+        ChannelIO.showChannelButton();
 
         nomadApi = NomadApi.retrofit.create(NomadApi.class);
 

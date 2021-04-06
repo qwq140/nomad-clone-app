@@ -152,7 +152,7 @@ public interface NomadApi {
     Call<CMRespDto> freePay(@Header("Authorization") String token, @Body FreeSaveReqDto freeSaveReqDto);
 
     public static final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://192.168.43.74:8080/")
+            .baseUrl("http://172.17.101.10:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
