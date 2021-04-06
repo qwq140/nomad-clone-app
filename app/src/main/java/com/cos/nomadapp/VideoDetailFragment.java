@@ -3,6 +3,7 @@ package com.cos.nomadapp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -88,14 +89,28 @@ public class VideoDetailFragment extends Fragment{
         tvVideoTitle = view.findViewById(R.id.tv_video_title);
         tvVideoTitle.setText(videoContent.getTitle());
         videoView = view.findViewById(R.id.video_view);
+
         videoView.getSettings().setJavaScriptEnabled(true);
-        String url = "http://172.30.1.53:3100/video/"+videoId;
-        Map<String, String> device = new HashMap<>();
-        device.put("Authorization","Bearer "+token);
+        videoView.getSettings().setDomStorageEnabled(true);
 
-        videoView.loadUrl(url, device);
 
-        //videoView.loadUrl("https://player.vimeo.com/video/180491843");
+        Log.d(TAG, "onCreateView: 비메오아이디"+videoContent.getVimeoId());
+        String url = "http://192.168.43.74:3100/android/video/"+videoContent.getVimeoId();
+        Map<String, String> additionalHttpHeader = new HashMap<>();
+        additionalHttpHeader.put("Authorization","Bearer "+token);
+
+        videoView.loadUrl(url, additionalHttpHeader);
+
+        videoView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                System.out.println("is run?");
+
+            }
+        });
+
+        //videoView.loadUrl("https://player.vimeo.com/video/532360991");
 
 
         // 댓글
@@ -131,7 +146,7 @@ public class VideoDetailFragment extends Fragment{
 //    }
 
     private void sendReply(String message){
-        Log.d(TAG, "sendReply: "+message);
+//        Log.d(TAG, "sendReply: "+message);
 //        pref = context.getSharedPreferences("pref",Context.MODE_PRIVATE);
 //        token = pref.getString("token","");
 //
