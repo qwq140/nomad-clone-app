@@ -76,7 +76,7 @@ public class CommunityWriteActivity extends AppCompatActivity {
 
         ArrayAdapter arrayAdapter = new ArrayAdapter(this,R.layout.community_category_item,category);
         // 디폴트 값
-        autoCompleteTextView.setText("test",true);
+        autoCompleteTextView.setText("카테고리 선택",true);
         autoCompleteTextView.setAdapter(arrayAdapter);
 
         summernote = (Summernote) findViewById(R.id.summernote);

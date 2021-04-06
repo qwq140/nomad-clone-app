@@ -25,6 +25,7 @@ import com.cos.nomadapp.model.community.CReplySaveReqDto;
 import com.cos.nomadapp.model.community.CommunityItemRespDto;
 import com.cos.nomadapp.model.community.CommunityListRespDto;
 import com.cos.nomadapp.service.NomadApi;
+import com.zoyi.channel.plugin.android.ChannelIO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,6 +105,7 @@ public class CommunityDetailActivity extends AppCompatActivity {
                 public void onResponse(Call<CMRespDto<CReply>> call, Response<CMRespDto<CReply>> response) {
                     items.add(new Item(1, response.body().getData()));
                     Log.d(TAG, "onResponse: 3 item : " + items);
+
                     shutdownReplyInput();       //댓글 작성 완료하고 키보드 닫기
                     //test();
                 }
@@ -124,6 +126,7 @@ public class CommunityDetailActivity extends AppCompatActivity {
     }
 
     public void showReplyInput() {           //댓글 키보드 쓰기
+        ChannelIO.hideChannelButton();
         RelativeLayout replyBar = (RelativeLayout) findViewById(R.id.reply_bar);
         replyBar.setVisibility(View.VISIBLE);
 
@@ -134,6 +137,7 @@ public class CommunityDetailActivity extends AppCompatActivity {
     }
 
     public void shutdownReplyInput() {           //댓글 키보드 닫기
+        ChannelIO.showChannelButton();
         RelativeLayout replyBar = (RelativeLayout) findViewById(R.id.reply_bar);
         replyBar.setVisibility(View.INVISIBLE);
 
@@ -171,4 +175,6 @@ public class CommunityDetailActivity extends AppCompatActivity {
         finish();
         startActivity(intent);
     }
+
+
 }
