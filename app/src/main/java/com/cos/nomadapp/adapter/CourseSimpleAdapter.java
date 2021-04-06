@@ -72,7 +72,7 @@ public class CourseSimpleAdapter extends RecyclerView.Adapter<CourseSimpleAdapte
             Glide
                     .with(mContext)
                     .load(courseSimple.getSimpleImage()) // 임시 테스트로 넘어오는 이미지는 localhost라서 적용이 안됨
-                    .centerCrop()
+                    .fitCenter()
                     .placeholder(R.drawable.test)
                     .into(ivThird);
             tvThirdTitle.setText(courseSimple.getTitle());

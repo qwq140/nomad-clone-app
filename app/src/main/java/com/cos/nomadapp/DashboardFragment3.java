@@ -47,7 +47,7 @@ public class DashboardFragment3 extends Fragment {
     private LoginDto loginDto;
     private long userId;
 
-    private LinearLayout layoutNoList;
+    private LinearLayout layoutNoList,layoutPayTable;
 
     private RecyclerView rvPaymentHistory;
     private NomadApi nomadApi;
@@ -62,6 +62,7 @@ public class DashboardFragment3 extends Fragment {
         nomadApi = NomadApi.retrofit.create(NomadApi.class);
 
         layoutNoList = view.findViewById(R.id.layout_no_list);
+        layoutPayTable =view.findViewById(R.id.layout_pay_table);
 
         rvPaymentHistory = view.findViewById(R.id.rv_payment_history);
         rvPaymentHistory.setLayoutManager(new LinearLayoutManager(mContext));
@@ -89,10 +90,12 @@ public class DashboardFragment3 extends Fragment {
                         Log.d(TAG, "onResponse: 결제내역 " + response.body().getData());
                         if (response.body().getData().toString()!="[]"){
                             layoutNoList.setVisibility(View.GONE);
+                            layoutPayTable.setVisibility(View.VISIBLE);
                             List<Pay> payList = response.body().getData();
                             rvPaymentHistory.setAdapter(new PaymentAdapter(mContext,payList));
                         } else {
                             layoutNoList.setVisibility(View.VISIBLE);
+                            layoutPayTable.setVisibility(View.GONE);
                         }
                     } else {
                         Intent intent = new Intent(mContext, LoginActivity.class);

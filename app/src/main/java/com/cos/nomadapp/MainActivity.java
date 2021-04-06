@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        ChannelIO.showChannelButton();
         pref = getSharedPreferences("pref", MODE_PRIVATE);
         token = pref.getString("token", "");
         Log.d(TAG, "onResume: " + token);

@@ -14,9 +14,6 @@
             android:id="@+id/courses"
             android:title="Courses" />
         <item
-            android:id="@+id/challenges"
-            android:title="Challenges"/>
-        <item
             android:id="@+id/community"
             android:title="Community"/>
         <item

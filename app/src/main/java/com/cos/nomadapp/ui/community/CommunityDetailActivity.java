@@ -73,7 +73,7 @@ public class CommunityDetailActivity extends AppCompatActivity {
         });
 
         tvToolbarTitle = findViewById(R.id.tv_toolbar_title);
-        tvToolbarTitle.setText("");
+        tvToolbarTitle.setText("Community");
 
         manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rvCommunityDetail = findViewById(R.id.rv_community_detail);

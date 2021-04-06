@@ -9,7 +9,8 @@
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/iv_third"
         android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
+        android:scaleType="fitXY"
         android:layout_height="150dp"
         app:riv_corner_radius="10dip"
         android:src="@drawable/test" />

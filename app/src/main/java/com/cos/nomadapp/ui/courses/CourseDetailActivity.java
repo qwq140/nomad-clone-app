@@ -169,7 +169,7 @@ public class CourseDetailActivity extends AppCompatActivity {
 
         // 앱바 디자인
         tvToolbarTitle = findViewById(R.id.tv_toolbar_title);
-        tvToolbarTitle.setText("");
+        tvToolbarTitle.setText("Course");
 
         // section1
         mainImage = findViewById(R.id.pageImage);

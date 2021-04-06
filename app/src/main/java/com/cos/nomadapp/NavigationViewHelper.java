@@ -40,11 +40,6 @@ public class NavigationViewHelper {
                 Intent intent = new Intent(context, CoursesActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 context.startActivity(intent);
-            } else if (id == R.id.challenges) {
-                Log.d(TAG, "enable: Challenges 클릭");
-                Intent intent = new Intent(context, ChallengesActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                context.startActivity(intent);
             } else if (id == R.id.community) {
                 Log.d(TAG, "enable: Community 클릭");
                 Intent intent = new Intent(context, CommunityActivity.class);
