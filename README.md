@@ -2,21 +2,25 @@
 
 Original Nomadcoder site :  https://nomadcoders.co/
 
+
 ## Development Environment
 - Android Studio 4.1.2
 - Java JDK 1.8
 - JWT Spring boot Server
 - Mysql 8.0
 
+
 ## Application Version
 - compileSdkVersion : 30
 - minSdkVersion : 21
 - targetSdkVersion : 30
 
+
 ## Git
 - JWT Server : https://github.com/LEEJAECHEOL/nomadCloneProject-bachend
 - Android : https://github.com/qwq140/nomad-clone-app/
 - Web (React) : https://github.com/LEEJAECHEOL/nomad_clone_web
+
 
 ## APIs
 - Google OAuth
@@ -26,6 +30,7 @@ Original Nomadcoder site :  https://nomadcoders.co/
 - Retrofit
 - Glide
 - 채널톡 Channel.io
+
 
 ## dependencies
 
@@ -164,7 +169,10 @@ file:
 ```
 
 
+
+
 ## Main source code
+
 
 ### Login
 
@@ -172,7 +180,6 @@ file:
 ![image](https://user-images.githubusercontent.com/44068819/113752266-b8924d00-9747-11eb-97c8-f6c13d6f96d5.png)
 
 ```java
-
 private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
@@ -239,6 +246,8 @@ private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 ```
+
+
 ### Course
 
 ![image](https://user-images.githubusercontent.com/44068819/113752486-ff804280-9747-11eb-82b5-4c9fb4e45037.png)
@@ -347,6 +356,8 @@ private void init(){
     }
 
 ```
+
+
 ### Community
 
 ![image](https://user-images.githubusercontent.com/44068819/113751344-d27f6000-9746-11eb-949e-1b8da07c74f3.png)
@@ -435,6 +446,8 @@ private void init(){
         });
     }
 ```
+
+
 ### Video
 
 ![image](https://user-images.githubusercontent.com/44068819/113752706-3c4c3980-9748-11eb-8f02-fc219d872291.png)
@@ -473,6 +486,8 @@ private void init(){
             }
         });
 ```
+
+
 ### Payment
 
 ![image](https://user-images.githubusercontent.com/44068819/113752814-5be36200-9748-11eb-9a52-ece32065d561.png)
