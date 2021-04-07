@@ -585,3 +585,38 @@ private void init(){
 ```
 
 
+## 오류해결
+
+![image](https://user-images.githubusercontent.com/44068819/113816321-a6e49000-97af-11eb-838c-846267e6dd4a.png)
+
+위와같은 error가 발생한다면
+
+nomad-clone-app/gradle/wrapper/gradle-wrapper.properties에서 
+```properties
+distributionUrl=https\://services.gradle.org/distributions/gradle-6.5-bin.zip
+```
+의 버전을
+```properties
+distributionUrl=https\://services.gradle.org/distributions/gradle-6.4.1-all.zip
+```
+로 낮추고 
+
+
+```gradle
+dependencies {
+        classpath "com.android.tools.build:gradle:4.0.2"
+
+
+        classpath 'com.google.gms:google-services:4.3.5'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+```
+gradle버전을 4.1.2에서 4.0.2로 낮추고 Sync Now를 눌러 적용해 준다
+
+
+## 개발하면서 어려웠던 부분
+
+###  이미지 업로드 
+
+해결방법 : https://blog.naver.com/qwq140/222295526906
