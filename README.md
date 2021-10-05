@@ -1,7 +1,8 @@
 # nomad-clone-app
 
 Original Nomadcoder site :  https://nomadcoders.co/
-
+Web[ReactJS] Code : https://github.com/LEEJAECHEOL/nomad_clone_web
+BackEnd Code : https://github.com/LEEJAECHEOL/nomadCloneProject-bachend
 
 ## Development Environment
 - Android Studio 4.1.2
