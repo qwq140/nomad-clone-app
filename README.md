@@ -16,13 +16,6 @@
 - minSdkVersion : 21
 - targetSdkVersion : 30
 
-
-## Git
-- JWT Server : https://github.com/LEEJAECHEOL/nomadCloneProject-bachend
-- Android : https://github.com/qwq140/nomad-clone-app/
-- Web (React) : https://github.com/LEEJAECHEOL/nomad_clone_web
-
-
 ## APIs
 - Google OAuth
 - Vimeo
